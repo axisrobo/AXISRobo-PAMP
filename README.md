@@ -2,6 +2,8 @@
 
 A modular, extensible platform for enterprise architecture management — EA review workflows, application portfolio management, business capability analysis, architecture decision & design (ADD), PACT concern catalog, viewpoint/artifact mapping, and reporting.
 
+AxisRobo-PAMP was sparked by the **PAMF series of papers** (PACT, AVDM, AADM, ARCM) and shaped by years of enterprise architecture practice. It is built not only around what ships today, but toward a long-term vision for architecture governance — spanning domain capability coverage and platform evolution through the v3.x horizon. See the [Roadmap](docs/ROADMAP.md) for that vision, beyond the currently implemented feature set.
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -48,6 +50,24 @@ docker run -d --name axisarch-pg \
   -e POSTGRES_PASSWORD=postgres \
   -e POSTGRES_DB=axisarch \
   -p 5432:5432 postgres:16
+```
+
+### Initialize Schema & Seed Data
+
+The database schema and AVDM seed data are maintained as SQL scripts under [`docs/SQL/`](docs/SQL/). Create the `eam` schema, load the table DDL, then load the AVDM seed data:
+
+```bash
+# Connection string matches the docker container above (db: axisarch)
+PG="postgresql://postgres:postgres@localhost:5432/axisarch"
+
+# 1. Create the eam schema
+psql "$PG" -c "CREATE SCHEMA IF NOT EXISTS eam;"
+
+# 2. Load all table definitions
+psql "$PG" -f docs/SQL/eam_schema_ddl.sql
+
+# 3. Load AVDM seed data (concerns, viewpoints, artifacts, mappings)
+psql "$PG" -f docs/SQL/avdm_schema_seed.sql
 ```
 
 ### Run
@@ -182,7 +202,8 @@ cd frontend && npx playwright test
 | [docs/threat-model.md](docs/threat-model.md) | Security threat model |
 | [docs/design.md](docs/design.md) | Detailed design (Chinese) |
 | [docs/database-schema.md](docs/database-schema.md) | Complete DB schema (98 tables) |
-| [docs/ROADMAP.md](docs/ROADMAP.md) | Development roadmap — aligned with AI Security Architecture Guideline v2.4 |
+| [docs/SQL/eam_schema_ddl.sql](docs/SQL/eam_schema_ddl.sql) | Complete schema DDL — `CREATE TABLE` definitions for all tables |
+| [docs/SQL/avdm_schema_seed.sql](docs/SQL/avdm_schema_seed.sql) | AVDM schema + seed data (concerns, viewpoints, artifacts, mappings) |
 | [docs/authorization.md](docs/authorization.md) | Auth model: RBAC + record-level ownership |
 | [docs/standards/](docs/standards/) | Coding conventions |
 

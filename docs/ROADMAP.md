@@ -1,7 +1,7 @@
 # PAMF — Roadmap
 
 > **Product positioning**: Enterprise Architecture Management & Governance Platform
-> **Aligned with**: *Enterprise AI Security Architecture Guideline v2.4* — OWASP Agentic Top 10, CAEP, Zero Trust, SPIFFE
+> **Grounded in**: industry security practices — OWASP Agentic Top 10, CAEP, Zero Trust, SPIFFE
 
 ---
 
@@ -89,7 +89,7 @@ Manage the technology stack lifecycle, compliance, and standardization.
 Enterprise security governance — architecture-level security controls and risk assessment.
 
 - [x] AI architecture diagram security review (AI check agent)
-- [x] AI security self-assessment against Enterprise AI Security Guideline v2.4
+- [x] AI security self-assessment with adoption-tier × governance-maturity scoring
 - [ ] Threat modeling integration with architecture review
 - [ ] Security control compliance mapping (NIST, ISO 27001, SOC 2)
 - [ ] Vulnerability management for technology stacks
@@ -248,7 +248,7 @@ Platform-level technical infrastructure — identity, access, audit, and system 
 
 *PAMF as the single source of truth for architecture decisions, policies, and their traceability*
 
-PAMF governs architecture at **design-time and review-time** — it defines what architectures should look like and verifies compliance, without runtime enforcement. The AI Security Guideline's identity and policy patterns are adapted as architecture governance capabilities that PAMF provides to organizations.
+PAMF governs architecture at **design-time and review-time** — it defines what architectures should look like and verifies compliance, without runtime enforcement. Established AI security identity and policy patterns are adapted as architecture governance capabilities that PAMF provides to organizations.
 
 - [ ] **Architecture Element Registry** — Single registry for all governed elements: applications, data assets, integration flows, technology stacks, AI agents. Each element carries scenario class, stakeholder type, owner, trust level, and linked architecture decisions.
 - [ ] **Architecture Policy Engine** — Define architecture rules as version-controlled policy code. Example: "All applications handling PII must complete Data Architecture Viewpoint review and produce a Data Flow artifact." Policy compliance evaluated during architecture review.
