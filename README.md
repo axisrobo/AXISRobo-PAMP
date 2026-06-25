@@ -1,4 +1,4 @@
-# AxisArch — Enterprise Architecture Management Platform
+# AxisRobo-PAMP — Enterprise Architecture Management Platform
 
 A modular, extensible platform for enterprise architecture management — EA review workflows, application portfolio management, business capability analysis, architecture decision & design (ADD), PACT concern catalog, viewpoint/artifact mapping, and reporting.
 
