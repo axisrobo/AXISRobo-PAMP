@@ -27,7 +27,7 @@ AxisRobo-PAMP was sparked by the **PAMF series of papers** (PACT, AVDM, AADM, AR
 ```bash
 # Clone
 git clone <repo-url>
-cd axisarch
+cd AXISRobo-PAMP
 
 # Install frontend
 cd frontend && npm install
@@ -217,9 +217,9 @@ cd frontend && npx playwright test
 | [docs/superpowers/plans/2026-06-23-concern-artifact-expand-plan.md](docs/superpowers/plans/2026-06-23-concern-artifact-expand-plan.md) | Concern/Artifact expand implementation plan |
 | [docs/superpowers/plans/2026-06-22-global-optimization.md](docs/superpowers/plans/2026-06-22-global-optimization.md) | Global optimization |
 
-## Citing PAMF
+## Citing AXISRobo-PAMP
 
-If you use PAMF in your research, please cite the following papers:
+If you use AXISRobo-PAMP in your research, please cite the related papers:
 
 **[1]** Han, H. *PACT: A Reference Viewpoint Taxonomy for Software-Intensive Systems*. Preprints 2026, 2026010720. [DOI: 10.20944/preprints202601.0720.v1](https://doi.org/10.20944/preprints202601.0720.v1)
 
@@ -228,6 +228,8 @@ If you use PAMF in your research, please cite the following papers:
 **[3]** Han, H. *AADM: An Architecture Artifact Decision Model for Risk-Aware Documentation Scope*. TechRxiv, 27 January 2026. [DOI: 10.36227/techrxiv.176948904.46258539/v1](https://doi.org/10.36227/techrxiv.176948904.46258539/v1)
 
 **[4]** Han, H. *ARCM: Responsibility Configuration in Multi-View Architecture Descriptions*. TechRxiv, 27 January 2026. [DOI: 10.36227/techrxiv.176948938.83267225/v1](https://doi.org/10.36227/techrxiv.176948938.83267225/v1)
+
+**[5]** Han, H. *AXISRobo-PAMP: An Open-Source Enterprise Architecture Management Platform*. GitHub repository, 2026. [Online]. Available: https://github.com/axisrobo/AXISRobo-PAMP
 
 ## License
 
