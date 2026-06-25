@@ -1,0 +1,16 @@
+schema: spec-driven
+
+context: |
+  Project: AxisArch — Enterprise Architecture Management Platform
+  Frontend: Next.js 16 (React 19, TypeScript, Ant Design v6)
+  Backend: FastAPI (Python 3.12+, asyncpg, raw SQL)
+  Database: PostgreSQL 16 (schema: eam)
+  Auth: Keycloak OIDC (EE) / Dev-mode bypass (OSS)
+  CI: lint, build, pytest, api-tests, playwright
+
+rules:
+  proposal:
+    - Keep proposals under 500 words
+    - Always include a "Non-goals" section
+  tasks:
+    - Break tasks into chunks of max 2 hours

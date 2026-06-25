@@ -1,0 +1,57 @@
+node_modules/
+.next/
+dist/
+
+# Editor swap/temp files
+*.swp
+*.swo
+*~
+*.log
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Build artifacts
+tsc_output.txt
+tsc_errors.log
+build_log.txt
+
+# Environment files - local development only
+.env.local
+.env.development.local
+.env.production.local
+*.db
+*.sqlite
+.DS_Store
+coverage/
+.turbo/
+venv/
+.venv/
+__pycache__/
+*.pyc
+test-results/
+
+# Local assistant/IDE metadata
+.claude/
+.cursor/
+.vscode/
+.idea/
+
+# OpenSpec — proposal/tasks are in changes/, keep specs/ for stable specs
+openspec/changes/
+
+# codex 
+AGENTS.md
+
+#
+docs/codex-collaboration-workflow.md
+paper/
+frontend/src/lib/app-config.ts
+backend/.env
+backend/venv/
+frontend/.env
+frontend/node_modules/
+frontend/.next/
+frontend/test-results/
+.pytest_cache/
+backend/backup/

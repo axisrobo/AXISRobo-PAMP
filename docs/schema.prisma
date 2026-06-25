@@ -1,0 +1,1113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model application_data {
+  id                     String    @id(map: "application_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  app_id                 String    @db.VarChar
+  data_residency_geo     String?   @db.VarChar
+  data_residency_country String?   @db.VarChar
+  data_center            String?   @db.VarChar
+  support                String?   @db.VarChar
+  create_by              String?   @db.VarChar
+  create_at              DateTime? @db.Timestamp(6)
+  update_by              String?   @db.VarChar
+  update_at              DateTime? @db.Timestamp(6)
+}
+
+model application_data_comment {
+  id          String    @id(map: "comment_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  object_type String    @db.VarChar
+  object_id   String    @db.Uuid
+  content     String?   @db.VarChar
+  create_by   String?   @db.VarChar
+  create_at   DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model application_data_entity {
+  id          String    @id(map: "application_data_entity_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  simple_id   String?   @default(dbgenerated("('DE'::text || to_char(nextval('application_data_entity_simple_id_seq'::regclass), 'FM000000'::text))")) @db.VarChar
+  name        String?   @db.VarChar
+  source      String?   @db.VarChar
+  data_volume String?   @db.VarChar
+  memo        String?   @db.VarChar
+  attachment  String?   @db.VarChar
+  create_by   String?   @db.VarChar
+  create_at   DateTime? @default(now()) @db.Timestamp(6)
+  app_id      String    @db.Uuid
+
+  @@index([id])
+}
+
+model application_data_entity_classification {
+  id        String  @id(map: "application_data_entity_classification_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entity_id String? @db.Uuid
+  method    String? @db.VarChar
+  level1    String? @db.Uuid
+  level2    String? @db.Uuid
+  level3    String? @db.Uuid
+  level4    String? @db.Uuid
+}
+
+model application_data_flow {
+  id                         String    @id(map: "dataflow_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_scenarios_l1      String?   @db.VarChar
+  source_data_entity_id      String?   @db.Uuid
+  destination_data_entity_id String?   @db.Uuid
+  remark                     String?   @db.VarChar
+  simple_id                  String?   @default(dbgenerated("('DF'::text || to_char(nextval('dataflow_simple_id_seq'::regclass), 'FM000000'::text))")) @db.VarChar
+  business_scenarios_l2      String?   @db.VarChar
+  create_by                  String?   @db.VarChar
+  create_at                  DateTime? @db.Timestamp(6)
+  update_by                  String?   @db.VarChar
+  update_at                  DateTime? @db.Timestamp(6)
+}
+
+model application_legal_entity {
+  id           String    @id(map: "application_legal_entity_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  app_id       String    @db.Uuid
+  company_code String?   @db.VarChar
+  create_at    DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model application_member {
+  id        String    @id(map: "application_member_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  app_id    String?   @db.VarChar
+  itcode    String?   @db.VarChar
+  create_at DateTime? @db.Timestamp(6)
+
+  @@unique([app_id, itcode], map: "unique_app_itcode")
+}
+
+model bcpf_master_data {
+  id                   BigInt   @id(map: "bcpf_master_data_pk") @default(autoincrement())
+  data_version         String   @db.VarChar(16)
+  bc_id                String   @db.VarChar(32)
+  parent_bc_id         String   @db.VarChar(32)
+  bc_name              String   @db.VarChar(255)
+  bc_name_cn           String?  @default("") @db.VarChar(255)
+  level                Int      @db.SmallInt
+  alias                String?  @default("") @db.VarChar(255)
+  bc_description       String?  @default("")
+  biz_group            String?  @default("") @db.VarChar(32)
+  geo                  String?  @default("") @db.VarChar(32)
+  biz_owner            String?  @default("") @db.VarChar(255)
+  biz_team             String?  @default("") @db.VarChar(255)
+  dt_owner             String?  @default("") @db.VarChar(255)
+  dt_team              String?  @default("") @db.VarChar(128)
+  remark               String?  @default("") @db.VarChar(255)
+  create_time          DateTime @db.Timestamp(6)
+  lv1_domain           String   @default("") @db.VarChar(255)
+  lv2_sub_domain       String?  @default("") @db.VarChar(255)
+  lv3_capability_group String?  @default("") @db.VarChar(255)
+
+  @@index([data_version, lv1_domain, lv2_sub_domain], map: "bcpf_master_data_data_version_idx")
+}
+
+model biz_cap_map {
+  id             String    @id(map: "biz_cap_map_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  app_id         String    @db.VarChar
+  bcpf_master_id BigInt
+  data_version   String?   @db.VarChar(16)
+  bc_id          String?   @db.VarChar(32)
+  create_by      String?   @db.VarChar
+  create_at      DateTime? @db.Timestamp(6)
+  update_by      String?   @db.VarChar
+  update_at      DateTime? @db.Timestamp(6)
+
+  @@unique([app_id, bcpf_master_id], map: "biz_cap_map_appid_bcpfmasterid_uk")
+}
+
+model business_object_sequences {
+  sequence_name String @unique(map: "sequence_name_unique") @db.VarChar(32)
+  current_value BigInt
+}
+
+model certification {
+  id               String    @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  simple_id        String?   @default(dbgenerated("('CN'::text || to_char(nextval('certification_simple_id_seq'::regclass), 'FM000000'::text))")) @db.VarChar
+  itcode           String    @db.VarChar
+  exam_name        String    @db.VarChar
+  certificate_type String    @db.VarChar
+  issue_date       DateTime  @db.Timestamp(6)
+  expiration_date  DateTime? @db.Timestamp(6)
+  comment          String?   @db.VarChar
+  create_by        String?   @db.VarChar
+  create_at        DateTime? @db.Timestamp(6)
+  update_by        String?   @db.VarChar
+  update_at        DateTime? @db.Timestamp(6)
+  user_name        String?   @db.VarChar
+  duration         Decimal   @db.Decimal
+
+  @@id([itcode, exam_name, certificate_type, issue_date, duration], map: "certification_pk")
+}
+
+model company {
+  id             String    @id(map: "vendor_pk_1") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  company_code   String    @db.VarChar
+  company_name   String?   @db.VarChar
+  company_remark String?   @db.VarChar
+  create_by      String?   @db.VarChar
+  create_at      DateTime? @db.Timestamp(6)
+  update_by      String?   @db.VarChar
+  update_at      DateTime? @db.Timestamp(6)
+  s4             String?   @db.VarChar
+  area           String?   @db.VarChar
+  profit_ecc     String?   @db.VarChar
+  profit_s4      String?   @db.VarChar
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model company_250401 {
+  id             String?   @db.VarChar
+  company_code   String?   @db.VarChar
+  company_name   String?   @db.VarChar
+  company_remark String?   @db.VarChar
+  create_by      String?   @db.VarChar
+  create_at      DateTime? @db.Timestamp(6)
+  update_by      String?   @db.VarChar
+  update_at      DateTime? @db.Timestamp(6)
+  s4             String?   @db.VarChar
+  area           String?   @db.VarChar
+  profit_ecc     String?   @db.VarChar
+  profit_s4      String?   @db.VarChar
+
+  @@ignore
+}
+
+model data_center {
+  id        String    @id(map: "data_center_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String?   @db.VarChar
+  create_by String?   @db.VarChar
+  create_at DateTime? @db.Timestamp(6)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model data_center_250401 {
+  id        String?   @db.Uuid
+  name      String?   @db.VarChar
+  create_by String?   @db.VarChar
+  create_at DateTime? @db.Timestamp(6)
+
+  @@ignore
+}
+
+model data_classification {
+  id      String   @id(map: "data_classification_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  method  String?  @db.VarChar
+  code    String?  @db.VarChar
+  name_zh String?  @db.VarChar
+  name_en String?  @db.VarChar
+  parent  String?  @db.Uuid
+  sort    String?  @db.VarChar
+  status  String?  @db.VarChar
+  comment String?  @db.VarChar
+  level   Decimal? @db.Decimal
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model data_classification_250401 {
+  id      String?  @db.Uuid
+  method  String?  @db.VarChar
+  code    String?  @db.VarChar
+  name_zh String?  @db.VarChar
+  name_en String?  @db.VarChar
+  parent  String?  @db.Uuid
+  sort    String?  @db.VarChar
+  status  String?  @db.VarChar
+  comment String?  @db.VarChar
+  level   Decimal? @db.Decimal
+
+  @@ignore
+}
+
+model dict_option {
+  category_id Int
+  option_id   Int
+  option      String?   @db.VarChar
+  lang        String    @db.VarChar
+  description String?   @db.VarChar
+  status      Int?      @default(1)
+  id          String?   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_by  String?   @db.VarChar
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  updated_by  String?   @db.VarChar
+  updated_at  DateTime? @default(now()) @db.Timestamp(6)
+
+  @@id([category_id, option_id, lang], map: "dict_option_pk")
+}
+
+model eam_actions {
+  id                 String    @id(map: "eam_actions_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  project_id         String    @db.VarChar
+  meeting_id         String?   @db.Uuid
+  action_no          BigInt    @default(autoincrement())
+  action_title       String    @db.VarChar
+  priority           String    @db.VarChar
+  due_date           DateTime? @db.Timestamp(6)
+  close_date         DateTime? @db.Timestamp(6)
+  assignee           String[]  @db.VarChar
+  assignee_name      String[]  @db.VarChar
+  action_description String    @db.VarChar
+  status             String    @db.VarChar
+  type               String    @db.VarChar
+  requested_by       String    @db.VarChar
+  requested_by_name  String    @db.VarChar
+  action_updates     String?   @db.VarChar
+  applicable_domain  String    @db.VarChar
+  start_date         DateTime? @db.Timestamp(6)
+  notification_times Int?      @db.SmallInt
+  open_date          DateTime? @db.Timestamp(6)
+  in_validtion_date  DateTime? @db.Timestamp(6)
+  create_at          DateTime? @db.Timestamp(6)
+  create_by          String?   @db.VarChar
+  update_at          DateTime? @db.Timestamp(6)
+  update_by          String?   @db.VarChar
+  request_id         String?   @db.VarChar
+}
+
+model eam_actions_email_log {
+  id         String   @id(map: "eam_actions_email_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  project_id String   @db.VarChar
+  meeting_id String?  @db.Uuid
+  action_id  String   @db.Uuid
+  log_time   DateTime @db.Timestamp(6)
+  from       String   @db.VarChar
+  recipients String[] @db.VarChar
+  subject    String   @db.VarChar
+  status     String   @db.VarChar
+}
+
+model eam_arch_ai_check {
+  total_cost      Decimal?              @db.Decimal
+  check_cost      Decimal?              @db.Decimal
+  request         Json?
+  result          Json?
+  create_at       DateTime?             @db.Timestamp(6)
+  create_by       String?               @db.VarChar
+  id              String                @id(map: "eam_arch_ai_check_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  attachment_uuid String?               @db.Uuid
+  apps            eam_arch_ai_check_app[]
+}
+
+model eam_arch_ai_check_app {
+  id                String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ai_check_id       String                @db.VarChar
+  app_id            String                @db.VarChar
+  app_name          String?               @db.VarChar
+  id_is_standard    Boolean               @default(false)
+  standard_id       String?               @db.VarChar
+  functions         String[]
+  check_app_status  String?               @db.VarChar
+  remark            String?               @db.VarChar
+  status            String?               @db.VarChar
+  status_changed_by String?               @db.VarChar
+  status_changed_at DateTime?             @db.Timestamp(6)
+  type              String?               @db.VarChar
+  create_at         DateTime?             @db.Timestamp(6)
+  create_by         String?               @db.VarChar
+  update_at         DateTime?             @db.Timestamp(6)
+  update_by         String?               @db.VarChar
+  // ai_check_id stores legacy integer IDs (old records) or UUID strings (new records)
+}
+
+model eam_audit_log {
+  id          String    @id(map: "eam_field_change_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  object_type String    @db.VarChar
+  object_id   String    @db.Uuid
+  field       String?   @db.VarChar
+  new_value   String?   @db.VarChar
+  old_value   String?   @db.VarChar
+  create_by   String?   @db.VarChar
+  create_time DateTime? @db.Timestamp(6)
+  project_id  String?   @db.VarChar
+}
+
+model eam_bigea_team_members {
+  worker          String?   @db.VarChar(255)
+  itcode          String    @id(map: "resource_pool_pkey") @db.VarChar(255)
+  worker_type     String?   @db.VarChar(255)
+  name            String?   @db.VarChar(255)
+  email           String?   @db.VarChar(255)
+  country         String?   @db.VarChar(255)
+  location        String?   @db.VarChar(255)
+  primary_skill   String?   @db.VarChar(255)
+  skill_level     String?   @db.VarChar(255)
+  job_role        String?   @db.VarChar(255)
+  rate            Decimal?  @db.Decimal(10, 3)
+  track_focal     String?   @db.VarChar(255)
+  manager_level_1 String?   @db.VarChar(255)
+  manager_level_2 String?   @db.VarChar(255)
+  manager_level_3 String?   @db.VarChar(255)
+  manager_level_4 String?   @db.VarChar(255)
+  manager_level_5 String?   @db.VarChar(255)
+  manager_level_6 String?   @db.VarChar(255)
+  manager_level_7 String?   @db.VarChar(255)
+  manager_level_8 String?   @db.VarChar(255)
+  manager_level_9 String?   @db.VarChar(255)
+  tier_1_org      String?   @db.VarChar(255)
+  tier_2_org      String?   @db.VarChar(255)
+  tier_3_org      String?   @db.VarChar(255)
+  tier_4_org      String?   @db.VarChar(255)
+  tier_5_org      String?   @db.VarChar(255)
+  tier_6_org      String?   @db.VarChar(255)
+  create_time     DateTime? @db.Timestamp(6)
+  create_by       String?   @db.VarChar(255)
+  update_time     DateTime? @db.Timestamp(6)
+  update_by       String?   @db.VarChar(255)
+  manager_itcode  String?   @db.VarChar
+  manager_name    String?   @db.VarChar
+  email_option    Boolean?  @default(true)
+  ea_admin_status Boolean?  @default(false)
+}
+
+model eam_ea_calendar {
+  id                 String   @id(map: "eam_ea_calendar_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  project_id         String?  @db.VarChar
+  schedule_no        BigInt   @default(autoincrement())
+  schedule_title     String?  @db.VarChar
+  start_time         DateTime @db.Timestamp(6)
+  end_time           DateTime @db.Timestamp(6)
+  duration           Int?     @db.SmallInt
+  recurrence_pattern String?  @db.VarChar
+  end_after          Int?
+  owner              String[] @db.VarChar
+  remark             String?  @db.VarChar
+  status             String?  @db.VarChar
+  for_project        String?  @db.VarChar
+  for_meeting        String?  @db.VarChar
+}
+
+model eam_meeting_deck {
+  id         String  @id(map: "eam_meeting_deck_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  meeting_id String? @db.VarChar
+  deck_name  String? @db.VarChar
+  deck_url   String? @db.VarChar
+}
+
+model eam_meeting_minutes {
+  id                     BigInt   @id(map: "eam_meeting_minutes_pk") @default(autoincrement())
+  project_id             String   @db.VarChar
+  project_name           String   @db.VarChar
+  project_leader         String   @db.VarChar
+  project_objectives     String
+  meeting_title          String   @db.VarChar
+  review_date            DateTime @db.Timestamp(6)
+  presenter              String[] @db.VarChar
+  attendees              String[] @db.VarChar
+  meeting_agenda         String
+  key_agreement_findings String
+  review_decks           String[] @db.VarChar
+  review_recording       String[] @db.VarChar
+}
+
+model eam_meetings {
+  id                     String    @id(map: "eam_meetings_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  meeting_no             BigInt?   @default(autoincrement())
+  project_id             String    @db.VarChar
+  project_objectives     String?
+  meeting_title          String    @db.VarChar
+  available_ea_schedule  String?   @db.VarChar
+  start_time             DateTime  @db.Timestamp(6)
+  end_time               DateTime  @db.Timestamp(6)
+  presenter              String[]  @db.VarChar
+  attendees              String[]  @db.VarChar
+  location               String?   @db.VarChar
+  meeting_agenda         String
+  key_agreement_findings String?
+  review_decks           String[]  @db.VarChar
+  review_recording       String[]  @db.VarChar
+  status                 String    @db.VarChar
+  calendar_id            String?   @db.VarChar
+  status_remark          String?   @db.VarChar
+  ea_review_result       String?   @db.VarChar
+  ea_review_remark       String?   @db.VarChar
+  email_cc               String[]  @db.VarChar
+  create_by              String?   @db.VarChar
+  update_by              String?   @db.VarChar
+  create_at              DateTime? @db.Timestamp(6)
+  update_at              DateTime? @db.Timestamp(6)
+  request_id             String?   @db.VarChar
+}
+
+model eam_meetings_email_log {
+  id         String   @id(map: "eam_meetings_email_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  project_id String   @db.VarChar
+  meeting_id String   @db.Uuid
+  log_time   DateTime @db.Timestamp(6)
+  from       String   @db.VarChar
+  recipients String[] @db.VarChar
+  subject    String   @db.VarChar
+  status     String   @db.VarChar
+}
+
+model eam_project_summary {
+  id                  String   @id(map: "project_summary_pk") @db.Uuid
+  project_id          String   @db.VarChar
+  business_owner1     String?  @db.VarChar
+  business_owner2     String?  @db.VarChar
+  cost                String?  @db.VarChar
+  schedule            String?  @db.VarChar
+  function_summary    String?  @db.VarChar
+  benefit             String?  @db.VarChar
+  paint_point         String?  @db.VarChar
+  application_list    String[] @db.VarChar
+  architect_summary   String?  @db.VarChar
+  ea_status           String?  @db.VarChar
+  status_remark       String?  @db.VarChar
+  attachments         String[] @db.VarChar
+  ea_review_submitter String?  @db.VarChar
+  comments_app        String?  @db.VarChar
+  ea_review_type      String?  @db.VarChar
+  domain_ea_reviewer  String?  @db.VarChar
+}
+
+model eam_request {
+  id                String    @id(map: "eam_request_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  request_id        String    @db.VarChar
+  project_id        String    @db.VarChar
+  review_scope      String?   @db.VarChar
+  ws_phase_name     String?   @db.VarChar
+  requester         String?   @db.VarChar
+  status            String    @db.VarChar
+  status_remark     String?   @db.VarChar
+  status_changed_by String?   @db.VarChar
+  status_changed_at DateTime? @db.Timestamp(6)
+  link              String?   @db.VarChar
+  create_at         DateTime? @db.Timestamp(6)
+  create_by         String?   @db.VarChar
+  update_at         DateTime? @db.Timestamp(6)
+  update_by         String?   @db.VarChar
+  assign_reviewer   String[]  @db.VarChar
+  review_result     String?   @db.VarChar
+  process_id        String?   @db.VarChar
+  organization      String?   @db.VarChar
+  request_desc      String?   @db.VarChar
+}
+
+model eam_request_attachment {
+  request_id      String    @db.VarChar
+  attachment_name String?   @db.VarChar
+  create_at       DateTime? @db.Timestamp(6)
+  create_by       String?   @db.VarChar
+  id              String    @id(map: "eam_request_attachment_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  biz_type        String?   @db.VarChar
+  app_arch_type   String?   @db.VarChar
+
+  @@unique([request_id, attachment_name, biz_type], map: "request_id_attachment_name_biz_type_uniq")
+}
+
+model eam_request_process_log {
+  request_id String?   @db.VarChar
+  action     String?   @db.VarChar
+  comment    String?   @db.VarChar
+  operator   String?   @db.VarChar
+  create_at  DateTime? @db.Timestamp(6)
+  id         String    @id(map: "eam_reqeust_process_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+}
+
+model eam_review_log {
+  id         String    @id(map: "sys_log_pk_1") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  comment    String?   @db.VarChar
+  create_at  DateTime? @default(now()) @db.Timestamp(6)
+  operator   String?   @db.VarChar
+  operation  String?   @db.VarChar
+  project_id String?   @db.VarChar
+}
+
+model eam_scope_check_list {
+  id           String   @id(map: "eam_scope_check_list_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  checklist_no Int      @db.SmallInt
+  project_id   String   @db.VarChar
+  category     String   @db.VarChar
+  questions    String?  @db.VarChar
+  answer       String?  @db.VarChar
+  option       String?  @db.VarChar
+  comment      String?  @db.VarChar
+  link         String[] @db.VarChar
+  sub_category String?  @db.VarChar
+
+  @@unique([project_id, checklist_no], map: "project_id_checklist_no_uniq")
+}
+
+model eam_scope_check_list_template {
+  checklist_no     Int      @db.SmallInt
+  category         String   @db.VarChar
+  questions        String?  @db.VarChar
+  answer           String?  @db.VarChar
+  option           String?  @db.VarChar
+  comment          String?  @db.VarChar
+  link             String[] @db.VarChar
+  id               String   @id(map: "eam_scope_check_list_template_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sub_category     String?  @db.VarChar
+  answer_type      String?  @db.VarChar
+  selection_type   String?  @db.VarChar
+  selection_option String[] @db.VarChar
+}
+
+model eam_scope_of_change {
+  id                    String @id(map: "eam_scope_of_change_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  project_id            String @db.VarChar
+  scope_no              BigInt @default(autoincrement())
+  title                 String @db.VarChar
+  description           String @db.VarChar
+  create_using_template String @db.VarChar
+  sample                String @db.VarChar
+
+  @@unique([project_id, scope_no], map: "project_id_scope_no_uniq")
+}
+
+model eam_scope_of_change_pages {
+  id                 String  @id(map: "eam_scope_of_change_pages_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  scope_of_change_id String  @db.Uuid
+  name               String? @db.VarChar
+  description        String? @db.VarChar
+  diagram            String?
+}
+
+model eam_scope_of_change_template {
+  id                    String @id(map: "eam_scope_of_change_template_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  scope_no              BigInt
+  title                 String @db.VarChar
+  description           String @db.VarChar
+  create_using_template String @db.VarChar
+  sample                String @db.VarChar
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model fiscal_year_sequences {
+  sequence_name String  @db.VarChar(32)
+  fiscal_year   String? @db.VarChar(16)
+  current_value BigInt
+
+  @@unique([sequence_name, fiscal_year], map: "sequence_simple_id_unique")
+  @@ignore
+}
+
+model help_file {
+  id        String    @id(map: "help_file_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  usage     String    @db.VarChar
+  file_name String?   @db.VarChar
+  file_path String?   @db.VarChar
+  create_by String?   @db.VarChar
+  create_at DateTime? @db.Timestamp(6)
+  update_by String?   @db.VarChar
+  update_at DateTime? @db.Timestamp(6)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model origin_mspo_history_tmp {
+  projectname    String?
+  projectno      String?
+  platformcode   String?
+  pmtype         String?
+  pm             String?
+  btlead         String?
+  startdt        String?
+  approvaldt     String?
+  golivedt       String?
+  ppsexitdt      String?
+  eaapprovaldt   String?
+  description    String?
+  businessunit   String?
+  status         String?
+  wtgbtr         String?
+  waers          String?
+  eastatus       String?
+  itleadcode     String?
+  itleadname     String?
+  lastgolivedate String?
+  intlabor       String?
+  extlabor       String?
+  pmname         String?
+  btleadname     String?
+  create_at      DateTime? @db.Timestamp(6)
+
+  @@ignore
+}
+
+model process_role {
+  node_name      String? @db.VarChar
+  pre_status     String? @db.VarChar
+  role           String? @db.VarChar
+  process_id     String? @db.VarChar
+  description    String? @db.VarChar
+  order_no       Int?
+  reminder_cycle Int?
+  id             String  @id(map: "process_role_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+}
+
+model project {
+  id                 String    @id(map: "project_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  project_id         String    @unique(map: "project_unique") @default(dbgenerated("concat('FY', ((date_part('year'::text, (now() - '3 mons'::interval month)))::integer % 100), (((date_part('year'::text, (now() - '3 mons'::interval month)))::integer % 100) + 1), '-', btrim(to_char(nextval('project_id_no_seq'::regclass), '000'::text)))")) @db.VarChar
+  project_name       String?   @db.VarChar
+  type               String?   @db.VarChar
+  start_date         String?   @db.VarChar
+  go_live_date       String?   @db.VarChar
+  pps_exit_date      String?   @db.VarChar
+  end_date           String?   @db.VarChar
+  pm                 String?   @db.VarChar
+  pm_itcode          String?   @db.VarChar
+  dt_lead            String?   @db.VarChar
+  dt_lead_itcode     String?   @db.VarChar
+  it_lead            String?   @db.VarChar
+  it_lead_itcode     String?   @db.VarChar
+  duration           Decimal?  @db.Decimal
+  objectives         String?   @db.VarChar
+  investment_cost    Decimal?  @db.Decimal
+  yearly_ma_cost     Decimal?  @db.Decimal
+  currency           String?   @db.VarChar
+  expected_man_days  Decimal?  @db.Decimal
+  status             String?   @db.VarChar
+  comment            String?   @db.VarChar
+  create_by          String?   @db.VarChar
+  create_at          DateTime? @default(now()) @db.Timestamp(6)
+  update_by          String?   @db.VarChar
+  update_at          DateTime? @db.Timestamp(6)
+  ea_review_type     String?   @db.VarChar
+  domain_ea_reviewer String?   @db.VarChar
+  favourite          String?   @default("false") @db.VarChar
+  overall_status     String?   @db.VarChar
+  approved_time      String?   @db.VarChar
+  source             String?   @db.VarChar
+  ea_approval_dt     String?   @db.VarChar
+  ai_related         String?   @db.VarChar
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model project_250620 {
+  id                 String?   @db.VarChar
+  project_id         String?   @db.VarChar
+  project_name       String?   @db.VarChar
+  type               String?   @db.VarChar
+  start_date         String?   @db.VarChar
+  go_live_date       String?   @db.VarChar
+  pps_exit_date      String?   @db.VarChar
+  end_date           String?   @db.VarChar
+  pm                 String?   @db.VarChar
+  pm_itcode          String?   @db.VarChar
+  dt_lead            String?   @db.VarChar
+  dt_lead_itcode     String?   @db.VarChar
+  it_lead            String?   @db.VarChar
+  it_lead_itcode     String?   @db.VarChar
+  duration           Decimal?  @db.Decimal
+  objectives         String?   @db.VarChar
+  investment_cost    Decimal?  @db.Decimal
+  yearly_ma_cost     Decimal?  @db.Decimal
+  currency           String?   @db.VarChar
+  expected_man_days  Decimal?  @db.Decimal
+  status             String?   @db.VarChar
+  comment            String?   @db.VarChar
+  create_by          String?   @db.VarChar
+  create_at          DateTime? @db.Timestamp(6)
+  update_by          String?   @db.VarChar
+  update_at          DateTime? @db.Timestamp(6)
+  ea_review_type     String?   @db.VarChar
+  domain_ea_reviewer String?   @db.VarChar
+  favourite          String?   @db.VarChar
+  overall_status     String?   @db.VarChar
+  approved_time      String?   @db.VarChar
+  source             String?   @db.VarChar
+  ea_approval_dt     String?   @db.VarChar
+  ai_related         String?   @db.VarChar
+
+  @@ignore
+}
+
+model project_app {
+  id                  String    @id(map: "app_item_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  project_id          String?   @db.VarChar
+  app_id              String    @db.VarChar
+  app_name            String?   @db.VarChar
+  app_full_name       String?   @db.VarChar
+  app_it_owner        String?   @db.VarChar
+  current_state       String?   @db.VarChar
+  app_tech_id_in_cmdb String?   @db.VarChar
+  app_description     String?   @db.VarChar
+  business_function   String?   @db.VarChar
+  app_ownership       String?   @db.VarChar
+  app_solution_owner  String?   @db.VarChar
+  portfolio_mgt       String?   @db.VarChar
+  app_solution_type   String?   @db.VarChar
+  app_classification  String?   @db.VarChar
+  create_by           String?   @db.VarChar
+  create_at           DateTime? @db.Timestamp(6)
+  update_by           String?   @db.VarChar
+  update_at           DateTime? @db.Timestamp(6)
+}
+
+model project_backup {
+  id                 String    @id(map: "project_pk_2") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  project_id         String    @db.VarChar
+  project_name       String?   @db.VarChar
+  type               String?   @db.VarChar
+  start_date         String?   @db.VarChar
+  go_live_date       String?   @db.VarChar
+  pps_exit_date      String?   @db.VarChar
+  end_date           String?   @db.VarChar
+  pm                 String?   @db.VarChar
+  pm_itcode          String?   @db.VarChar
+  dt_lead            String?   @db.VarChar
+  dt_lead_itcode     String?   @db.VarChar
+  it_lead            String?   @db.VarChar
+  it_lead_itcode     String?   @db.VarChar
+  duration           Decimal?  @db.Decimal
+  objectives         String?   @db.VarChar
+  investment_cost    Decimal?  @db.Decimal
+  yearly_ma_cost     Decimal?  @db.Decimal
+  currency           String?   @db.VarChar
+  expected_man_days  Decimal?  @db.Decimal
+  status             String?   @db.VarChar
+  comment            String?   @db.VarChar
+  create_by          String?   @db.VarChar
+  create_at          DateTime? @db.Timestamp(6)
+  update_by          String?   @db.VarChar
+  update_at          DateTime? @db.Timestamp(6)
+  ea_review_type     String?   @db.VarChar
+  domain_ea_reviewer String?   @db.VarChar
+  favourite          String?   @default("false") @db.VarChar
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model project_ea_status_log {
+  project_id         String?   @db.VarChar
+  ea_status          String?   @db.VarChar
+  approved_time      String?   @db.VarChar
+  create_at          DateTime  @default(now()) @db.Timestamptz(2)
+  status_change_date DateTime? @db.Date
+
+  @@ignore
+}
+
+model project_task {
+  id              String    @id(map: "project_task_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  project_id      String    @db.VarChar
+  project_name    String?   @db.VarChar
+  task_name       String?   @db.VarChar
+  create_by       String?   @db.VarChar
+  create_at       DateTime? @db.Timestamp(6)
+  update_by       String?   @db.VarChar
+  update_at       DateTime? @db.Timestamp(6)
+  assignee        String?   @db.VarChar
+  approval_status String?   @db.VarChar
+  task_status     String?   @db.VarChar
+  approval_date   String?   @db.VarChar
+  comment         String?   @db.VarChar
+  description     String?   @db.VarChar
+}
+
+model project_team_members {
+  id             String    @id(map: "project_team_members_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  project_id     String?   @db.VarChar
+  itcode         String    @db.VarChar
+  name           String?   @db.VarChar
+  worker_type    String?   @db.VarChar
+  manager_itcode String?   @db.VarChar
+  create_by      String?   @db.VarChar
+  create_at      DateTime? @db.Timestamp(6)
+  update_by      String?   @db.VarChar
+  update_at      DateTime? @db.Timestamp(6)
+
+  @@unique([project_id, itcode], map: "unique_project_itcode")
+}
+
+model resource_pool {
+  worker          String?   @db.VarChar(255)
+  itcode          String    @id(map: "resource_pool_pk") @db.VarChar(255)
+  worker_type     String?   @db.VarChar(255)
+  name            String?   @db.VarChar(255)
+  email           String?   @db.VarChar(255)
+  country         String?   @db.VarChar(255)
+  location        String?   @db.VarChar(255)
+  primary_skill   String?   @db.VarChar(255)
+  skill_level     String?   @db.VarChar(255)
+  job_role        String?   @db.VarChar(255)
+  rate            Decimal?  @db.Decimal(10, 3)
+  track_focal     String?   @db.VarChar(255)
+  manager_level_1 String?   @db.VarChar(255)
+  manager_level_2 String?   @db.VarChar(255)
+  manager_level_3 String?   @db.VarChar(255)
+  manager_level_4 String?   @db.VarChar(255)
+  manager_level_5 String?   @db.VarChar(255)
+  manager_level_6 String?   @db.VarChar(255)
+  manager_level_7 String?   @db.VarChar(255)
+  manager_level_8 String?   @db.VarChar(255)
+  manager_level_9 String?   @db.VarChar(255)
+  tier_1_org      String?   @db.VarChar(255)
+  tier_2_org      String?   @db.VarChar(255)
+  tier_3_org      String?   @db.VarChar(255)
+  tier_4_org      String?   @db.VarChar(255)
+  tier_5_org      String?   @db.VarChar(255)
+  tier_6_org      String?   @db.VarChar(255)
+  create_time     DateTime? @default(now()) @db.Timestamp(6)
+  create_by       String?   @db.VarChar(255)
+  update_time     DateTime? @default(now()) @db.Timestamp(6)
+  update_by       String?   @db.VarChar(255)
+  manager_itcode  String?   @db.VarChar
+  manager_name    String?   @db.VarChar
+  email_option    Boolean?
+}
+
+model resource_pool_extend {
+  worker          String?   @db.VarChar(255)
+  itcode          String    @id(map: "resource_pool_pkey_1_1") @db.VarChar(255)
+  worker_type     String?   @db.VarChar(255)
+  name            String?   @db.VarChar(255)
+  email           String?   @db.VarChar(255)
+  country         String?   @db.VarChar(255)
+  location        String?   @db.VarChar(255)
+  primary_skill   String?   @db.VarChar(255)
+  skill_level     String?   @db.VarChar(255)
+  job_role        String?   @db.VarChar(255)
+  rate            Decimal?  @db.Decimal(10, 3)
+  track_focal     String?   @db.VarChar(255)
+  manager_level_1 String?   @db.VarChar(255)
+  manager_level_2 String?   @db.VarChar(255)
+  manager_level_3 String?   @db.VarChar(255)
+  manager_level_4 String?   @db.VarChar(255)
+  manager_level_5 String?   @db.VarChar(255)
+  manager_level_6 String?   @db.VarChar(255)
+  manager_level_7 String?   @db.VarChar(255)
+  manager_level_8 String?   @db.VarChar(255)
+  manager_level_9 String?   @db.VarChar(255)
+  tier_1_org      String?   @db.VarChar(255)
+  tier_2_org      String?   @db.VarChar(255)
+  tier_3_org      String?   @db.VarChar(255)
+  tier_4_org      String?   @db.VarChar(255)
+  tier_5_org      String?   @db.VarChar(255)
+  tier_6_org      String?   @db.VarChar(255)
+  create_time     DateTime? @default(now()) @db.Timestamp(6)
+  create_by       String?   @db.VarChar(255)
+  update_time     DateTime? @db.Timestamp(6)
+  update_by       String?   @db.VarChar(255)
+  manager_itcode  String?   @db.VarChar
+  manager_name    String?   @db.VarChar
+  email_option    Boolean?
+}
+
+model sys_log {
+  id          String    @id(map: "sys_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  log_content Json?     @db.Json
+  create_at   DateTime? @db.Timestamp(6)
+  user        String?   @db.VarChar
+  action      String?   @db.VarChar
+  object      String?   @db.VarChar
+}
+
+model tech_key_stack_auto_checking_log {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  update_time      DateTime @db.Timestamp(6)
+  last_update_time DateTime @db.Timestamp(6)
+  old_content      Json?
+  new_content      Json?
+  app_id           String?  @db.VarChar(255)
+  create_by        String   @db.VarChar(255)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tech_key_stack_item {
+  id                         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  stack_id                   String    @default(dbgenerated("lpad((nextval('tech_key_stack_item_seq'::regclass))::text, 7, '0'::text)")) @db.VarChar
+  app_id                     String    @db.VarChar
+  category                   String    @db.VarChar
+  component                  String    @db.VarChar
+  use_status                 String?   @db.VarChar
+  sub_category               String    @db.VarChar
+  major_version              Int
+  minor_version              Int
+  patch_version              String?   @db.VarChar
+  eol_date                   DateTime? @db.Date
+  eol_interval_time          String?   @db.VarChar
+  maintainability_risk_level String?   @db.VarChar
+  maintainability_risk_light String?   @db.VarChar
+  standard                   String?   @db.VarChar
+  status_comments            String?   @db.VarChar
+  remark                     String?   @db.VarChar
+  create_by                  String?   @db.VarChar
+  create_at                  DateTime? @db.Timestamp(6)
+  update_by                  String?   @db.VarChar
+  update_at                  DateTime? @db.Timestamp(6)
+  component_package          String    @db.VarChar
+  ea_advice                  String?   @db.VarChar
+  security_advice            String?   @db.VarChar
+  security_risk_level        String?   @db.VarChar
+  security_risk_light        String?   @db.VarChar
+  master_no                  Int?
+  cvss_v3_score              Decimal?  @db.Decimal
+}
+
+model tech_stack_app {
+  id        String    @id(map: "tech_stack_app_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  app_id    String    @unique(map: "unique_app_id") @db.VarChar
+  status    String?   @db.VarChar
+  create_by String?   @db.VarChar
+  create_at DateTime? @db.Timestamp(6)
+  update_by String?   @db.VarChar
+  update_at DateTime? @db.Timestamp(6)
+}
+
+model tech_stack_component {
+  id                String    @id(map: "tech_stack_component_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  stack_id          String?   @default(dbgenerated("lpad((nextval('tech_stack_component_seq'::regclass))::text, 6, '0'::text)")) @db.VarChar
+  dependency_id     String    @db.Uuid
+  remark            String?   @db.VarChar
+  category          String?   @db.VarChar
+  group_id          String?   @db.VarChar
+  component_package String    @db.VarChar
+  version           String    @db.VarChar
+  specifier         String?   @db.VarChar
+  type              String?   @db.VarChar
+  scope             String?   @db.VarChar
+  source            String?   @db.VarChar
+  inherited         Boolean?
+  status            String?   @db.VarChar
+  create_by         String?   @db.VarChar
+  create_at         DateTime? @db.Timestamp(6)
+  update_by         String?   @db.VarChar
+  update_at         DateTime? @db.Timestamp(6)
+
+  @@unique([dependency_id, component_package, version], map: "dependency_component_version")
+}
+
+model tech_stack_dependency {
+  id             String    @id(map: "tech_stack_dependency_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  app_id         String    @db.VarChar
+  devops_link    String    @db.VarChar
+  devops_project String    @db.VarChar
+  pipline_name   String    @db.VarChar
+  package_type   String    @db.VarChar
+  remark         String?   @db.VarChar
+  status         String?   @db.VarChar
+  create_by      String?   @db.VarChar
+  create_at      DateTime? @db.Timestamp(6)
+  update_by      String?   @db.VarChar
+  update_at      DateTime? @db.Timestamp(6)
+}
+
+model tech_stack_dependency_file {
+  id            String    @id(map: "tech_stack_dependency_files_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  app_id        String    @db.VarChar
+  dependency_id String    @db.Uuid
+  file_name     String    @db.VarChar
+  file_size     Int?
+  file_content  String
+  mime_type     String?   @db.VarChar
+  create_by     String?   @db.VarChar
+  create_at     DateTime? @db.Timestamp(6)
+}
+
+model tech_stack_master_data {
+  id                     String    @id(map: "tech_stack_master_data_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  master_no              Int
+  category               String    @db.VarChar
+  source_type            String?   @db.VarChar
+  source                 String?   @db.VarChar
+  component              String    @db.VarChar
+  component_package      String    @db.VarChar
+  version                String    @db.VarChar
+  ea_advice              String    @db.VarChar
+  remark                 String?   @db.VarChar
+  initial_release_date   DateTime? @db.Date
+  final_release_date     DateTime? @db.Date
+  security_vulnerability String?   @db.VarChar
+  security_serverity     String?   @db.VarChar
+  cvss_v3_score          Decimal?  @db.Decimal
+  status                 String?   @db.VarChar
+  create_by              String?   @db.VarChar
+  create_at              DateTime? @db.Timestamp(6)
+  update_by              String?   @db.VarChar
+  update_at              DateTime? @db.Timestamp(6)
+  eol_link               String?   @db.VarChar
+  sub_category           String?   @db.VarChar
+  standard               String?   @db.VarChar
+  major_version          Int?
+  minor_version          Int?
+  patch_version          String?   @db.VarChar
+  eol_date               DateTime? @db.Date
+  security_advice        String?   @db.VarChar
+  vulnerability_link     String?   @db.VarChar
+  restricted             String?   @db.VarChar
+
+  @@unique([component, component_package, version], map: "tech_stack_master_component_version")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model tmp_ai_project {
+  project_id         String? @db.VarChar(50)
+  project_name       String? @db.VarChar(64)
+  Is_AI_Related      String? @map("Is AI Related") @db.VarChar(50)
+  EA_Review_Result   String? @map("EA Review Result") @db.VarChar(50)
+  Latest_Review_Time String? @map("Latest Review Time") @db.VarChar(50)
+
+  @@ignore
+}
+
+model tmp_project {
+  id                 String    @id(map: "project_pk_1") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  project_id         String    @db.VarChar
+  project_name       String?   @db.VarChar
+  type               String?   @db.VarChar
+  start_date         String?   @db.VarChar
+  go_live_date       String?   @db.VarChar
+  pps_exit_date      String?   @db.VarChar
+  end_date           String?   @db.VarChar
+  pm                 String?   @db.VarChar
+  pm_itcode          String?   @db.VarChar
+  dt_lead            String?   @db.VarChar
+  dt_lead_itcode     String?   @db.VarChar
+  it_lead            String?   @db.VarChar
+  it_lead_itcode     String?   @db.VarChar
+  duration           Decimal?  @db.Decimal
+  objectives         String?   @db.VarChar
+  investment_cost    Decimal?  @db.Decimal
+  yearly_ma_cost     Decimal?  @db.Decimal
+  currency           String?   @db.VarChar
+  expected_man_days  Decimal?  @db.Decimal
+  status             String?   @db.VarChar
+  comment            String?   @db.VarChar
+  create_by          String?   @db.VarChar
+  create_at          DateTime? @db.Timestamp(6)
+  update_by          String?   @db.VarChar
+  update_at          DateTime? @db.Timestamp(6)
+  ea_review_type     String?   @db.VarChar
+  domain_ea_reviewer String?   @db.VarChar
+  favourite          String?   @default("false") @db.VarChar
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model towers {
+  id           String    @db.VarChar
+  tower_no     String?   @db.VarChar
+  tower_name   String?   @db.VarChar
+  tower_remark String?   @db.VarChar
+  itcode       String?   @db.VarChar
+  focal_name   String?   @db.VarChar
+  role         String?   @db.VarChar
+  create_by    String?   @db.VarChar
+  create_at    DateTime? @db.Timestamp(6)
+  update_by    String?   @db.VarChar
+  update_at    DateTime? @db.Timestamp(6)
+
+  @@ignore
+}
+
+model user_profile {
+  itcode         String    @id(map: "user_profile_pk") @db.VarChar
+  name           String?   @db.VarChar
+  email          String?   @db.VarChar
+  country        String?   @db.VarChar
+  manager_itcode String?   @db.VarChar
+  manager_name   String?   @db.VarChar
+  tier_1_org     String?   @db.VarChar(255)
+  tier_2_org     String?   @db.VarChar(255)
+  tier_3_org     String?   @db.VarChar(255)
+  tier_4_org     String?   @db.VarChar(255)
+  tier_5_org     String?   @db.VarChar(255)
+  tier_6_org     String?   @db.VarChar(255)
+  create_time    DateTime? @default(now()) @db.Timestamp(6)
+}
