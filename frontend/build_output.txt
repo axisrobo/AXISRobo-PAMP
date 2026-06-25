@@ -1,0 +1,74 @@
+
+> eam-frontend@1.0.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of d:\project\eam-rebuid\Simple-eam\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * d:\project\eam-rebuid\Simple-eam\frontend\package-lock.json
+
+▲ Next.js 16.2.4 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 2 errors:
+./frontend/src/modules/application_management/components/bc-visualization/AppDashboard.tsx:6:1
+Module not found: Can't resolve '../ui/MultiSelect'
+  [90m4 |[0m [36mimport[0m [36mtype[0m { [33mApplication[0m, [33mCapNode[0m } [36mfrom[0m [32m'./types'[0m;
+  [90m5 |[0m [36mimport[0m { getDomainPalette } [36mfrom[0m [32m'./constants'[0m;
+[31m[1m>[0m [90m6 |[0m [36mimport[0m { [33mMultiSelect[0m } [36mfrom[0m [32m'../ui/MultiSelect'[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m7 |[0m
+  [90m8 |[0m [36minterface[0m [33mAppDashboardProps[0m {
+  [90m9 |[0m   applications: [33mReadonlyArray[0m<[33mApplication[0m>;
+
+
+
+Import traces:
+  Client Component Browser:
+    ./frontend/src/modules/application_management/components/bc-visualization/AppDashboard.tsx [Client Component Browser]
+    ./frontend/src/app/(application_management)/app-management/bc-visualization/page.tsx [Client Component Browser]
+    ./frontend/src/app/(application_management)/app-management/bc-visualization/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./frontend/src/modules/application_management/components/bc-visualization/AppDashboard.tsx [Client Component SSR]
+    ./frontend/src/app/(application_management)/app-management/bc-visualization/page.tsx [Client Component SSR]
+    ./frontend/src/app/(application_management)/app-management/bc-visualization/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./frontend/src/modules/application_management/components/bc-visualization/CapabilityDashboard.tsx:5:1
+Module not found: Can't resolve '../ui/MultiSelect'
+  [90m3 |[0m [36mimport[0m { useMemo, useState } [36mfrom[0m [32m'react'[0m;
+  [90m4 |[0m [36mimport[0m [36mtype[0m { [33mCapNode[0m, [33mApplication[0m } [36mfrom[0m [32m'./types'[0m;
+[31m[1m>[0m [90m5 |[0m [36mimport[0m { [33mMultiSelect[0m } [36mfrom[0m [32m'../ui/MultiSelect'[0m;
+  [90m  |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m6 |[0m
+  [90m7 |[0m [90m/* ── colour / style maps ── */[0m
+  [90m8 |[0m
+
+
+
+Import traces:
+  Client Component Browser:
+    ./frontend/src/modules/application_management/components/bc-visualization/CapabilityDashboard.tsx [Client Component Browser]
+    ./frontend/src/app/(application_management)/app-management/bc-visualization/page.tsx [Client Component Browser]
+    ./frontend/src/app/(application_management)/app-management/bc-visualization/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./frontend/src/modules/application_management/components/bc-visualization/CapabilityDashboard.tsx [Client Component SSR]
+    ./frontend/src/app/(application_management)/app-management/bc-visualization/page.tsx [Client Component SSR]
+    ./frontend/src/app/(application_management)/app-management/bc-visualization/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (./frontend/src/modules/application_management/components/bc-visualization/AppDashboard.tsx:6:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./frontend/src/modules/application_management/components/bc-visualization/CapabilityDashboard.tsx:5:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)

@@ -1,0 +1,49 @@
+# AxisArch Docker Deployment
+
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: axisarch
+      POSTGRES_USER: axisarch
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-axisarch_dev}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U axisarch"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://axisarch:${DB_PASSWORD:-axisarch_dev}@db:5432/axisarch
+      DB_SCHEMA: eam
+      AUTH_DISABLED: "true"
+      ENABLED_MODULES: add,architecture_review,application_management,data_management,project_management,technology_stack_management
+      PORT: "4000"
+      HOST: "0.0.0.0"
+      LOG_LEVEL: INFO
+      CORS_ALLOWED_ORIGINS: '["http://localhost:3000"]'
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+
+  frontend:
+    build: ./frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4000/api
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:

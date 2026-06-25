@@ -1,0 +1,1 @@
+export { AttachmentsSection } from '../../components/ea-review/request-detail/AttachmentsSection';

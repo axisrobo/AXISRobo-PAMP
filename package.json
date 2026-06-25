@@ -1,0 +1,23 @@
+{
+  "name": "axisarch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AxisArch — Enterprise Architecture Management Platform",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "preinstall": "node -e \"console.error('Do not run npm install at repo root. Please run: cd frontend && npm install'); process.exit(1)\"",
+    "dev": "bash scripts/dev.sh",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "./backend/venv/bin/python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 4000 --app-dir backend",
+    "build": "npm run build:frontend",
+    "build:frontend": "cd frontend && npm run build"
+  },
+  "packageManager": "npm@10",
+  "dependencies": {
+    "playwright": "^1.59.1",
+    "vitest": "^4.1.4"
+  }
+}
