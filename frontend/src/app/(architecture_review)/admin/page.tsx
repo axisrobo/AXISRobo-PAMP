@@ -17,7 +17,7 @@ const adminItems = [
   },
   {
     title: 'Questionnaire & Concern Mapping',
-    description: 'Maintain answer-to-concern mappings, combination rules, and additive concern risk scores.',
+    description: 'Maintain answer-to-concern mappings, activation rules (single-signal and combination), and additive concern risk scores.',
     href: '/concern-mapping-config',
     icon: GitBranch,
     action: 'Tune Mapping',

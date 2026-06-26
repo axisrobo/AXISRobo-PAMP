@@ -466,7 +466,7 @@ export default function ConcernMappingConfigPage() {
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <Typography.Title level={4} style={{ marginBottom: 4 }}>Questionnaire & Concern Mapping</Typography.Title>
-            <Typography.Text type="secondary">Maintain answer mappings and combination rules with additive PACT concern risk scores.</Typography.Text>
+            <Typography.Text type="secondary">Maintain answer mappings and activation rules (single-signal and combination) with additive PACT concern risk scores.</Typography.Text>
           </div>
           <Space wrap>
             <Button icon={<RefreshCw className="h-4 w-4" />} onClick={() => refetch()} loading={isLoading}>Refresh</Button>
@@ -503,7 +503,7 @@ export default function ConcernMappingConfigPage() {
             },
             {
               key: 'rules',
-              label: `Combination Rules (${config.concernActivationRules.length})`,
+              label: `Activation Rules (${config.concernActivationRules.length})`,
               children: (
                 <Space orientation="vertical" size={12} style={{ width: '100%' }}>
                   <Button type="primary" icon={<Plus className="h-4 w-4" />} onClick={() => openRuleEditor()}>Add Rule</Button>
@@ -559,7 +559,7 @@ export default function ConcernMappingConfigPage() {
         </Form>
       </Modal>
 
-      <Modal title={editingRule ? 'Edit Combination Rule' : 'Add Combination Rule'} open={ruleModalOpen} onCancel={() => setRuleModalOpen(false)} onOk={saveRule} width={920} destroyOnHidden>
+      <Modal title={editingRule ? 'Edit Activation Rule' : 'Add Activation Rule'} open={ruleModalOpen} onCancel={() => setRuleModalOpen(false)} onOk={saveRule} width={920} destroyOnHidden>
         <Form form={ruleForm} layout="vertical">
           <Form.Item name="id" label="Rule ID" rules={[{ required: true }]}>
             <Input disabled={!!editingRule} placeholder="identity-and-authorization-combination" />
