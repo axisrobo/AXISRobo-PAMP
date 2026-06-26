@@ -164,6 +164,12 @@ Canonical chain: `Questionnaire → Concern → Viewpoint → Artifact`.
 
 Multiple concerns may map to the same viewpoint, and a single concern may activate multiple viewpoints. Artifacts are derived exclusively through viewpoints — there is no direct concern-to-artifact mapping. The viewpoint layer is the single source of truth for which artifacts a concern requires.
 
+### Cross-border combination rule
+
+The seed configuration includes an active `cross-border-sensitive-data` combination rule. It escalates data sovereignty, data compliance, security control, and compliance-boundary concerns when cross-border data flow is combined with sensitive-data or checkpoint conditions.
+
+The walkthrough in the AVDM manuscript reports a *selected activation trace* that isolates convergent single-signal activation. The full rule set also supports the stronger combination-rule case when the additional checkpoint predicates are satisfied.
+
 ## API
 
 81+ endpoints, all RBAC-gated. Swagger UI at `http://localhost:4000/docs`.
