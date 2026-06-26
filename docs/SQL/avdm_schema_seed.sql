@@ -813,7 +813,7 @@ CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint_concern_mapping (
 
 -- Seed: eam.avdm_viewpoint_concern_mapping (56 rows)
 -- Canonical AVDM chain: questionnaire answers activate concerns; concerns classify viewpoints; viewpoints recommend artifacts.
--- The direct concern->artifact mapping below is retained as a materialized shortcut for compatibility and UI convenience.
+-- There is no direct concern->artifact mapping; artifacts are derived exclusively through viewpoints.
 INSERT INTO eam.avdm_viewpoint_concern_mapping (id, viewpoint_id, concern_id, sort_order, is_active, create_by, update_by, create_at, update_at)
 SELECT gen_random_uuid(), v.id, c.id, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
 FROM (VALUES
@@ -975,7 +975,7 @@ INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, 
 -- Corrective seed: align high-signal viewpoint->artifact mappings with the canonical AVDM chain.
 -- These rows normalize the most visible semantic drift from earlier seed exports.
 WITH target_viewpoints(viewpoint_number) AS (
-    VALUES (23), (24), (27), (29), (30), (31), (35), (36), (38), (39), (42), (43), (44), (45)
+    VALUES (6), (7), (8), (10), (11), (12), (23), (24), (27), (29), (30), (31), (32), (35), (36), (38), (39), (42), (43), (44), (45)
 )
 DELETE FROM eam.avdm_viewpoint_artifact_mapping m
 USING eam.avdm_viewpoint v, target_viewpoints t
@@ -985,28 +985,39 @@ WHERE m.viewpoint_id = v.id
 INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at)
 SELECT gen_random_uuid(), v.id, a.id, m.recommendation_status, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
 FROM (VALUES
+    (6, 'biz_diagram', 'Mandatory', 10),
+    (6, 'app_collab', 'Optional', 20),
+    (7, 'biz_diagram', 'Mandatory', 10),
+    (7, 'app_collab', 'Optional', 20),
+    (8, 'app_collab', 'Mandatory', 10),
+    (10, 'tech_diagram', 'Mandatory', 10),
+    (11, 'tech_diagram', 'Mandatory', 10),
+    (12, 'tech_diagram', 'Mandatory', 10),
+    (12, 'resource_list', 'Optional', 20),
+    (32, 'auth_flow', 'Mandatory', 10),
+    (32, 'resource_list', 'Optional', 20),
     (23, 'data_pipeline', 'Mandatory', 10),
-    (23, 'data_compliance_diagram', 'Recommended', 20),
+    (23, 'data_compliance_diagram', 'Optional', 20),
     (24, 'data_asset_matrix', 'Mandatory', 10),
     (27, 'data_compliance_diagram', 'Mandatory', 10),
-    (27, 'data_pipeline', 'Recommended', 20),
+    (27, 'data_pipeline', 'Optional', 20),
     (29, 'data_compliance_diagram', 'Mandatory', 10),
-    (29, 'resource_list', 'Recommended', 20),
+    (29, 'resource_list', 'Optional', 20),
     (30, 'data_model', 'Mandatory', 10),
     (31, 'data_model', 'Mandatory', 10),
     (35, 'auth_flow', 'Mandatory', 10),
     (36, 'auth_flow', 'Mandatory', 10),
     (38, 'tech_diagram', 'Mandatory', 10),
-    (38, 'resource_list', 'Recommended', 20),
+    (38, 'resource_list', 'Optional', 20),
     (39, 'tech_diagram', 'Mandatory', 10),
-    (39, 'resource_list', 'Recommended', 20),
+    (39, 'resource_list', 'Optional', 20),
     (42, 'resource_list', 'Mandatory', 10),
-    (42, 'system_process_flow', 'Recommended', 20),
+    (42, 'system_process_flow', 'Optional', 20),
     (43, 'tech_diagram', 'Mandatory', 10),
-    (43, 'resource_list', 'Recommended', 20),
+    (43, 'resource_list', 'Optional', 20),
     (44, 'resource_list', 'Mandatory', 10),
     (45, 'resource_list', 'Mandatory', 10),
-    (45, 'tech_diagram', 'Recommended', 20)
+    (45, 'tech_diagram', 'Optional', 20)
 ) AS m(viewpoint_number, artifact_key, recommendation_status, sort_order)
 JOIN eam.avdm_viewpoint v ON v.viewpoint_number = m.viewpoint_number
 JOIN eam.avdm_artifact a ON a.artifact_key = m.artifact_key
