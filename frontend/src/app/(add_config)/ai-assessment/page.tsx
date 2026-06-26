@@ -51,7 +51,7 @@ export default function AiAssessmentListPage() {
       <div className="flex items-center justify-between">
         <div>
           <Title level={4} style={{ marginBottom: 4 }}>AI Project Self-Assessment</Title>
-          <p className="text-sm text-text-secondary">Assess AI projects against the Enterprise AI Security Architecture Guideline v2.4</p>
+          <p className="text-sm text-text-secondary">Assess AI projects with adoption-tier × governance-maturity scoring</p>
         </div>
         <Button type="primary" icon={<Plus className="h-4 w-4" />} onClick={() => setModalOpen(true)}>New Assessment</Button>
       </div>

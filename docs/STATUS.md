@@ -20,7 +20,7 @@ Total: ~95 API endpoints, 160+ FastAPI routes.
 
 ## Recent Changes (2026-06-24)
 
-- **AI Self-Assessment**: Full AI project self-assessment module — AT0-AT8 adoption tier × L0-L4 governance maturity matrix, 11-section 49-item architecture review checklist, counterparty type (CP1-CP4) governance contexts, automated matrix positioning with go/no-go guidance. Aligned with *Enterprise AI Security Architecture Guideline v2.4*.
+- **AI Self-Assessment**: Full AI project self-assessment module — AT0-AT8 adoption tier × L0-L4 governance maturity matrix, 11-section 49-item architecture review checklist, counterparty type (CP1-CP4) governance contexts, automated matrix positioning with go/no-go guidance.
 - **Auth**: OSS local auth mode (`AUTH_MODE=local`) with username/password + JWT, 3 roles (admin/reviewer/requestor), `eam.local_users` table, user CRUD endpoints
 - **Storage**: Database-backed file storage (`eam.eam_file_storage`) as fallback when S3 not configured
 - **AVDM Data Chain**: Populated 45 viewpoints (from CSV), 76 concern→artifact direct mappings, 74 viewpoint→artifact mappings, 57 B-class question concern mappings. Three-tier question ID scheme (A1-A25, B1-B29, C1-C15).

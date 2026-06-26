@@ -13,7 +13,7 @@ from app.auth.models import AuthUser
 
 router = APIRouter()
 
-# checklist sections from AI Security Guideline §11
+# checklist sections — AT0-AT8 × L0-L4 matrix, 11 sections
 CHECKLIST_SECTIONS = [
     ("A", "Scenario & Adoption", [
         ("A1", "Scenario class defined in assessment (Personal/Enterprise/Domain)", True),

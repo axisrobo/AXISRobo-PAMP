@@ -67,7 +67,7 @@ Seven independently deployable modules, controlled via `ENABLED_MODULES` env var
 | Technology Stack | `technology_stack_management` | `(technology_stack_management)` | Tech stack lifecycle management, compliance checking |
 | Project Management | `project_management` | `(project_management)` | Project CRUD, team member management |
 | Data Management | `data_management` | `(data_management)` | Master data, resources, certifications, dict options |
-| AI Self-Assessment | `ai_assessment` | `(ai_assessment)` | AI project self-assessment against AI Security Architecture Guideline v2.4 |
+| AI Self-Assessment | `ai_assessment` | `(ai_assessment)` | AI project self-assessment with adoption-tier × governance-maturity scoring |
 
 ## AVDM Architecture Concerns
 
