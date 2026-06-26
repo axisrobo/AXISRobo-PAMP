@@ -651,10 +651,33 @@ CREATE TABLE IF NOT EXISTS eam.avdm_concern_activation_rule (
 );
 
 -- Seed: eam.avdm_concern_activation_rule (4 rows)
+-- 'cross-border-sensitive-data' is an ACTIVE combination rule in the full rule set: when cross-border
+-- data flow combines with sensitive-data / checkpoint conditions it escalates D7, D9, SCR1, SCR7.
+-- The AVDM manuscript walkthrough reports a selected single-signal activation trace that does not include
+-- the checkpoint predicates required to trigger this rule; the rule remains active here by design.
 INSERT INTO eam.avdm_concern_activation_rule (id, rule_key, description, all_conditions, any_conditions, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('164e153c-4911-4f5f-8a97-a3cc3f73eb12', 'cross-border-sensitive-data', 'Cross-border flow plus privacy or important data checkpoint escalates data sovereignty and compliance concerns.', '[{''equals'': ''Yes'', ''source'': ''complexitySection.hasCrossBorderDataFlow''}]', '[{''equals'': ''Y'', ''source'': ''question.9.answer''}, {''equals'': ''Yes'', ''source'': ''checkpoint2.required''}, {''equals'': ''Yes'', ''source'': ''checkpoint3.required''}, {''in'': [''Yes'', ''Not Sure''], ''source'': ''checkpoint3.crossBorderTransfer''}]', 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
 INSERT INTO eam.avdm_concern_activation_rule (id, rule_key, description, all_conditions, any_conditions, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('d0e55862-0f61-4c14-966d-f5016976f484', 'identity-and-authorization-combination', 'User group change combined with non-standard authentication or authorization requires identity/access concern review.', '[{''equals'': ''Y'', ''source'': ''question.7.answer''}, {''equals'': ''Y'', ''source'': ''question.19.answer''}]', '[{''equals'': ''Y'', ''source'': ''question.20.answer''}, {''equals'': ''Y'', ''source'': ''question.8.answer''}]', 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
 INSERT INTO eam.avdm_concern_activation_rule (id, rule_key, description, all_conditions, any_conditions, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('d553a41d-ccd4-4451-8a81-1fa27f7953f8', 'large-scale-integration', 'Large application scope with external systems activates integration, dependency, reliability, and capacity concerns.', '[{''in'': [''21_50'', ''51_100'', ''GT_100''], ''source'': ''projectScaleSection.applicationsInScope''}, {''equals'': ''Yes'', ''source'': ''projectScaleSection.hasExternalSystems''}]', '[]', 30, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
 INSERT INTO eam.avdm_concern_activation_rule (id, rule_key, description, all_conditions, any_conditions, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('e6b42b59-0787-46cb-9f63-2fabaefd51ea', 'technology-exception-stack-complexity', 'Technology exception combined with broad tech stack variety increases governance and operability concern priority.', '[{''equals'': ''Y'', ''source'': ''question.16.answer''}, {''in'': [''6_10'', ''GT_10''], ''source'': ''complexitySection.techStackKindsCount''}]', '[]', 40, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
+
+-- Architecture Type activation rules (one per option of architectureTypeSection.architectureType, a multiselect).
+-- 'in' matches when the selected architecture-type array contains the option value, so multiple rules can fire.
+INSERT INTO eam.avdm_concern_activation_rule (id, rule_key, description, all_conditions, any_conditions, sort_order, is_active, create_by, update_by, create_at, update_at)
+SELECT gen_random_uuid(), m.rule_key, m.description, m.all_conditions::jsonb, '[]'::jsonb, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
+FROM (VALUES
+    ('arch-type-web-application', 'Architecture type: Web application activates application and container concerns.', '[{"in": ["web_application"], "source": "architectureTypeSection.architectureType"}]', 110),
+    ('arch-type-data-platform', 'Architecture type: Data platform activates data lineage, quality, pipeline, and model concerns.', '[{"in": ["data_platform"], "source": "architectureTypeSection.architectureType"}]', 120),
+    ('arch-type-ai-ml-system', 'Architecture type: AI/ML system activates data quality, security control, and observability concerns.', '[{"in": ["ai_ml_system"], "source": "architectureTypeSection.architectureType"}]', 130),
+    ('arch-type-llm-rag-system', 'Architecture type: LLM/RAG system activates data quality, data compliance, security control, and observability concerns.', '[{"in": ["llm_rag_system"], "source": "architectureTypeSection.architectureType"}]', 140),
+    ('arch-type-identity-iam', 'Architecture type: Identity/IAM integration activates authentication, authorization, and user-role concerns.', '[{"in": ["identity_iam_integration"], "source": "architectureTypeSection.architectureType"}]', 150),
+    ('arch-type-event-driven', 'Architecture type: Event-driven system activates communication, process flow, and sequence concerns.', '[{"in": ["event_driven_system"], "source": "architectureTypeSection.architectureType"}]', 160),
+    ('arch-type-cross-border', 'Architecture type: Cross-border / multi-region platform activates data compliance, sovereignty, location, and compliance-boundary concerns.', '[{"in": ["cross_border_multi_region"], "source": "architectureTypeSection.architectureType"}]', 170),
+    ('arch-type-saas-integration', 'Architecture type: SaaS integration activates application interaction, integration, authentication, and compliance-boundary concerns.', '[{"in": ["saas_integration"], "source": "architectureTypeSection.architectureType"}]', 180),
+    ('arch-type-legacy-modernization', 'Architecture type: Legacy modernization activates evolution/impact, interaction, and technical service/stack concerns.', '[{"in": ["legacy_modernization"], "source": "architectureTypeSection.architectureType"}]', 190)
+) AS m(rule_key, description, all_conditions, sort_order)
+WHERE NOT EXISTS (
+    SELECT 1 FROM eam.avdm_concern_activation_rule existing WHERE existing.rule_key = m.rule_key
+);
 
 -- Table: eam.avdm_concern_activation_rule_score
 CREATE TABLE IF NOT EXISTS eam.avdm_concern_activation_rule_score (
@@ -695,6 +718,54 @@ INSERT INTO eam.avdm_concern_activation_rule_score (id, rule_id, concern_id, map
 INSERT INTO eam.avdm_concern_activation_rule_score (id, rule_id, concern_id, mapping_score, severity, likelihood, note_text, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('b7f1047b-bcef-4147-94f4-ea2f7b3f289c', '164e153c-4911-4f5f-8a97-a3cc3f73eb12', '28504628-97c3-432d-8a6a-78517e288efd', '15.000', NULL, NULL, NULL, 30, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
 INSERT INTO eam.avdm_concern_activation_rule_score (id, rule_id, concern_id, mapping_score, severity, likelihood, note_text, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('e2141b1e-d2e0-4a3a-8a6d-4a79c592ef8e', 'd553a41d-ccd4-4451-8a81-1fa27f7953f8', 'ccf8abd3-3794-4c3b-8f30-6d72d8b29815', '10.000', NULL, NULL, NULL, 60, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
 INSERT INTO eam.avdm_concern_activation_rule_score (id, rule_id, concern_id, mapping_score, severity, likelihood, note_text, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('e7bb5410-b10a-4e16-92d8-417e04e7301f', 'd0e55862-0f61-4c14-966d-f5016976f484', '33fa7d86-f251-4dfd-b58a-1cb730a8218f', '12.000', NULL, NULL, NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
+
+-- Architecture Type rule scores. All concern keys are ACTIVE and have concern->viewpoint mappings so the
+-- chain reaches viewpoints/artifacts. data_governance / security_data_protection (inactive, unmapped) are
+-- substituted with active equivalents (D6 data quality, D7 data compliance, SCR1 security control).
+INSERT INTO eam.avdm_concern_activation_rule_score (id, rule_id, concern_id, mapping_score, severity, likelihood, note_text, sort_order, is_active, create_by, update_by, create_at, update_at)
+SELECT gen_random_uuid(), r.id, c.id, m.score, NULL, NULL, NULL, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
+FROM (VALUES
+    ('arch-type-web-application', 'A1', 8.0, 10),
+    ('arch-type-web-application', 'A2', 8.0, 20),
+    ('arch-type-web-application', 'C1', 8.0, 30),
+    ('arch-type-web-application', 'C2', 8.0, 40),
+    ('arch-type-data-platform', 'D3', 8.0, 10),
+    ('arch-type-data-platform', 'D6', 8.0, 20),
+    ('arch-type-data-platform', 'D8', 8.0, 30),
+    ('arch-type-data-platform', 'D10', 8.0, 40),
+    ('arch-type-ai-ml-system', 'D6', 8.0, 10),
+    ('arch-type-ai-ml-system', 'SCR1', 8.0, 20),
+    ('arch-type-ai-ml-system', 'OR4', 8.0, 30),
+    ('arch-type-llm-rag-system', 'D6', 8.0, 10),
+    ('arch-type-llm-rag-system', 'D7', 8.0, 20),
+    ('arch-type-llm-rag-system', 'SCR1', 8.0, 30),
+    ('arch-type-llm-rag-system', 'OR4', 8.0, 40),
+    ('arch-type-identity-iam', 'SCR4', 8.0, 10),
+    ('arch-type-identity-iam', 'SCR5', 8.0, 20),
+    ('arch-type-identity-iam', 'SCR6', 8.0, 30),
+    ('arch-type-identity-iam', 'A4', 8.0, 40),
+    ('arch-type-event-driven', 'C5', 8.0, 10),
+    ('arch-type-event-driven', 'IP5', 8.0, 20),
+    ('arch-type-event-driven', 'IP6', 8.0, 30),
+    ('arch-type-cross-border', 'D7', 8.0, 10),
+    ('arch-type-cross-border', 'D9', 8.0, 20),
+    ('arch-type-cross-border', 'DIN1', 8.0, 30),
+    ('arch-type-cross-border', 'SCR7', 8.0, 40),
+    ('arch-type-saas-integration', 'A3', 8.0, 10),
+    ('arch-type-saas-integration', 'IP1', 8.0, 20),
+    ('arch-type-saas-integration', 'SCR4', 8.0, 30),
+    ('arch-type-saas-integration', 'SCR5', 8.0, 40),
+    ('arch-type-saas-integration', 'SCR7', 8.0, 50),
+    ('arch-type-legacy-modernization', 'AGD2', 8.0, 10),
+    ('arch-type-legacy-modernization', 'A3', 8.0, 20),
+    ('arch-type-legacy-modernization', 'C3', 8.0, 30),
+    ('arch-type-legacy-modernization', 'C4', 8.0, 40)
+) AS m(rule_key, concern_key, score, sort_order)
+JOIN eam.avdm_concern_activation_rule r ON r.rule_key = m.rule_key
+JOIN eam.avdm_pact_concern c ON c.concern_key = m.concern_key
+WHERE NOT EXISTS (
+    SELECT 1 FROM eam.avdm_concern_activation_rule_score s WHERE s.rule_id = r.id AND s.concern_id = c.id
+);
 
 -- Table: eam.avdm_artifact
 CREATE TABLE IF NOT EXISTS eam.avdm_artifact (
@@ -811,7 +882,7 @@ CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint_concern_mapping (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Seed: eam.avdm_viewpoint_concern_mapping (56 rows)
+-- Seed: eam.avdm_viewpoint_concern_mapping (55 rows)
 -- Canonical AVDM chain: questionnaire answers activate concerns; concerns classify viewpoints; viewpoints recommend artifacts.
 -- There is no direct concern->artifact mapping; artifacts are derived exclusively through viewpoints.
 INSERT INTO eam.avdm_viewpoint_concern_mapping (id, viewpoint_id, concern_id, sort_order, is_active, create_by, update_by, create_at, update_at)
@@ -882,6 +953,52 @@ WHERE NOT EXISTS (
       AND existing.viewpoint_id = v.id
 );
 
+-- #8 disposition of previously unmapped concerns.
+-- Legacy / artifact-like concerns are deactivated so the active catalog only contains mapped concerns.
+UPDATE eam.avdm_pact_concern SET is_active = FALSE, update_by = 'avdm_seed', update_at = now()
+WHERE concern_key IN ('OR5', 'governance_control_matrix', 'governance_decision_log') AND is_active = TRUE;
+
+-- Real architecture concerns get a viewpoint home. app_resilience_pattern stays active (mapped, live);
+-- the rest remain inactive as a future PACF/Risk catalog and their mapping is dormant (filtered by
+-- concern.is_active at read time) until activated by questionnaire rules.
+INSERT INTO eam.avdm_viewpoint_concern_mapping (id, viewpoint_id, concern_id, sort_order, is_active, create_by, update_by, create_at, update_at)
+SELECT gen_random_uuid(), v.id, c.id, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
+FROM (VALUES
+    ('app_resilience_pattern', 43, 10),
+    ('app_resilience_pattern', 44, 20),
+    ('app_domain_boundary', 6, 10),
+    ('app_domain_boundary', 7, 20),
+    ('data_governance', 24, 10),
+    ('data_governance', 27, 20),
+    ('data_governance', 41, 30),
+    ('data_lineage', 23, 10),
+    ('infra_recovery', 43, 10),
+    ('infra_scalability', 40, 10),
+    ('infra_scalability', 44, 20),
+    ('integration_contract', 14, 10),
+    ('integration_contract', 15, 20),
+    ('integration_contract', 16, 30),
+    ('integration_dependency_map', 8, 10),
+    ('integration_dependency_map', 15, 20),
+    ('ops_observability', 45, 10),
+    ('ops_operability', 42, 10),
+    ('risk_change_readiness', 8, 10),
+    ('risk_change_readiness', 41, 20),
+    ('risk_dependency', 8, 10),
+    ('risk_dependency', 41, 20),
+    ('security_data_protection', 27, 10),
+    ('security_data_protection', 32, 20),
+    ('security_identity_access', 9, 10),
+    ('security_identity_access', 32, 20),
+    ('security_identity_access', 36, 30)
+) AS m(concern_key, viewpoint_number, sort_order)
+JOIN eam.avdm_pact_concern c ON c.concern_key = m.concern_key
+JOIN eam.avdm_viewpoint v ON v.viewpoint_number = m.viewpoint_number
+WHERE NOT EXISTS (
+    SELECT 1 FROM eam.avdm_viewpoint_concern_mapping existing
+    WHERE existing.concern_id = c.id AND existing.viewpoint_id = v.id
+);
+
 -- Table: eam.avdm_viewpoint_artifact_mapping
 CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint_artifact_mapping (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -896,121 +1013,79 @@ CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint_artifact_mapping (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Seed: eam.avdm_viewpoint_artifact_mapping (74 rows)
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('033cd833-d9b4-4871-97c5-072c3776754b', 'b25bace9-c58e-433e-97b7-ecfcf317a2e3', '10864a32-7397-4ae6-9087-bbc5af706920', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('0ce4a4f8-aca8-48dd-8728-bffe86873cab', 'd670a383-4ab8-42c3-8387-f3b76fc490f0', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('11dd8c5b-2105-4670-9995-f6f29a6b31e2', 'f9afffe6-19d4-4469-9519-46a0e08a501b', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('12053939-dfd9-4c63-9add-8c9464eec0d0', 'a8a2022d-83de-4ec9-b5df-7227c4e1ef98', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('1321a36f-5024-4a2c-a4cc-421144346158', 'd608faaf-16d9-4e5b-a5fa-40c737ec6936', 'c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'Mandatory', 30, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('144b8944-35f9-48de-89d4-a4f7c8e98b9e', '6402bbf0-786c-4005-b66f-4a4e4e516336', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('15fe8050-1116-4e03-9bb7-6e78f8f0aa81', 'db062c87-39be-4fc7-9521-47dbccd76c21', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Optional', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('1769d61c-7045-49d4-8067-69068e4e95c7', '767691ec-f060-490b-8209-46d8dae1f52f', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('198d47fa-98dd-40a1-af02-379397c11a25', '2a487898-5a01-440a-a40c-1fa5d0261e5f', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('202f53ee-848d-4956-8bb5-7c73b265d820', 'e3701253-a841-4596-aa16-a8f784ed1280', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('233d63f4-7cbc-49cb-a19d-c58bda0b9cd5', '44c9c3f6-b15f-44ad-be79-68bda49f0228', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('2a57d2df-9bb9-4127-a8aa-79d74d4b0242', 'dda37d01-a646-40cd-8afc-2bd6d22542c4', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('33047810-ab7f-470d-b506-9bf5084d1bc0', 'b3c1b157-96bc-491f-ac7d-f3ad2786a8c8', '0e15f6f6-4341-41ba-9e2f-0d8b98e8b499', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('372f09be-1896-4ddb-91f1-dfaa638d15f0', '6e742abf-1a2c-4e87-8c38-02b6ae34b802', '9c71a803-e029-467d-b261-76382159eb34', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('38c3fa8c-09b3-48d4-bb7c-031ffe02fad0', '77e16ded-b538-4fbf-a18d-988640c9ae79', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('3cb8c2ee-cc87-4f64-bebb-fe8d65419a38', 'f266f512-8266-4ded-a825-1803841e49bb', '10864a32-7397-4ae6-9087-bbc5af706920', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('3d8ff9a3-1eb5-4df3-8ad3-70fc4f574fc9', 'e3701253-a841-4596-aa16-a8f784ed1280', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', 30, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('4072e3af-5afa-4c21-882c-2fea75d37e2e', '5349f202-8c0e-470a-bc8a-1698434e24ea', '10864a32-7397-4ae6-9087-bbc5af706920', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('45f8922a-73ae-4ce2-b4b1-9d76ed98d02f', 'e3701253-a841-4596-aa16-a8f784ed1280', 'c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'Mandatory', 40, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('4729bab5-f711-4433-8fa1-0bbbe9fc8e0c', '23576827-f9f1-4ab2-9734-1eee7f01f613', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('48b34230-3a42-4cab-b7b2-1e824cf16b59', '2a487898-5a01-440a-a40c-1fa5d0261e5f', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('4ff53bef-8a3d-45cc-bb2f-2886cb2fcc7f', '1301a846-6524-499a-951d-37822ad705ae', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('54e89813-9710-4555-a658-71f1b85f7f0a', '9e7ae8e8-4c1a-4bdf-a770-e68fa5d7d70d', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Optional', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('55ee9431-0544-475a-bed1-f5addbd43883', '77e16ded-b538-4fbf-a18d-988640c9ae79', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('56246e38-1fff-4d58-ad49-fdff9166d06a', '8de5a6cf-0898-485f-8300-11a28b67b62b', 'c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('5ade57f7-435a-4426-92d6-bfd8948c6007', 'f9afffe6-19d4-4469-9519-46a0e08a501b', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('5f66428e-26f0-41c9-bee1-9e5ea1ca51ba', '6eac4e5a-6e00-4458-b76f-25f5c7ec978a', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Optional', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('64a76989-d990-4340-9be9-9282a853f8c7', 'b91effd7-caa9-4ae7-a3cc-b3c94df8d275', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('66183850-7230-4c1d-9de2-9c2a5c7ec6f1', 'b94a9c8d-fd14-4aa4-b0be-747447192b84', '85c3e85d-f80c-4389-9f48-8b3399a3d166', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('6a80931a-c7fd-4e7b-90e6-ddcc406b7c6a', '0abb506a-e351-4746-813a-aa49eaf757e1', '0e15f6f6-4341-41ba-9e2f-0d8b98e8b499', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('6ca51887-b10a-4cac-b1eb-8675f461207b', '48c31226-09de-4aa5-9374-4f244faf003f', '85c3e85d-f80c-4389-9f48-8b3399a3d166', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('6e089453-1fce-4633-8d47-b313de47d3c7', '0cd5d96e-3bd2-4efe-8636-5bb611c25956', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('6f8e624f-b26f-4286-8e17-9d0cdedecd17', '32d718bb-e8dc-44b0-b4ce-9e97e2f823ec', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('7590b750-0153-467c-95b4-e12295813782', '45d10e3c-f5a3-48e0-9e53-ed1d342bb845', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('7e14e618-41bf-46e5-ba21-c19097726e10', 'a8a2022d-83de-4ec9-b5df-7227c4e1ef98', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('80cdece3-092f-49b9-938e-3871bd5eb105', 'd7a739f2-e8cc-4b9a-a9b1-e7289243f018', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('85146aea-4567-4cd7-a823-202305876558', '77e16ded-b538-4fbf-a18d-988640c9ae79', '9c71a803-e029-467d-b261-76382159eb34', 'Mandatory', 40, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('85a96c3c-67c5-4abd-8fc9-42671d177d77', 'd5534de6-369b-4b07-8135-9e3b5bdaadaa', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('863ca6f4-7d5c-4125-bba6-6eaa72e51134', '438072e7-8cda-43c2-a80f-a8a6de5376dc', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('882dfc51-ae8c-417d-879b-93a431090b13', '48c31226-09de-4aa5-9374-4f244faf003f', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('89b48226-69d6-4458-a91c-6a9c54625c8f', 'db062c87-39be-4fc7-9521-47dbccd76c21', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Optional', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('8a392f24-6857-41c1-b2b6-44c5a464e117', '3f0bc38e-1e07-40e1-9741-60fbba96b2ac', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Optional', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('8e713800-7272-44bf-b263-9c90f6c5a87a', '715c8cc4-2ff1-494b-9a96-200522e0af58', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('8e7e73b5-88e7-435d-93c7-3c6cf4b79625', 'a8a2022d-83de-4ec9-b5df-7227c4e1ef98', '9c71a803-e029-467d-b261-76382159eb34', 'Optional', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('8f0f4811-d68b-42a8-9332-57c9e97c1ab3', '764358a6-abb9-484c-a8ec-f2949a38d218', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('904a4378-7c81-4532-be22-a51b6dbacf7b', '6402bbf0-786c-4005-b66f-4a4e4e516336', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', 30, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('974b110d-7eb1-4782-b381-39464b202ad9', 'f02e1c31-35c7-431d-96ec-3824d95570e0', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('990a2cdb-1330-4ac0-a2a2-211f22128448', 'd43c1c48-f60f-487d-b933-5c0f4767eb0a', '10864a32-7397-4ae6-9087-bbc5af706920', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('9e5123ee-ffa2-4605-b2dd-b403de8433ce', '77e16ded-b538-4fbf-a18d-988640c9ae79', 'c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'Mandatory', 30, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('9fddddc7-dc29-4ca0-af6c-940d89f57f5d', '767691ec-f060-490b-8209-46d8dae1f52f', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Optional', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('a1bcb8a2-7e8f-48b1-b995-d9105a827941', 'd608faaf-16d9-4e5b-a5fa-40c737ec6936', '9c71a803-e029-467d-b261-76382159eb34', 'Mandatory', 40, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('a575b5e4-062e-4bb5-b485-8dd3babbb0c3', 'b7f473a4-5e42-49df-917a-bec506497abd', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('a77e3074-f89a-4b14-a14c-5e15ce0e22bb', '9aa771b9-a998-4bb5-b5de-ff2607f1028c', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Optional', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ae771bb8-c22e-415d-b15e-9aa8463d20d1', '6e742abf-1a2c-4e87-8c38-02b6ae34b802', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Optional', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('afa83489-a0a0-4bb0-b11d-e6583a3d3d07', 'e3701253-a841-4596-aa16-a8f784ed1280', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('b86cfe9b-7024-4ccc-9e95-602febbc9af5', 'ea9df78d-8572-4e41-8bbe-321a5a9552cc', '85c3e85d-f80c-4389-9f48-8b3399a3d166', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('c1efbf9d-7b79-4b14-bf61-253809f02178', '9e7ae8e8-4c1a-4bdf-a770-e68fa5d7d70d', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('c270a6cd-1468-4b33-bbc0-c2fb06552a46', 'a8a2022d-83de-4ec9-b5df-7227c4e1ef98', 'c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'Mandatory', 30, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ca5e6680-d946-456e-8545-9d2c8660b21b', 'd43c1c48-f60f-487d-b933-5c0f4767eb0a', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('d527ec08-d0e8-42b7-a43b-699b8698efba', '1662d4f7-2c16-4192-8db7-5a7200c7f435', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('dba3b18d-cd59-45c3-a7d8-903bd96e621b', 'b7f473a4-5e42-49df-917a-bec506497abd', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ddaf67c3-097e-4ab3-adc0-8c11e95047c6', '995fe265-3408-458b-b935-207f3b3fe368', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('df4d07ae-8e7a-476b-bec5-995911efbb91', '767691ec-f060-490b-8209-46d8dae1f52f', 'c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('e1c29bd4-84d6-4f0c-addb-b656d031c2bd', 'd5534de6-369b-4b07-8135-9e3b5bdaadaa', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Optional', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('e63cfae1-97ed-4462-93d3-eff1ddedfe38', '6402bbf0-786c-4005-b66f-4a4e4e516336', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f11a8323-3aac-4db5-aeb3-dca51b4b50a1', '9aa771b9-a998-4bb5-b5de-ff2607f1028c', 'c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'Optional', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f1dbff0c-eb59-44e8-991b-de5447b94618', '715c8cc4-2ff1-494b-9a96-200522e0af58', '85c3e85d-f80c-4389-9f48-8b3399a3d166', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f24c3057-a25e-4fc2-8908-7477316cecae', 'd608faaf-16d9-4e5b-a5fa-40c737ec6936', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f544e7ac-a3e6-4835-813d-40bdd8a16231', 'd608faaf-16d9-4e5b-a5fa-40c737ec6936', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f594ccfd-3c29-464c-8ca1-df40a2c5896c', 'b91effd7-caa9-4ae7-a3cc-b3c94df8d275', '85c3e85d-f80c-4389-9f48-8b3399a3d166', 'Mandatory', 20, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f840fb5a-924c-4f48-b8a8-701dfe9caf19', '4732930d-a63a-4e1d-b1d4-c404ce97b0cb', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f9e79faa-8f4d-4039-8f41-b2e32659979c', 'b94a9c8d-fd14-4aa4-b0be-747447192b84', '0e15f6f6-4341-41ba-9e2f-0d8b98e8b499', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ff785bf0-526f-4047-93fe-7609caf87ce3', 'd670a383-4ab8-42c3-8387-f3b76fc490f0', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ffeea597-94e1-4296-b2cd-4191b2c00b81', 'b94a9c8d-fd14-4aa4-b0be-747447192b84', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', 30, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
-
--- Corrective seed: align high-signal viewpoint->artifact mappings with the canonical AVDM chain.
--- These rows normalize the most visible semantic drift from earlier seed exports.
-WITH target_viewpoints(viewpoint_number) AS (
-    VALUES (6), (7), (8), (10), (11), (12), (23), (24), (27), (29), (30), (31), (32), (35), (36), (38), (39), (42), (43), (44), (45)
-)
-DELETE FROM eam.avdm_viewpoint_artifact_mapping m
-USING eam.avdm_viewpoint v, target_viewpoints t
-WHERE m.viewpoint_id = v.id
-  AND v.viewpoint_number = t.viewpoint_number;
-
+-- Seed: eam.avdm_viewpoint_artifact_mapping (73 rows; canonical, all 45 viewpoints, each viewpoint has >= 1 artifact)
+-- Status limited to Mandatory/Optional per chk_avdm_viewpoint_artifact_mapping_status.
+-- Keyed by viewpoint_number + artifact_key for readability and idempotency.
+DELETE FROM eam.avdm_viewpoint_artifact_mapping;
 INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at)
 SELECT gen_random_uuid(), v.id, a.id, m.recommendation_status, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
 FROM (VALUES
-    (6, 'biz_diagram', 'Mandatory', 10),
-    (6, 'app_collab', 'Optional', 20),
+    (1, 'biz_diagram', 'Mandatory', 10),
+    (2, 'business_process', 'Mandatory', 10),
+    (3, 'biz_diagram', 'Mandatory', 10),
+    (3, 'auth_flow', 'Optional', 20),
+    (4, 'biz_diagram', 'Mandatory', 10),
+    (4, 'resource_list', 'Optional', 20),
+    (5, 'biz_diagram', 'Mandatory', 10),
+    (5, 'app_collab', 'Optional', 20),
+    (6, 'app_collab', 'Mandatory', 10),
+    (6, 'tech_diagram', 'Optional', 20),
     (7, 'biz_diagram', 'Mandatory', 10),
     (7, 'app_collab', 'Optional', 20),
     (8, 'app_collab', 'Mandatory', 10),
+    (8, 'system_process_flow', 'Optional', 20),
+    (9, 'auth_flow', 'Mandatory', 10),
+    (9, 'biz_diagram', 'Optional', 20),
     (10, 'tech_diagram', 'Mandatory', 10),
     (11, 'tech_diagram', 'Mandatory', 10),
     (12, 'tech_diagram', 'Mandatory', 10),
     (12, 'resource_list', 'Optional', 20),
-    (32, 'auth_flow', 'Mandatory', 10),
-    (32, 'resource_list', 'Optional', 20),
+    (13, 'tech_diagram', 'Mandatory', 10),
+    (13, 'resource_list', 'Optional', 20),
+    (14, 'tech_diagram', 'Mandatory', 10),
+    (14, 'system_process_flow', 'Optional', 20),
+    (15, 'app_collab', 'Mandatory', 10),
+    (15, 'data_pipeline', 'Optional', 20),
+    (16, 'tech_diagram', 'Mandatory', 10),
+    (16, 'system_process_flow', 'Optional', 20),
+    (17, 'system_process_flow', 'Mandatory', 10),
+    (18, 'system_process_flow', 'Mandatory', 10),
+    (18, 'business_process', 'Optional', 20),
+    (19, 'business_process', 'Mandatory', 10),
+    (19, 'system_process_flow', 'Optional', 20),
+    (20, 'system_process_flow', 'Mandatory', 10),
+    (21, 'data_pipeline', 'Mandatory', 10),
+    (21, 'business_process', 'Optional', 20),
+    (22, 'data_pipeline', 'Mandatory', 10),
     (23, 'data_pipeline', 'Mandatory', 10),
     (23, 'data_compliance_diagram', 'Optional', 20),
     (24, 'data_asset_matrix', 'Mandatory', 10),
+    (25, 'data_model', 'Mandatory', 10),
+    (26, 'data_asset_matrix', 'Mandatory', 10),
+    (26, 'data_pipeline', 'Optional', 20),
     (27, 'data_compliance_diagram', 'Mandatory', 10),
-    (27, 'data_pipeline', 'Optional', 20),
+    (28, 'data_pipeline', 'Mandatory', 10),
     (29, 'data_compliance_diagram', 'Mandatory', 10),
     (29, 'resource_list', 'Optional', 20),
     (30, 'data_model', 'Mandatory', 10),
     (31, 'data_model', 'Mandatory', 10),
+    (32, 'auth_flow', 'Mandatory', 10),
+    (32, 'tech_diagram', 'Optional', 20),
+    (33, 'tech_diagram', 'Mandatory', 10),
+    (33, 'auth_flow', 'Optional', 20),
+    (34, 'auth_flow', 'Mandatory', 10),
+    (34, 'system_process_flow', 'Optional', 20),
     (35, 'auth_flow', 'Mandatory', 10),
     (36, 'auth_flow', 'Mandatory', 10),
+    (37, 'tech_diagram', 'Mandatory', 10),
+    (37, 'resource_list', 'Optional', 20),
     (38, 'tech_diagram', 'Mandatory', 10),
     (38, 'resource_list', 'Optional', 20),
     (39, 'tech_diagram', 'Mandatory', 10),
     (39, 'resource_list', 'Optional', 20),
+    (40, 'resource_list', 'Mandatory', 10),
+    (41, 'resource_list', 'Mandatory', 10),
+    (41, 'biz_diagram', 'Optional', 20),
     (42, 'resource_list', 'Mandatory', 10),
     (42, 'system_process_flow', 'Optional', 20),
     (43, 'tech_diagram', 'Mandatory', 10),
@@ -1020,13 +1095,7 @@ FROM (VALUES
     (45, 'tech_diagram', 'Optional', 20)
 ) AS m(viewpoint_number, artifact_key, recommendation_status, sort_order)
 JOIN eam.avdm_viewpoint v ON v.viewpoint_number = m.viewpoint_number
-JOIN eam.avdm_artifact a ON a.artifact_key = m.artifact_key
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM eam.avdm_viewpoint_artifact_mapping existing
-    WHERE existing.viewpoint_id = v.id
-      AND existing.artifact_id = a.id
-);
+JOIN eam.avdm_artifact a ON a.artifact_key = m.artifact_key;
 
 -- Table: eam.avdm_project_type_profile
 CREATE TABLE IF NOT EXISTS eam.avdm_project_type_profile (
