@@ -34,7 +34,7 @@ export function LoginGate({ children }: { children: React.ReactNode }) {
             title="Unable to load user information"
             subTitle={error || 'The request failed. Check your network connection and try again, or contact an administrator.'}
             extra={
-              <Button type="primary" size="large" onClick={login}>
+              <Button type="primary" size="large" onClick={() => void login()}>
                 Sign in again
               </Button>
             }
@@ -69,7 +69,7 @@ export function LoginGate({ children }: { children: React.ReactNode }) {
             </div>
             <div>
               <button
-                onClick={login}
+                onClick={() => void login()}
                 className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               >
                 Log in with Keycloak

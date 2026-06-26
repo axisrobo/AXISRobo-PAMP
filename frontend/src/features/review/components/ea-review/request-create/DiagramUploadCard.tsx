@@ -128,7 +128,9 @@ export function DiagramUploadCard({
 
   /* Keep a ref to the latest attachments to avoid stale closures in multi-file uploads */
   const attachmentsRef = useRef(attachments);
-  attachmentsRef.current = attachments;
+  useEffect(() => {
+    attachmentsRef.current = attachments;
+  }, [attachments]);
 
   /* ── Upload mutation ── */
   const uploadMutation = useMutation({
