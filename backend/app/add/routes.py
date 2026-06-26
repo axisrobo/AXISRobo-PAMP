@@ -44,7 +44,7 @@ from .master_data_repository import (
     QUESTIONNAIRE_DOMAIN,
     VIEWPOINT_ARTIFACT_MAPPING_DOMAIN,
     get_config_metadata,
-    list_concern_artifact_recommendation_items,
+    list_viewpoint_artifact_recommendation_items,
     load_artifact_catalog_config,
     load_concern_mapping_config,
     load_questionnaire_config,
@@ -217,36 +217,6 @@ async def put_viewpoint_artifact_mapping_config(
         operator=operator,
     )
     return _build_config_response(configKey, result["config"], result)
-
-
-@router.get("/concern-artifact-mapping", dependencies=[Depends(require_permission("avdm", "read"))])
-async def get_concern_artifact_mapping(
-    db: AsyncSession = Depends(get_db),
-):
-    rows = await db.execute(
-        text(
-            "SELECT m.id, c.concern_key, c.concern_name, a.artifact_key, a.artifact_name, "
-            "      m.default_status, m.rationale, m.sort_order, m.is_active "
-            "FROM eam.avdm_concern_artifact_mapping m "
-            "JOIN eam.avdm_pact_concern c ON c.id = m.concern_id "
-            "JOIN eam.avdm_artifact a ON a.id = m.artifact_id "
-            "ORDER BY c.concern_key, m.sort_order, a.artifact_name"
-        )
-    )
-    result = []
-    for row in rows.mappings().all():
-        result.append({
-            "id": str(row["id"]),
-            "concernKey": row["concern_key"],
-            "concernName": row["concern_name"],
-            "artifactKey": row["artifact_key"],
-            "artifactName": row["artifact_name"],
-            "defaultStatus": row["default_status"],
-            "rationale": row["rationale"],
-            "sortOrder": row["sort_order"],
-            "isActive": row["is_active"],
-        })
-    return {"data": result, "total": len(result)}
 
 
 @router.get("/concern-viewpoint-mapping", dependencies=[Depends(require_permission("avdm", "read"))])
@@ -636,7 +606,7 @@ async def get_artifact_recommendation(project_id: str, db: AsyncSession = Depend
         viewpoint_mapping_config={"viewpoints": []},
         questionnaire_config=questionnaire_config,
     )
-    concern_items = await list_concern_artifact_recommendation_items(
+    concern_items = await list_viewpoint_artifact_recommendation_items(
         db,
         decisions=[item.model_dump() for item in evaluation.decisions],
     )

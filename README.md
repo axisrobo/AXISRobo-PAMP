@@ -120,7 +120,7 @@ Set `AUTH_MODE=dev` in backend/.env to skip authentication during development. A
 | Module | Description |
 |--------|-------------|
 | **EA Review** | Architecture review workflow, meetings, actions, AI architecture checks, AVDM questionnaire |
-| **ADD — Architecture Decision & Design** | PACT concern catalog (52 concerns), viewpoint catalog (45 viewpoints), concern↔artifact mapping (76 rules), questionnaire config, risk scoring, architecture governance matrix |
+| **ADD — Architecture Decision & Design** | PACT concern catalog, viewpoint catalog, concern-to-viewpoint mapping, viewpoint-to-artifact mapping, questionnaire config, risk scoring, architecture governance matrix |
 | **AI Self-Assessment** | AI project self-assessment aligned with Enterprise AI Security Architecture Guideline v2.4 — AT0-AT8 adoption tier × L0-L4 governance maturity matrix, 11-section 49-item checklist, counterparty type (CP1-CP4) governance contexts |
 | **Application Portfolio** | BCM, BizCapability, CMDB — business capability mapping |
 | **Technology Stack** | Tech stack lifecycle, compliance checking |
@@ -146,13 +146,23 @@ Browser → Next.js :3000 → FastAPI :4000 → PostgreSQL :5432
 5. **Raw SQL over ORM** — SQLAlchemy `text()` for performance; Pydantic for request/response validation
 6. **Storage abstraction** — S3-compatible when configured, database-backed (`eam_file_storage`) when not
 
-### AVDM Data Chain
+### AVDM Decision Chain
+
+AXISRobo-PAMP implements AVDM as a configurable decision chain:
 
 ```
-Questionnaire Items → Concerns (direct/tag score) 
-    → Viewpoints (PACT layers, 45 viewpoints)
-        → Artifacts (11 types, 76 concern→artifact mappings)
+Questionnaire Answer
+    → Risk Signal / Architecture Concern Activation
+    → Concern Score Aggregation
+    → Viewpoint Classification
+    → Artifact Recommendation
 ```
+
+The questionnaire captures project scale, complexity, change scope, and architecture type. Selected answers activate architecture concerns through weighted mapping rules. Activated concerns are then projected onto the viewpoint taxonomy through concern-to-viewpoint mappings. Finally, each selected viewpoint is mapped to one or more supporting artifacts, such as diagrams, lists, or matrices.
+
+Canonical chain: `Questionnaire → Concern → Viewpoint → Artifact`.
+
+Multiple concerns may map to the same viewpoint, and a single concern may activate multiple viewpoints. Artifacts are derived exclusively through viewpoints — there is no direct concern-to-artifact mapping. The viewpoint layer is the single source of truth for which artifacts a concern requires.
 
 ## API
 

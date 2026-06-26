@@ -66,28 +66,34 @@ async def get_request_artifacts(
     concern_keys = [d.get("concernKey", "") for d in evaluation.get("decisions", []) if d.get("concernKey")]
     artifacts = []
     if concern_keys:
+        # Canonical chain: concern -> viewpoint -> artifact.
         map_rows = await db.execute(
             text(
-                "SELECT c.concern_key, a.artifact_name, m.default_status "
-                "FROM eam.avdm_concern_artifact_mapping m "
-                "JOIN eam.avdm_pact_concern c ON c.id = m.concern_id AND c.is_active = TRUE "
-                "JOIN eam.avdm_artifact a ON a.id = m.artifact_id AND a.is_active = TRUE "
-                "WHERE m.is_active = TRUE AND c.concern_key = ANY(:keys) "
-                "ORDER BY c.concern_key, m.sort_order, a.artifact_name"
+                "SELECT c.concern_key, a.artifact_name "
+                "FROM eam.avdm_pact_concern c "
+                "JOIN eam.avdm_viewpoint_concern_mapping vc ON vc.concern_id = c.id AND vc.is_active = TRUE "
+                "JOIN eam.avdm_viewpoint v ON v.id = vc.viewpoint_id AND v.is_active = TRUE "
+                "JOIN eam.avdm_viewpoint_artifact_mapping va ON va.viewpoint_id = v.id AND va.is_active = TRUE "
+                "JOIN eam.avdm_artifact a ON a.id = va.artifact_id AND a.is_active = TRUE "
+                "WHERE c.is_active = TRUE AND c.concern_key = ANY(:keys) "
+                "ORDER BY c.concern_key, vc.sort_order, va.sort_order, a.artifact_name"
             ),
             {"keys": concern_keys},
         )
-        mapping_rows = map_rows.mappings().all()
+        canonical_map: dict[str, list[str]] = {}
+        for mr in map_rows.mappings().all():
+            names = canonical_map.setdefault(mr["concern_key"], [])
+            if mr["artifact_name"] not in names:
+                names.append(mr["artifact_name"])
+
         for d in evaluation.get("decisions", []):
             ck = d.get("concernKey", "")
             cn = d.get("concernName", "")
             cl = d.get("classification", "Optional")
             score = d.get("score", 0)
             concern_contrib = contributions.get(ck, {"direct": [], "tagged": [], "rules": []})
-            for mr in mapping_rows:
-                if mr["concern_key"] != ck:
-                    continue
-                aname = mr["artifact_name"]
+            artifact_names = canonical_map.get(ck, [])
+            for aname in artifact_names:
                 sel_status = "selected" if (ck, aname) in selected_keys else "recommended"
                 artifacts.append({
                     "artifactId": f"{ck}_{aname}",

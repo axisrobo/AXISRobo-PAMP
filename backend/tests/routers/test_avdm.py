@@ -230,7 +230,7 @@ class TestAVDMArtifactRecommendation:
         )
         monkeypatch.setattr(
             avdm_routes,
-            "list_concern_artifact_recommendation_items",
+            "list_viewpoint_artifact_recommendation_items",
             AsyncMock(
                 return_value=[
                     ArtifactRecommendationItem(

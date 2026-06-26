@@ -16,6 +16,7 @@ import { GeneralDataSection } from '@/features/review/components/ea-review/reque
 import { AVDMLifecycleStageSection } from '@/features/review/components/ea-review/request-detail/AVDMLifecycleStageSection';
 import { AVDMConcernListSection, type AVDMEvaluation } from '@/features/review/components/ea-review/request-detail/AVDMConcernListSection';
 import { AVDMConcernExpandSection } from '@/features/review/components/ea-review/request-detail/AVDMConcernExpandSection';
+import { AVDMViewpointExpandSection } from '@/features/review/components/ea-review/request-detail/AVDMViewpointExpandSection';
 import { AVDMArtifactExpandSection } from '@/features/review/components/ea-review/request-detail/AVDMArtifactExpandSection';
 import { AddApplicationModal } from '@/features/review/components/ea-review/request-detail/modals/AddApplicationModal';
 import { AddInterfaceModal } from '@/features/review/components/ea-review/request-detail/modals/AddInterfaceModal';
@@ -39,9 +40,16 @@ type AVDMWorkflowStatusResponse = {
   architectureLifecycleStages: ArchitectureLifecycleStage[];
 };
 
+type ArtifactSelectionItem = {
+  concernKey: string;
+  artifactName: string;
+  rationale?: string | null;
+};
+
 type AVDMAssessmentRecord = {
   concernRequirementConfirmedAt?: string | null;
   evaluation?: AVDMEvaluation | null;
+  artifactSelection?: ArtifactSelectionItem[] | null;
 };
 
 export default function RequestDetailView() {
@@ -134,6 +142,12 @@ export default function RequestDetailView() {
     enabled: !!id,
   });
 
+  const { data: viewpointsData, isLoading: viewpointsLoading } = useQuery({
+    queryKey: ['eaRequestViewpoints', id],
+    queryFn: () => api.get<any>(`/ea-requests/${id}/viewpoints`),
+    enabled: !!id,
+  });
+
   const confirmConcernsMutation = useMutation({
     mutationFn: () => api.post<AVDMWorkflowStatusResponse>(`/avdm/projects/${encodeURIComponent(projectId)}/concerns/confirm`, {
       operator: user?.id || 'system',
@@ -166,7 +180,7 @@ export default function RequestDetailView() {
   const submitArtifactsMutation = useMutation({
     mutationFn: () => api.put(`/avdm/projects/${encodeURIComponent(projectId)}/artifacts`, {
       operator: user?.id || 'system',
-      artifactSelection: avdmAssessment?.evaluation?.artifactSelection ?? [],
+      selections: avdmAssessment?.artifactSelection ?? [],
     }),
     onSuccess: () => {
       messageApi.success('Artifacts submitted');
@@ -379,11 +393,12 @@ export default function RequestDetailView() {
         },
         {
           key: 'viewpoints',
-          label: 'Architecture View Points',
+          label: `Architecture Viewpoints (${viewpointsData?.viewpoints?.length ?? 0})`,
           children: (
-            <div className="text-sm text-mdb-steel py-4 text-center">
-              Viewpoint mappings are configured in the ADD administration pages.
-            </div>
+            <AVDMViewpointExpandSection
+              viewpoints={viewpointsData?.viewpoints ?? []}
+              loading={viewpointsLoading}
+            />
           ),
         },
         {
