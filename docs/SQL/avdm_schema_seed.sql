@@ -885,9 +885,13 @@ CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint_concern_mapping (
 -- Seed: eam.avdm_viewpoint_concern_mapping (55 rows)
 -- Canonical AVDM chain: questionnaire answers activate concerns; concerns classify viewpoints; viewpoints recommend artifacts.
 -- There is no direct concern->artifact mapping; artifacts are derived exclusively through viewpoints.
+-- Rationale: each row is (concern_key, viewpoint_number, sort_order). Base mappings are 1:1 -- a PACT
+-- concern maps to the architecture viewpoint that directly observes it (aligned by PACT layer/number).
+-- Cross-cutting governance/security concerns (SCR6/SCR7/AGD*) are 1:N; see inline notes near the end.
 INSERT INTO eam.avdm_viewpoint_concern_mapping (id, viewpoint_id, concern_id, sort_order, is_active, create_by, update_by, create_at, update_at)
 SELECT gen_random_uuid(), v.id, c.id, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
 FROM (VALUES
+    -- Base 1:1 mappings (concern -> its aligned viewpoint)
     ('B1', 1, 10),
     ('B2', 2, 20),
     ('B3', 3, 30),
@@ -932,17 +936,18 @@ FROM (VALUES
     ('OR2', 43, 430),
     ('OR3', 44, 440),
     ('OR4', 45, 450),
-    ('SCR6', 9, 910),
-    ('SCR6', 32, 920),
-    ('SCR7', 27, 930),
-    ('SCR7', 41, 940),
-    ('AGD1', 41, 950),
-    ('AGD2', 8, 960),
-    ('AGD2', 41, 970),
-    ('AGD3', 41, 980),
-    ('AGD4', 41, 990),
-    ('AGD5', 4, 1000),
-    ('AGD5', 41, 1010)
+    -- 1:N mappings: cross-cutting governance/security concerns map to multiple viewpoints
+    ('SCR6', 9, 910),    -- Authorization & Access Control -> User Role View
+    ('SCR6', 32, 920),   -- Authorization & Access Control -> Security Control View
+    ('SCR7', 27, 930),   -- Compliance Boundary -> Data Flow Compliance View
+    ('SCR7', 41, 940),   -- Compliance Boundary -> Architecture Governance View
+    ('AGD1', 41, 950),   -- Architecture Decision -> Architecture Governance View
+    ('AGD2', 8, 960),    -- Evolution & Change Impact -> Application Interaction / Impact View
+    ('AGD2', 41, 970),   -- Evolution & Change Impact -> Architecture Governance View
+    ('AGD3', 41, 980),   -- Quality Attribute Trade-off -> Architecture Governance View
+    ('AGD4', 41, 990),   -- Cost & Value -> Architecture Governance View
+    ('AGD5', 4, 1000),   -- Team-Architecture Alignment -> Organizational View
+    ('AGD5', 41, 1010)   -- Team-Architecture Alignment -> Architecture Governance View
 ) AS m(concern_key, viewpoint_number, sort_order)
 JOIN eam.avdm_pact_concern c ON c.concern_key = m.concern_key
 JOIN eam.avdm_viewpoint v ON v.viewpoint_number = m.viewpoint_number
