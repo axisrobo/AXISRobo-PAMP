@@ -39,7 +39,7 @@ export function CmdbPickerModal({ onClose, onConfirm }: CmdbPickerModalProps) {
   // Auto-fetch all on mount
   useEffect(() => {
     fetchData({ appId: '', appName: '' }, 1);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, []);
 
   async function fetchData(filter: { appId: string; appName: string }, targetPage: number) {

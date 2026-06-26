@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { API_BASE, api, authFetch } from '@/shared/lib/api';
 import { authHeaders } from '@/shared/lib/auth-token';
 import { useLocale, useT } from '@/shared/lib/locale';
-import { Button, Card, Radio, Spin, Tooltip, message, Select, Modal, Input, Popconfirm, App } from 'antd';
+import { Button, Card, Radio, Spin, Tooltip, message, Select, Modal, Input, App } from 'antd';
 import { AppArchReportDrawer } from '@/features/review/components/ea-review/request-detail/AppArchReportDrawer';
 import { TechArchReportDrawer } from '@/features/review/components/ea-review/request-detail/TechArchReportDrawer';
 import { ImageViewerModal } from '@/features/review/components/ea-review/request-detail/modals/ImageViewerModal';
@@ -89,7 +89,7 @@ export function DiagramUploadCard({
   readOnly = false,
 }: DiagramUploadCardProps) {
   const [messageApi, contextHolder] = message.useMessage();
-  const { modal } = App.useApp();
+  App.useApp();
   const { locale } = useLocale();
   const t = useT();
   const queryClient = useQueryClient();

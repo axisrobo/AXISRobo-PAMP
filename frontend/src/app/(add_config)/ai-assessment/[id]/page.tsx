@@ -3,11 +3,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, Card, Checkbox, Collapse, Input, message, Progress, Radio, Select, Space, Tag, Typography } from 'antd';
+import { Button, Card, Checkbox, Collapse, Input, message, Progress, Select, Tag, Typography } from 'antd';
 import { ArrowLeft, Save } from 'lucide-react';
 import { api } from '@/shared/lib/api';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text } = Typography;
 
 type MetaData = {
   adoptionTiers: Array<{ value: number; label: string; description: string }>;
@@ -37,7 +37,7 @@ export default function AiAssessmentDetailPage() {
   const [checklistState, setChecklistState] = useState<Record<string, boolean>>({});
   const [notes, setNotes] = useState<Record<string, string>>({});
 
-  const { data, isLoading } = useQuery({ queryKey: ['aiAssessment', id], queryFn: () => api.get<AssessmentDetail>(`/ai-assessment/${id}`), enabled: !!id });
+  const { data } = useQuery({ queryKey: ['aiAssessment', id], queryFn: () => api.get<AssessmentDetail>(`/ai-assessment/${id}`), enabled: !!id });
   const { data: meta } = useQuery({ queryKey: ['aiAssessmentMeta'], queryFn: () => api.get<MetaData>('/ai-assessment/meta') });
 
   useEffect(() => {
