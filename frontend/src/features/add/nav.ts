@@ -1,4 +1,4 @@
-import { Database, GitBranch, Layers3, Network, ShieldCheck } from 'lucide-react';
+import { Database, GitBranch, Layers3, Network } from 'lucide-react';
 import type { ModuleNavDefinition } from '@/shared/modules/types';
 
 export const addNav: ModuleNavDefinition = {

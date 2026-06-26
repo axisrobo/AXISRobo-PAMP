@@ -98,7 +98,7 @@ export function CatalogItemModal({ appId, item, onClose, onSaved }: CatalogItemM
     if (!valid) {
       set('subCategory', '');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [form.subCategory, subCategoryOptions]);
 
   useEffect(() => {

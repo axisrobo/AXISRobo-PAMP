@@ -111,7 +111,7 @@ function CmdbPickerModal({
 
   useEffect(() => {
     fetchData({ appId: '', appName: '' }, 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   async function fetchData(filter: { appId: string; appName: string }, targetPage: number) {
