@@ -1,9 +1,22 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { useAuth } from '@/shared/lib/auth-context';
+
+const AUTH_MODE = (process.env.NEXT_PUBLIC_AUTH_MODE as string) || 'dev';
 
 export function AuthButton() {
   const { user, loading, login, logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogin = () => {
+    if (AUTH_MODE === 'local') {
+      router.push('/login');
+      return;
+    }
+    void login();
+  };
 
   if (loading) {
     return (
@@ -17,8 +30,9 @@ export function AuthButton() {
   if (!user) {
     return (
       <button
-        onClick={login}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+        type="button"
+        onClick={handleLogin}
+        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer"
       >
         Log In
       </button>
@@ -42,7 +56,8 @@ export function AuthButton() {
         </div>
       </div>
       <button
-        onClick={logout}
+        type="button"
+        onClick={() => void logout()}
         className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer"
       >
         Log Out

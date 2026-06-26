@@ -25,6 +25,7 @@ type ProjectCreatePayload = {
   duration?: number | null;
   objectives?: string | null;
   status?: string | null;
+  category?: string | null;
   aiRelated?: string | null;
   pm?: string | null;
   pmItcode?: string | null;
