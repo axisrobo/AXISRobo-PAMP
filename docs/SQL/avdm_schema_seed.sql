@@ -726,98 +726,9 @@ INSERT INTO eam.avdm_artifact (id, artifact_key, artifact_category_id, artifact_
 INSERT INTO eam.avdm_artifact (id, artifact_key, artifact_category_id, artifact_name, purpose, stage, typical_contents, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'data_model', '0bf36d1c-65d3-469a-ab00-07d3fffc34f7', 'Data Model Diagram', 'Defines entities, relationships, and key structural attributes for data architecture.', 'Preparation', '[]', 5, TRUE, 'migration_017', 'dev_admin', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-23T23:19:21.201124'::TIMESTAMP) ON CONFLICT DO NOTHING;
 INSERT INTO eam.avdm_artifact (id, artifact_key, artifact_category_id, artifact_name, purpose, stage, typical_contents, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('d407ec10-7dcd-4778-8186-d584c2163f1f', 'data_pipeline', '0bf36d1c-65d3-469a-ab00-07d3fffc34f7', 'Data Pipeline Diagram', 'Shows movement, transformation, and processing stages for data pipelines.', 'Preparation', '[]', 9, TRUE, 'migration_017', 'dev_admin', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-23T23:19:21.201124'::TIMESTAMP) ON CONFLICT DO NOTHING;
 
--- Table: eam.avdm_concern_artifact_mapping
-CREATE TABLE IF NOT EXISTS eam.avdm_concern_artifact_mapping (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    concern_id UUID NOT NULL,
-    artifact_id UUID NOT NULL,
-    default_status VARCHAR NOT NULL,
-    rationale text,
-    sort_order INTEGER NOT NULL DEFAULT 0,
-    is_active BOOLEAN NOT NULL DEFAULT true,
-    create_by VARCHAR NOT NULL DEFAULT 'system'::character varying,
-    update_by VARCHAR NOT NULL DEFAULT 'system'::character varying,
-    create_at TIMESTAMP NOT NULL DEFAULT now(),
-    update_at TIMESTAMP NOT NULL DEFAULT now()
-);
-
--- Seed: eam.avdm_concern_artifact_mapping (76 rows)
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('04260312-c967-41b2-9003-9a5246165794', '3827e763-ed52-440a-81fe-30e9cd10c279', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('04801a24-16a8-4cab-9774-c661c0be033b', 'a7159e8d-3824-4bfc-a1c6-f4798dc2b04a', '10864a32-7397-4ae6-9087-bbc5af706920', 'Optional', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('075a4773-7a63-4ce3-b4ed-d29564471a80', '83dff545-c341-47d8-b929-544cc66a9077', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', NULL, 30, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('105b5e68-1c11-42de-8024-28a8dd8dedc5', '1cbe8c0e-c9d4-4119-88f2-3a00498d0876', '0e15f6f6-4341-41ba-9e2f-0d8b98e8b499', 'Optional', NULL, 30, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('16aa3f48-62f2-458c-a501-ddc690200b90', 'e0f38176-57f9-4c7f-8841-b224ab7c68ce', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', NULL, 30, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('16f62b29-8bcc-47b4-9361-1d1b593f3cb2', '207c45e8-7e13-43a8-927f-b6e76c1ec5ab', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('1bfec27e-6544-4894-ac7b-3f932f5ea3d3', 'd4afd8ac-cb51-459d-887d-128eef4f23a5', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('1e3e78ce-c3cf-4ef5-ab11-f525608e1a84', '28b57abf-5f74-431b-badf-739c32b7a898', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('1ea6f169-e78e-44f1-91c2-d961c8dd2558', '33fa7d86-f251-4dfd-b58a-1cb730a8218f', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('1f1769c1-7d24-40df-918d-dea36284ec8c', 'f2fa6488-c455-4103-85ef-993d180b2baf', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Optional', NULL, 30, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('24e40808-a756-4383-9808-e2f861c1ed37', 'bf6048e2-2604-4d23-a2fa-aa3afae283b5', '85c3e85d-f80c-4389-9f48-8b3399a3d166', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('25031e68-2774-4e95-afb8-be39d0b97d4e', '28504628-97c3-432d-8a6a-78517e288efd', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('286acd6d-4694-4653-b55f-3f358fb69f72', '3e9d1504-b37a-4e94-abb3-7e142aeaf9b2', '9c71a803-e029-467d-b261-76382159eb34', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('2fe42f1c-5f6a-4901-b25e-3bcdfbbdcaa0', '0a56429c-278f-4160-99a3-75d7e1b91e09', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('2fef59b1-348c-4701-a3fe-616a9861a4cb', 'e0f38176-57f9-4c7f-8841-b224ab7c68ce', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('317aef1f-5487-4bf1-a30b-bd3143bf3640', '1cbe8c0e-c9d4-4119-88f2-3a00498d0876', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('355a818f-2d37-47b3-b470-f09377417814', 'e52325d3-1109-4c83-8ff7-7337cf27bb80', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('3925b83f-5fb2-47de-a71d-26ab3be72e43', '1cbe8c0e-c9d4-4119-88f2-3a00498d0876', '10864a32-7397-4ae6-9087-bbc5af706920', 'Mandatory', NULL, 40, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('394f174f-5ee2-41bb-8a86-ef9ca120bb1b', 'e0f38176-57f9-4c7f-8841-b224ab7c68ce', '10864a32-7397-4ae6-9087-bbc5af706920', 'Mandatory', NULL, 40, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('3b7ddaa0-e753-4fed-b2a3-9f9a8bcfc549', '3e9d1504-b37a-4e94-abb3-7e142aeaf9b2', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('3d90c61b-e04b-43c1-be6a-814b986eab69', 'e943a552-617b-4112-93d5-d9d3bd94b9a6', '85c3e85d-f80c-4389-9f48-8b3399a3d166', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('3fac0584-3235-4229-8d68-3ffc6c08b211', '2ee0c84b-8b62-4733-a7c1-23756dd4a878', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('47cc5455-3cb4-4558-a6b6-a8a103113eb1', '38ca83cc-361b-4dce-8973-e67156a8d8d1', '9c71a803-e029-467d-b261-76382159eb34', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('49719aef-5100-4105-94da-ea49b0854ba7', 'ce132670-3e9a-4606-a407-291eff16446e', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('4c373b5b-f7e9-45b1-b7f5-4352f5cf551f', '0f89db83-d84e-4fa5-95ad-3929f3d1dfc6', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('53efea11-271d-487d-ba5a-fdfd17025362', '2eed1b4c-2a65-4190-a406-dffff76106ff', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('54217d30-3440-4f63-8102-9c7c47b38f66', '0667e0eb-563c-4bed-a2af-8d8f3872f45d', 'c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('5fea5856-cb50-4b9a-9228-c6f2c4b0e995', 'd4afd8ac-cb51-459d-887d-128eef4f23a5', '0e15f6f6-4341-41ba-9e2f-0d8b98e8b499', 'Mandatory', NULL, 30, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('6119261d-da99-4c16-a6b7-0f5820cfd501', '2fdc5548-aae8-4073-a863-177d95264e9d', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('641d8c43-a55d-47fe-88d8-ce102138c501', '33fa7d86-f251-4dfd-b58a-1cb730a8218f', '9c71a803-e029-467d-b261-76382159eb34', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('6a9dc263-4278-44bd-b94f-177003010df2', '11ef6f1d-b005-4469-be15-14a516e1620a', '10864a32-7397-4ae6-9087-bbc5af706920', 'Mandatory', NULL, 30, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('6b3a3fee-daa0-471c-94bc-5791e32d97b2', 'e0f38176-57f9-4c7f-8841-b224ab7c68ce', '85c3e85d-f80c-4389-9f48-8b3399a3d166', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('6fbc3005-8b2b-4e61-a8b5-4b7db892959b', '790ea5f7-68a4-414a-9ff9-c215af2ce53f', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('72a89c51-206f-47ad-b223-965f4b3b040c', '3efe6823-5036-4d30-91d8-dfac1dd8d847', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Optional', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('763b5b46-04ce-4bef-9937-2fc1ec35b4ed', '9185b6da-ff40-459f-b2fe-f7fb4c2f0e9f', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('79f0ff6e-32c0-47d3-a9e2-582285c0dda7', 'f7f896c5-3f2c-49d3-9db1-c9882dcc5ce3', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('7b187b7c-ec2f-4ebe-ac5a-610b41fbae54', 'e943a552-617b-4112-93d5-d9d3bd94b9a6', 'c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('7cb735c2-b470-4af8-a52b-17c1dd722896', '4b7a1ac7-fc11-4391-9902-c5c632f4acad', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Optional', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('7e0c9ec5-e0c3-412c-a19b-6aac81a6712d', '4b7a1ac7-fc11-4391-9902-c5c632f4acad', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('7ece4600-6c8c-4fa2-bb02-183132d49007', 'f7f896c5-3f2c-49d3-9db1-c9882dcc5ce3', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('8a0649cb-dd13-4510-893c-13c6c4b0cabb', 'ce132670-3e9a-4606-a407-291eff16446e', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('8bff44d6-7536-40f6-91bd-1d0d580bcca8', '29001e8b-7082-4ce1-971b-9220bd86b590', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Optional', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('8fffb9b0-621e-466b-a46f-d09ded0d443e', 'f2fa6488-c455-4103-85ef-993d180b2baf', '10864a32-7397-4ae6-9087-bbc5af706920', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('90419cb7-718b-4a0e-a78c-f02a43d6cf47', 'e52325d3-1109-4c83-8ff7-7337cf27bb80', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('91ec3231-8cdb-44b7-905c-a49614f3e29b', '1cbe8c0e-c9d4-4119-88f2-3a00498d0876', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('947c26ad-729b-45be-bb90-d9d09c1cc7ab', 'b501e152-100e-47fd-99af-3a41377e54f8', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('968fcdf2-e6ae-40f1-9a8c-1118da40087e', 'ccf8abd3-3794-4c3b-8f30-6d72d8b29815', '85c3e85d-f80c-4389-9f48-8b3399a3d166', 'Optional', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('973c9535-a25d-45ac-879a-9dc42ad24b90', '48dfc8fd-540f-4aab-8664-ade612687973', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('a28fd07a-dd3a-4aba-93d0-e713b12e584d', 'a7159e8d-3824-4bfc-a1c6-f4798dc2b04a', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Optional', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('a4646e4b-6108-48ab-a9d8-0f67b15bb2ed', '0a9b2496-b20d-459c-a589-3620a78fedae', '2cace55f-0227-48f5-861e-ac4f86d983e7', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('aca49208-c80c-4f02-9e70-55476dd59eba', 'd368804c-4368-4e29-9e71-51e552d74d7f', 'c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ae09e34a-541d-47ab-a64c-c885060a5b8e', '83dff545-c341-47d8-b929-544cc66a9077', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ae4f79be-8c2b-4d4b-b2c3-36d6029ed2f3', 'f2fa6488-c455-4103-85ef-993d180b2baf', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('b10ffdd1-6a00-4b37-b591-a4fef761dba7', 'b7751257-c599-4291-a108-43690f98bfcb', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('b2c78271-7cdc-4c07-9076-ec23391b70bd', '29001e8b-7082-4ce1-971b-9220bd86b590', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('c0c3469c-741c-48f7-b483-5f1b5c127aab', 'd4afd8ac-cb51-459d-887d-128eef4f23a5', '10864a32-7397-4ae6-9087-bbc5af706920', 'Mandatory', NULL, 40, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('c3b5ca56-0b74-45f9-a7bf-169cc5aa944d', '28504628-97c3-432d-8a6a-78517e288efd', '9c71a803-e029-467d-b261-76382159eb34', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('c9e1265c-5f64-41ef-9caf-cfadebdf224d', 'c46eec72-b92a-4f2a-ac80-bd3097694729', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Optional', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ce79524b-20d8-4108-8995-f7d09241e03d', 'be1af365-bc9c-4678-a0e1-18aa5eb3dc9a', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('cf65248a-6d9b-4e75-9485-eaecdfe80db6', '2fdc5548-aae8-4073-a863-177d95264e9d', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('d45d8321-be81-4077-9853-d515cd60df6d', '7a454779-a4bd-4c9d-9f02-dc0774f78ec5', '0e15f6f6-4341-41ba-9e2f-0d8b98e8b499', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('d50ed51b-076a-4cc8-a22f-5367605c6562', 'ccf8abd3-3794-4c3b-8f30-6d72d8b29815', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Optional', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('d6e7d78d-0387-4f50-a8de-f0b5e389eefd', '2eed1b4c-2a65-4190-a406-dffff76106ff', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('d811861c-af2b-4322-911f-21156709d466', '2826d95f-c76d-47b5-bcda-98a24a8d600a', 'c30e2a0e-7e2d-4ab3-b02c-c1f8ba43b871', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('de6b7ae1-4281-43cc-8d2c-f669cd1c72a6', '7a454779-a4bd-4c9d-9f02-dc0774f78ec5', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Optional', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('e4276eec-32a1-4577-a7f7-bda00f2b7c02', 'e52325d3-1109-4c83-8ff7-7337cf27bb80', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 30, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('e4da5c60-fce3-48d9-8521-3ef63a5a28c3', '83dff545-c341-47d8-b929-544cc66a9077', '9c71a803-e029-467d-b261-76382159eb34', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ea697361-df91-46b4-b076-e83ecc325dd3', 'd4afd8ac-cb51-459d-887d-128eef4f23a5', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('eae1c110-fe83-4c07-8657-1113a4f8a91d', 'b0ae8094-e55d-449d-9fda-f30f918923a9', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('eea91157-a421-4092-a99e-aea3ae4de333', '7e19731b-6f4c-49de-8af1-b2566ce8ae89', '10864a32-7397-4ae6-9087-bbc5af706920', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ef1fd7fa-8244-4175-bfca-186f46e59999', '11ef6f1d-b005-4469-be15-14a516e1620a', '0c1fdebb-5bc1-452f-a489-d34622a8ab4e', 'Mandatory', NULL, 40, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f0a09865-df7a-4566-a263-76b8d01f26e5', 'e092f5e0-16f3-47f3-8343-bd77d8967788', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f10bb38e-012c-4f3f-8593-aaf4e95005eb', '0dfbdb6e-fc39-45c3-b0ff-85140e1cc6dc', '3dd880b0-72c2-4009-9185-dfd7876c5544', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f16d1018-92b0-41a8-82df-c4fe520b3979', '0a56429c-278f-4160-99a3-75d7e1b91e09', '85c3e85d-f80c-4389-9f48-8b3399a3d166', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f39521e8-7159-490f-a860-de9fe9a2e140', '11ef6f1d-b005-4469-be15-14a516e1620a', '0e15f6f6-4341-41ba-9e2f-0d8b98e8b499', 'Mandatory', NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
-INSERT INTO eam.avdm_concern_artifact_mapping (id, concern_id, artifact_id, default_status, rationale, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f39fefc9-c87b-4fea-ae34-696a67b5cf9c', '11ef6f1d-b005-4469-be15-14a516e1620a', 'd407ec10-7dcd-4778-8186-d584c2163f1f', 'Mandatory', NULL, 10, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
+-- Removed: eam.avdm_concern_artifact_mapping (direct concern -> artifact shortcut).
+-- The canonical AVDM chain is concern -> viewpoint -> artifact.
+DROP TABLE IF EXISTS eam.avdm_concern_artifact_mapping CASCADE;
 
 -- Table: eam.avdm_viewpoint
 CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint (
@@ -898,6 +809,77 @@ CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint_concern_mapping (
     update_by VARCHAR NOT NULL DEFAULT 'system'::character varying,
     create_at TIMESTAMP NOT NULL DEFAULT now(),
     update_at TIMESTAMP NOT NULL DEFAULT now()
+);
+
+-- Seed: eam.avdm_viewpoint_concern_mapping (56 rows)
+-- Canonical AVDM chain: questionnaire answers activate concerns; concerns classify viewpoints; viewpoints recommend artifacts.
+-- The direct concern->artifact mapping below is retained as a materialized shortcut for compatibility and UI convenience.
+INSERT INTO eam.avdm_viewpoint_concern_mapping (id, viewpoint_id, concern_id, sort_order, is_active, create_by, update_by, create_at, update_at)
+SELECT gen_random_uuid(), v.id, c.id, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
+FROM (VALUES
+    ('B1', 1, 10),
+    ('B2', 2, 20),
+    ('B3', 3, 30),
+    ('B4', 4, 40),
+    ('B5', 5, 50),
+    ('A1', 6, 60),
+    ('A2', 7, 70),
+    ('A3', 8, 80),
+    ('A4', 9, 90),
+    ('C1', 10, 100),
+    ('C2', 11, 110),
+    ('C3', 12, 120),
+    ('C4', 13, 130),
+    ('C5', 14, 140),
+    ('IP1', 15, 150),
+    ('IP2', 16, 160),
+    ('IP3', 17, 170),
+    ('IP4', 18, 180),
+    ('IP5', 19, 190),
+    ('IP6', 20, 200),
+    ('D1', 21, 210),
+    ('D2', 22, 220),
+    ('D3', 23, 230),
+    ('D4', 24, 240),
+    ('D5', 25, 250),
+    ('D6', 26, 260),
+    ('D7', 27, 270),
+    ('D8', 28, 280),
+    ('D9', 29, 290),
+    ('D10', 30, 300),
+    ('D11', 31, 310),
+    ('SCR1', 32, 320),
+    ('SCR2', 33, 330),
+    ('SCR3', 34, 340),
+    ('SCR4', 35, 350),
+    ('SCR5', 36, 360),
+    ('DIN1', 37, 370),
+    ('DIN2', 38, 380),
+    ('DIN3', 39, 390),
+    ('DIN4', 40, 400),
+    ('OR1', 42, 420),
+    ('OR2', 43, 430),
+    ('OR3', 44, 440),
+    ('OR4', 45, 450),
+    ('SCR6', 9, 910),
+    ('SCR6', 32, 920),
+    ('SCR7', 27, 930),
+    ('SCR7', 41, 940),
+    ('AGD1', 41, 950),
+    ('AGD2', 8, 960),
+    ('AGD2', 41, 970),
+    ('AGD3', 41, 980),
+    ('AGD4', 41, 990),
+    ('AGD5', 4, 1000),
+    ('AGD5', 41, 1010)
+) AS m(concern_key, viewpoint_number, sort_order)
+JOIN eam.avdm_pact_concern c ON c.concern_key = m.concern_key
+JOIN eam.avdm_viewpoint v ON v.viewpoint_number = m.viewpoint_number
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM eam.avdm_viewpoint_concern_mapping existing
+    WHERE existing.concern_id = c.id
+      AND existing.viewpoint_id = v.id
 );
 
 -- Table: eam.avdm_viewpoint_artifact_mapping
@@ -989,6 +971,51 @@ INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, 
 INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('f9e79faa-8f4d-4039-8f41-b2e32659979c', 'b94a9c8d-fd14-4aa4-b0be-747447192b84', '0e15f6f6-4341-41ba-9e2f-0d8b98e8b499', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
 INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ff785bf0-526f-4047-93fe-7609caf87ce3', 'd670a383-4ab8-42c3-8387-f3b76fc490f0', '3980d626-dea4-4e27-b197-6be8716d0c48', 'Mandatory', 10, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
 INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('ffeea597-94e1-4296-b2cd-4191b2c00b81', 'b94a9c8d-fd14-4aa4-b0be-747447192b84', '461007d7-b9ba-4f60-adba-0873d1bbfb9a', 'Mandatory', 30, TRUE, 'csv_import', 'csv_import', '2026-06-23T22:05:20.268109'::TIMESTAMP, '2026-06-23T22:05:20.268109'::TIMESTAMP) ON CONFLICT DO NOTHING;
+
+-- Corrective seed: align high-signal viewpoint->artifact mappings with the canonical AVDM chain.
+-- These rows normalize the most visible semantic drift from earlier seed exports.
+WITH target_viewpoints(viewpoint_number) AS (
+    VALUES (23), (24), (27), (29), (30), (31), (35), (36), (38), (39), (42), (43), (44), (45)
+)
+DELETE FROM eam.avdm_viewpoint_artifact_mapping m
+USING eam.avdm_viewpoint v, target_viewpoints t
+WHERE m.viewpoint_id = v.id
+  AND v.viewpoint_number = t.viewpoint_number;
+
+INSERT INTO eam.avdm_viewpoint_artifact_mapping (id, viewpoint_id, artifact_id, recommendation_status, sort_order, is_active, create_by, update_by, create_at, update_at)
+SELECT gen_random_uuid(), v.id, a.id, m.recommendation_status, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
+FROM (VALUES
+    (23, 'data_pipeline', 'Mandatory', 10),
+    (23, 'data_compliance_diagram', 'Recommended', 20),
+    (24, 'data_asset_matrix', 'Mandatory', 10),
+    (27, 'data_compliance_diagram', 'Mandatory', 10),
+    (27, 'data_pipeline', 'Recommended', 20),
+    (29, 'data_compliance_diagram', 'Mandatory', 10),
+    (29, 'resource_list', 'Recommended', 20),
+    (30, 'data_model', 'Mandatory', 10),
+    (31, 'data_model', 'Mandatory', 10),
+    (35, 'auth_flow', 'Mandatory', 10),
+    (36, 'auth_flow', 'Mandatory', 10),
+    (38, 'tech_diagram', 'Mandatory', 10),
+    (38, 'resource_list', 'Recommended', 20),
+    (39, 'tech_diagram', 'Mandatory', 10),
+    (39, 'resource_list', 'Recommended', 20),
+    (42, 'resource_list', 'Mandatory', 10),
+    (42, 'system_process_flow', 'Recommended', 20),
+    (43, 'tech_diagram', 'Mandatory', 10),
+    (43, 'resource_list', 'Recommended', 20),
+    (44, 'resource_list', 'Mandatory', 10),
+    (45, 'resource_list', 'Mandatory', 10),
+    (45, 'tech_diagram', 'Recommended', 20)
+) AS m(viewpoint_number, artifact_key, recommendation_status, sort_order)
+JOIN eam.avdm_viewpoint v ON v.viewpoint_number = m.viewpoint_number
+JOIN eam.avdm_artifact a ON a.artifact_key = m.artifact_key
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM eam.avdm_viewpoint_artifact_mapping existing
+    WHERE existing.viewpoint_id = v.id
+      AND existing.artifact_id = a.id
+);
 
 -- Table: eam.avdm_project_type_profile
 CREATE TABLE IF NOT EXISTS eam.avdm_project_type_profile (

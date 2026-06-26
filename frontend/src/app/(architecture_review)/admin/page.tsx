@@ -51,13 +51,6 @@ const adminItems = [
     action: 'Open Matrix',
   },
   {
-    title: 'Concern & Artifact Mapping',
-    description: 'Direct concern-to-artifact mapping showing which artifacts are prescribed for each architecture concern, with Mandatory/Recommended/Optional status.',
-    href: '/concern-artifact-mapping',
-    icon: Layers3,
-    action: 'View Mappings',
-  },
-  {
     title: 'Concern Catalog',
     description: 'Maintain the 52 architecture concerns and active/inactive status through the AVDM concern master data API.',
     href: '/pact-concern-catalog',

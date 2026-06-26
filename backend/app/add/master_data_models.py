@@ -127,13 +127,3 @@ class ArtifactModel:
     typical_contents: tuple[str, ...] = field(default_factory=tuple)
     sort_order: int = 0
     is_active: bool = True
-
-
-@dataclass(frozen=True, slots=True)
-class ConcernArtifactMappingModel:
-    concern_key: str
-    artifact_key: str
-    default_status: ArtifactRecommendationStatus
-    rationale: str = ""
-    sort_order: int = 0
-    is_active: bool = True

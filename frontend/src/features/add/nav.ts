@@ -52,12 +52,6 @@ export const addNav: ModuleNavDefinition = {
           icon: Network,
           requiredRole: 'ea_admin',
         },
-        {
-          label: 'Concern-Artifact Mapping',
-          href: '/concern-artifact-mapping',
-          icon: GitBranch,
-          requiredRole: 'ea_admin',
-        },
       ],
     },
   ],

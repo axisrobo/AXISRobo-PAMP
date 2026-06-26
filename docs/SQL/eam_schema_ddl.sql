@@ -187,21 +187,6 @@ CREATE TABLE IF NOT EXISTS eam.avdm_concern_activation_rule_score (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_concern_artifact_mapping
-CREATE TABLE IF NOT EXISTS eam.avdm_concern_artifact_mapping (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    concern_id UUID NOT NULL,
-    artifact_id UUID NOT NULL,
-    default_status VARCHAR(255) NOT NULL,
-    rationale TEXT,
-    sort_order INTEGER NOT NULL DEFAULT 0,
-    is_active BOOLEAN NOT NULL DEFAULT true,
-    create_by VARCHAR(255) NOT NULL DEFAULT 'system'::character varying,
-    update_by VARCHAR(255) NOT NULL DEFAULT 'system'::character varying,
-    create_at TIMESTAMP NOT NULL DEFAULT now(),
-    update_at TIMESTAMP NOT NULL DEFAULT now()
-);
-
 -- Table: eam.avdm_master_data_revision
 CREATE TABLE IF NOT EXISTS eam.avdm_master_data_revision (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

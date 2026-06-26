@@ -34,7 +34,6 @@ PACT concern master catalog (52 architecture concerns). Defines concern keys, na
 ### Relationships
 
 - `eam.avdm_concern_activation_rule_score.concern_id` <- `eam.avdm_pact_concern`
-- `eam.avdm_concern_artifact_mapping.concern_id` <- `eam.avdm_pact_concern`
 - `eam.avdm_question_answer_concern_mapping.concern_id` <- `eam.avdm_pact_concern`
 - `eam.avdm_viewpoint_concern_mapping.concern_id` <- `eam.avdm_pact_concern`
 
@@ -276,34 +275,8 @@ Named artifacts (tech diagram, app collaboration, biz diagram, data model, etc.)
 ### Relationships
 
 - `eam.avdm_artifact.artifact_category_id` -> `eam.avdm_artifact_category.id`
-- `eam.avdm_concern_artifact_mapping.artifact_id` <- `eam.avdm_artifact`
 - `eam.avdm_project_type_artifact_mapping.artifact_id` <- `eam.avdm_artifact`
 - `eam.avdm_viewpoint_artifact_mapping.artifact_id` <- `eam.avdm_artifact`
-
----
-
-## `eam.avdm_concern_artifact_mapping`
-
-Maps PACT concerns to recommended artifacts with status (Mandatory/Recommended/Optional/Not Required).
-
-| Column | Type | Null | FK / PK |
-|--------|------|------|---------|
-| `id` | `uuid` | NOT NULL | PK |
-| `concern_id` | `uuid` | NOT NULL | FK -> `avdm_pact_concern.id` |
-| `artifact_id` | `uuid` | NOT NULL | FK -> `avdm_artifact.id` |
-| `default_status` | `character varying(32)` | NOT NULL | - |
-| `rationale` | `text` | NULL | - |
-| `sort_order` | `integer(32)` | NOT NULL | - |
-| `is_active` | `boolean` | NOT NULL | - |
-| `create_by` | `character varying(64)` | NOT NULL | - |
-| `update_by` | `character varying(64)` | NOT NULL | - |
-| `create_at` | `timestamp without time zone` | NOT NULL | - |
-| `update_at` | `timestamp without time zone` | NOT NULL | - |
-
-### Relationships
-
-- `eam.avdm_concern_artifact_mapping.concern_id` -> `eam.avdm_pact_concern.id`
-- `eam.avdm_concern_artifact_mapping.artifact_id` -> `eam.avdm_artifact.id`
 
 ---
 

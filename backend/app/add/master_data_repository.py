@@ -1489,7 +1489,7 @@ async def get_config_metadata(
     return await _get_revision(db, domain_key=domain_key, default_change_note=default_change_note)
 
 
-async def list_concern_artifact_recommendation_items(
+async def list_viewpoint_artifact_recommendation_items(
     db: AsyncSession,
     *,
     decisions: list[dict[str, Any]],
@@ -1501,25 +1501,39 @@ async def list_concern_artifact_recommendation_items(
     ]
     if not concern_keys:
         return []
+
     rows = (
         await db.execute(
             text(
                 """
-                SELECT c.concern_key, a.artifact_name, m.default_status, a.sort_order
-                FROM eam.avdm_concern_artifact_mapping m
-                JOIN eam.avdm_pact_concern c ON c.id = m.concern_id
-                JOIN eam.avdm_artifact a ON a.id = m.artifact_id
-                WHERE m.is_active = TRUE AND a.is_active = TRUE AND c.is_active = TRUE
-                  AND c.concern_key = ANY(:concern_keys)
-                ORDER BY c.concern_key, a.sort_order, a.artifact_name
+                SELECT DISTINCT UPPER(c.concern_key) AS concern_key,
+                       a.artifact_name,
+                       a.sort_order,
+                       vc.sort_order AS viewpoint_sort_order,
+                       va.sort_order AS artifact_sort_order
+                FROM eam.avdm_pact_concern c
+                JOIN eam.avdm_viewpoint_concern_mapping vc
+                  ON vc.concern_id = c.id AND vc.is_active = TRUE
+                JOIN eam.avdm_viewpoint v
+                  ON v.id = vc.viewpoint_id AND v.is_active = TRUE
+                JOIN eam.avdm_viewpoint_artifact_mapping va
+                  ON va.viewpoint_id = v.id AND va.is_active = TRUE
+                JOIN eam.avdm_artifact a
+                  ON a.id = va.artifact_id AND a.is_active = TRUE
+                WHERE c.is_active = TRUE
+                  AND UPPER(c.concern_key) = ANY(:concern_keys)
+                ORDER BY UPPER(c.concern_key), vc.sort_order, va.sort_order, a.sort_order, a.artifact_name
                 """
             ),
             {"concern_keys": concern_keys},
         )
     ).mappings().all()
+
     artifact_map: dict[str, list[str]] = {}
     for row in rows:
-        artifact_map.setdefault(row["concern_key"], []).append(row["artifact_name"])
+        artifacts = artifact_map.setdefault(row["concern_key"], [])
+        if row["artifact_name"] not in artifacts:
+            artifacts.append(row["artifact_name"])
 
     items: list[ArtifactRecommendationItem] = []
     for decision in decisions:

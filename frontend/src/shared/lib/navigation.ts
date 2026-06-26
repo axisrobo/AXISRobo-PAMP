@@ -19,7 +19,6 @@ export function isAdminPath(pathname: string): boolean {
     || pathname === '/viewpoint-catalog'
     || pathname === '/concern-viewpoint-mapping'
     || pathname === '/viewpoint-artifact-mapping'
-    || pathname === '/concern-artifact-mapping'
     || pathname === '/pact-concern-catalog'
     || pathname === '/ai-assessment'
     || pathname.startsWith('/ai-assessment/');
