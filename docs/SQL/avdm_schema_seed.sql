@@ -660,20 +660,46 @@ INSERT INTO eam.avdm_concern_activation_rule (id, rule_key, description, all_con
 INSERT INTO eam.avdm_concern_activation_rule (id, rule_key, description, all_conditions, any_conditions, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('d553a41d-ccd4-4451-8a81-1fa27f7953f8', 'large-scale-integration', 'Large application scope with external systems activates integration, dependency, reliability, and capacity concerns.', '[{''in'': [''21_50'', ''51_100'', ''GT_100''], ''source'': ''projectScaleSection.applicationsInScope''}, {''equals'': ''Yes'', ''source'': ''projectScaleSection.hasExternalSystems''}]', '[]', 30, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
 INSERT INTO eam.avdm_concern_activation_rule (id, rule_key, description, all_conditions, any_conditions, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('e6b42b59-0787-46cb-9f63-2fabaefd51ea', 'technology-exception-stack-complexity', 'Technology exception combined with broad tech stack variety increases governance and operability concern priority.', '[{''equals'': ''Y'', ''source'': ''question.16.answer''}, {''in'': [''6_10'', ''GT_10''], ''source'': ''complexitySection.techStackKindsCount''}]', '[]', 40, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
 
--- Architecture Type activation rules (one per option of architectureTypeSection.architectureType, a multiselect).
--- 'in' matches when the selected architecture-type array contains the option value, so multiple rules can fire.
+-- Architecture Type activation rules (Phase 2): one rule per option of the 5 category multiselect
+-- fields under architectureTypeSection. The question is rendered from questionnaireSections
+-- (questionnaire_config.py / DEFAULT_QUESTIONNAIRE_CONFIG), NOT from avdm_question; these rules
+-- consume the submitted keys architectureTypeSection.<field>.
+-- NOTE: these are SINGLE-SIGNAL, array-valued activation rules (ALL = one 'in' condition over a
+-- multiselect answer; ANY empty). Stored in avdm_concern_activation_rule because the answer is
+-- array-valued; they are NOT combination rules.
 INSERT INTO eam.avdm_concern_activation_rule (id, rule_key, description, all_conditions, any_conditions, sort_order, is_active, create_by, update_by, create_at, update_at)
 SELECT gen_random_uuid(), m.rule_key, m.description, m.all_conditions::jsonb, '[]'::jsonb, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
 FROM (VALUES
-    ('arch-type-web-application', 'Architecture type: Web application activates application and container concerns.', '[{"in": ["web_application"], "source": "architectureTypeSection.architectureType"}]', 110),
-    ('arch-type-data-platform', 'Architecture type: Data platform activates data lineage, quality, pipeline, and model concerns.', '[{"in": ["data_platform"], "source": "architectureTypeSection.architectureType"}]', 120),
-    ('arch-type-ai-ml-system', 'Architecture type: AI/ML system activates data quality, security control, and observability concerns.', '[{"in": ["ai_ml_system"], "source": "architectureTypeSection.architectureType"}]', 130),
-    ('arch-type-llm-rag-system', 'Architecture type: LLM/RAG system activates data quality, data compliance, security control, and observability concerns.', '[{"in": ["llm_rag_system"], "source": "architectureTypeSection.architectureType"}]', 140),
-    ('arch-type-identity-iam', 'Architecture type: Identity/IAM integration activates authentication, authorization, and user-role concerns.', '[{"in": ["identity_iam_integration"], "source": "architectureTypeSection.architectureType"}]', 150),
-    ('arch-type-event-driven', 'Architecture type: Event-driven system activates communication, process flow, and sequence concerns.', '[{"in": ["event_driven_system"], "source": "architectureTypeSection.architectureType"}]', 160),
-    ('arch-type-cross-border', 'Architecture type: Cross-border / multi-region platform activates data compliance, sovereignty, location, and compliance-boundary concerns.', '[{"in": ["cross_border_multi_region"], "source": "architectureTypeSection.architectureType"}]', 170),
-    ('arch-type-saas-integration', 'Architecture type: SaaS integration activates application interaction, integration, authentication, and compliance-boundary concerns.', '[{"in": ["saas_integration"], "source": "architectureTypeSection.architectureType"}]', 180),
-    ('arch-type-legacy-modernization', 'Architecture type: Legacy modernization activates evolution/impact, interaction, and technical service/stack concerns.', '[{"in": ["legacy_modernization"], "source": "architectureTypeSection.architectureType"}]', 190)
+    ('at-business-capability_based', 'Architecture type (business): capability_based.', '[{"in": ["capability_based"], "source": "architectureTypeSection.businessArchitectureType"}]', 110),
+    ('at-business-process_centric', 'Architecture type (business): process_centric.', '[{"in": ["process_centric"], "source": "architectureTypeSection.businessArchitectureType"}]', 120),
+    ('at-business-customer_journey', 'Architecture type (business): customer_journey.', '[{"in": ["customer_journey"], "source": "architectureTypeSection.businessArchitectureType"}]', 130),
+    ('at-business-multi_entity', 'Architecture type (business): multi_entity.', '[{"in": ["multi_entity"], "source": "architectureTypeSection.businessArchitectureType"}]', 140),
+    ('at-business-platform_business', 'Architecture type (business): platform_business.', '[{"in": ["platform_business"], "source": "architectureTypeSection.businessArchitectureType"}]', 150),
+    ('at-application-monolith', 'Architecture type (application): monolith.', '[{"in": ["monolith"], "source": "architectureTypeSection.applicationArchitectureType"}]', 160),
+    ('at-application-modular_monolith', 'Architecture type (application): modular_monolith.', '[{"in": ["modular_monolith"], "source": "architectureTypeSection.applicationArchitectureType"}]', 170),
+    ('at-application-microservices', 'Architecture type (application): microservices.', '[{"in": ["microservices"], "source": "architectureTypeSection.applicationArchitectureType"}]', 180),
+    ('at-application-event_driven', 'Architecture type (application): event_driven.', '[{"in": ["event_driven"], "source": "architectureTypeSection.applicationArchitectureType"}]', 190),
+    ('at-application-web_application', 'Architecture type (application): web_application.', '[{"in": ["web_application"], "source": "architectureTypeSection.applicationArchitectureType"}]', 200),
+    ('at-application-mobile_or_client', 'Architecture type (application): mobile_or_client.', '[{"in": ["mobile_or_client"], "source": "architectureTypeSection.applicationArchitectureType"}]', 210),
+    ('at-technical-cloud_native', 'Architecture type (technical): cloud_native.', '[{"in": ["cloud_native"], "source": "architectureTypeSection.technicalArchitectureType"}]', 220),
+    ('at-technical-containerized', 'Architecture type (technical): containerized.', '[{"in": ["containerized"], "source": "architectureTypeSection.technicalArchitectureType"}]', 230),
+    ('at-technical-on_premise', 'Architecture type (technical): on_premise.', '[{"in": ["on_premise"], "source": "architectureTypeSection.technicalArchitectureType"}]', 240),
+    ('at-technical-hybrid_multicloud', 'Architecture type (technical): hybrid_multicloud.', '[{"in": ["hybrid_multicloud"], "source": "architectureTypeSection.technicalArchitectureType"}]', 250),
+    ('at-technical-legacy_modernization', 'Architecture type (technical): legacy_modernization.', '[{"in": ["legacy_modernization"], "source": "architectureTypeSection.technicalArchitectureType"}]', 260),
+    ('at-technical-high_availability', 'Architecture type (technical): high_availability.', '[{"in": ["high_availability"], "source": "architectureTypeSection.technicalArchitectureType"}]', 270),
+    ('at-data-relational_oltp', 'Architecture type (data): relational_oltp.', '[{"in": ["relational_oltp"], "source": "architectureTypeSection.dataArchitectureType"}]', 280),
+    ('at-data-data_warehouse', 'Architecture type (data): data_warehouse.', '[{"in": ["data_warehouse"], "source": "architectureTypeSection.dataArchitectureType"}]', 290),
+    ('at-data-data_lake', 'Architecture type (data): data_lake.', '[{"in": ["data_lake"], "source": "architectureTypeSection.dataArchitectureType"}]', 300),
+    ('at-data-streaming', 'Architecture type (data): streaming.', '[{"in": ["streaming"], "source": "architectureTypeSection.dataArchitectureType"}]', 310),
+    ('at-data-ai_ml', 'Architecture type (data): ai_ml.', '[{"in": ["ai_ml"], "source": "architectureTypeSection.dataArchitectureType"}]', 320),
+    ('at-data-llm_rag', 'Architecture type (data): llm_rag.', '[{"in": ["llm_rag"], "source": "architectureTypeSection.dataArchitectureType"}]', 330),
+    ('at-data-master_data', 'Architecture type (data): master_data.', '[{"in": ["master_data"], "source": "architectureTypeSection.dataArchitectureType"}]', 340),
+    ('at-security-zero_trust', 'Architecture type (security): zero_trust.', '[{"in": ["zero_trust"], "source": "architectureTypeSection.securityArchitectureType"}]', 350),
+    ('at-security-iam_integration', 'Architecture type (security): iam_integration.', '[{"in": ["iam_integration"], "source": "architectureTypeSection.securityArchitectureType"}]', 360),
+    ('at-security-perimeter_network', 'Architecture type (security): perimeter_network.', '[{"in": ["perimeter_network"], "source": "architectureTypeSection.securityArchitectureType"}]', 370),
+    ('at-security-data_protection', 'Architecture type (security): data_protection.', '[{"in": ["data_protection"], "source": "architectureTypeSection.securityArchitectureType"}]', 380),
+    ('at-security-compliance_driven', 'Architecture type (security): compliance_driven.', '[{"in": ["compliance_driven"], "source": "architectureTypeSection.securityArchitectureType"}]', 390),
+    ('at-security-cross_border', 'Architecture type (security): cross_border.', '[{"in": ["cross_border"], "source": "architectureTypeSection.securityArchitectureType"}]', 400)
 ) AS m(rule_key, description, all_conditions, sort_order)
 WHERE NOT EXISTS (
     SELECT 1 FROM eam.avdm_concern_activation_rule existing WHERE existing.rule_key = m.rule_key
@@ -719,47 +745,104 @@ INSERT INTO eam.avdm_concern_activation_rule_score (id, rule_id, concern_id, map
 INSERT INTO eam.avdm_concern_activation_rule_score (id, rule_id, concern_id, mapping_score, severity, likelihood, note_text, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('e2141b1e-d2e0-4a3a-8a6d-4a79c592ef8e', 'd553a41d-ccd4-4451-8a81-1fa27f7953f8', 'ccf8abd3-3794-4c3b-8f30-6d72d8b29815', '10.000', NULL, NULL, NULL, 60, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
 INSERT INTO eam.avdm_concern_activation_rule_score (id, rule_id, concern_id, mapping_score, severity, likelihood, note_text, sort_order, is_active, create_by, update_by, create_at, update_at) VALUES ('e7bb5410-b10a-4e16-92d8-417e04e7301f', 'd0e55862-0f61-4c14-966d-f5016976f484', '33fa7d86-f251-4dfd-b58a-1cb730a8218f', '12.000', NULL, NULL, NULL, 20, TRUE, 'migration_017', 'migration_017', '2026-06-22T18:51:06.967596'::TIMESTAMP, '2026-06-22T18:53:45.117734'::TIMESTAMP) ON CONFLICT DO NOTHING;
 
--- Architecture Type rule scores. All concern keys are ACTIVE and have concern->viewpoint mappings so the
--- chain reaches viewpoints/artifacts. data_governance / security_data_protection (inactive, unmapped) are
--- substituted with active equivalents (D6 data quality, D7 data compliance, SCR1 security control).
+-- Phase 2 cleanup: remove Phase 1 single-question architecture-type rules and scores.
+DELETE FROM eam.avdm_concern_activation_rule_score WHERE rule_id IN (SELECT id FROM eam.avdm_concern_activation_rule WHERE rule_key LIKE 'arch-type-%');
+DELETE FROM eam.avdm_concern_activation_rule WHERE rule_key LIKE 'arch-type-%';
+
+-- Architecture Type rule scores (Phase 2). All concern keys are active + viewpoint-mapped.
 INSERT INTO eam.avdm_concern_activation_rule_score (id, rule_id, concern_id, mapping_score, severity, likelihood, note_text, sort_order, is_active, create_by, update_by, create_at, update_at)
 SELECT gen_random_uuid(), r.id, c.id, m.score, NULL, NULL, NULL, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
 FROM (VALUES
-    ('arch-type-web-application', 'A1', 8.0, 10),
-    ('arch-type-web-application', 'A2', 8.0, 20),
-    ('arch-type-web-application', 'C1', 8.0, 30),
-    ('arch-type-web-application', 'C2', 8.0, 40),
-    ('arch-type-data-platform', 'D3', 8.0, 10),
-    ('arch-type-data-platform', 'D6', 8.0, 20),
-    ('arch-type-data-platform', 'D8', 8.0, 30),
-    ('arch-type-data-platform', 'D10', 8.0, 40),
-    ('arch-type-ai-ml-system', 'D6', 8.0, 10),
-    ('arch-type-ai-ml-system', 'SCR1', 8.0, 20),
-    ('arch-type-ai-ml-system', 'OR4', 8.0, 30),
-    ('arch-type-llm-rag-system', 'D6', 8.0, 10),
-    ('arch-type-llm-rag-system', 'D7', 8.0, 20),
-    ('arch-type-llm-rag-system', 'SCR1', 8.0, 30),
-    ('arch-type-llm-rag-system', 'OR4', 8.0, 40),
-    ('arch-type-identity-iam', 'SCR4', 8.0, 10),
-    ('arch-type-identity-iam', 'SCR5', 8.0, 20),
-    ('arch-type-identity-iam', 'SCR6', 8.0, 30),
-    ('arch-type-identity-iam', 'A4', 8.0, 40),
-    ('arch-type-event-driven', 'C5', 8.0, 10),
-    ('arch-type-event-driven', 'IP5', 8.0, 20),
-    ('arch-type-event-driven', 'IP6', 8.0, 30),
-    ('arch-type-cross-border', 'D7', 8.0, 10),
-    ('arch-type-cross-border', 'D9', 8.0, 20),
-    ('arch-type-cross-border', 'DIN1', 8.0, 30),
-    ('arch-type-cross-border', 'SCR7', 8.0, 40),
-    ('arch-type-saas-integration', 'A3', 8.0, 10),
-    ('arch-type-saas-integration', 'IP1', 8.0, 20),
-    ('arch-type-saas-integration', 'SCR4', 8.0, 30),
-    ('arch-type-saas-integration', 'SCR5', 8.0, 40),
-    ('arch-type-saas-integration', 'SCR7', 8.0, 50),
-    ('arch-type-legacy-modernization', 'AGD2', 8.0, 10),
-    ('arch-type-legacy-modernization', 'A3', 8.0, 20),
-    ('arch-type-legacy-modernization', 'C3', 8.0, 30),
-    ('arch-type-legacy-modernization', 'C4', 8.0, 40)
+    ('at-business-capability_based', 'B1', 8.0, 10),
+    ('at-business-capability_based', 'B5', 8.0, 20),
+    ('at-business-process_centric', 'B2', 8.0, 10),
+    ('at-business-process_centric', 'IP5', 8.0, 20),
+    ('at-business-process_centric', 'IP4', 8.0, 30),
+    ('at-business-customer_journey', 'B3', 8.0, 10),
+    ('at-business-customer_journey', 'A4', 8.0, 20),
+    ('at-business-multi_entity', 'B4', 8.0, 10),
+    ('at-business-multi_entity', 'B5', 8.0, 20),
+    ('at-business-multi_entity', 'AGD5', 8.0, 30),
+    ('at-business-platform_business', 'B1', 8.0, 10),
+    ('at-business-platform_business', 'B5', 8.0, 20),
+    ('at-business-platform_business', 'A3', 8.0, 30),
+    ('at-application-monolith', 'A2', 8.0, 10),
+    ('at-application-monolith', 'C1', 8.0, 20),
+    ('at-application-modular_monolith', 'A1', 8.0, 10),
+    ('at-application-modular_monolith', 'A2', 8.0, 20),
+    ('at-application-modular_monolith', 'C2', 8.0, 30),
+    ('at-application-microservices', 'C1', 8.0, 10),
+    ('at-application-microservices', 'C2', 8.0, 20),
+    ('at-application-microservices', 'A3', 8.0, 30),
+    ('at-application-microservices', 'C5', 8.0, 40),
+    ('at-application-event_driven', 'C5', 8.0, 10),
+    ('at-application-event_driven', 'IP5', 8.0, 20),
+    ('at-application-event_driven', 'IP6', 8.0, 30),
+    ('at-application-web_application', 'A1', 8.0, 10),
+    ('at-application-web_application', 'A2', 8.0, 20),
+    ('at-application-web_application', 'A4', 8.0, 30),
+    ('at-application-mobile_or_client', 'A1', 8.0, 10),
+    ('at-application-mobile_or_client', 'A4', 8.0, 20),
+    ('at-application-mobile_or_client', 'C5', 8.0, 30),
+    ('at-technical-cloud_native', 'C4', 8.0, 10),
+    ('at-technical-cloud_native', 'DIN3', 8.0, 20),
+    ('at-technical-cloud_native', 'DIN4', 8.0, 30),
+    ('at-technical-containerized', 'C1', 8.0, 10),
+    ('at-technical-containerized', 'DIN3', 8.0, 20),
+    ('at-technical-containerized', 'DIN4', 8.0, 30),
+    ('at-technical-on_premise', 'DIN2', 8.0, 10),
+    ('at-technical-on_premise', 'DIN3', 8.0, 20),
+    ('at-technical-hybrid_multicloud', 'DIN1', 8.0, 10),
+    ('at-technical-hybrid_multicloud', 'DIN2', 8.0, 20),
+    ('at-technical-hybrid_multicloud', 'DIN3', 8.0, 30),
+    ('at-technical-legacy_modernization', 'AGD2', 8.0, 10),
+    ('at-technical-legacy_modernization', 'C3', 8.0, 20),
+    ('at-technical-legacy_modernization', 'C4', 8.0, 30),
+    ('at-technical-high_availability', 'OR2', 8.0, 10),
+    ('at-technical-high_availability', 'OR3', 8.0, 20),
+    ('at-technical-high_availability', 'app_resilience_pattern', 8.0, 30),
+    ('at-data-relational_oltp', 'D5', 8.0, 10),
+    ('at-data-relational_oltp', 'D10', 8.0, 20),
+    ('at-data-relational_oltp', 'D11', 8.0, 30),
+    ('at-data-data_warehouse', 'D1', 8.0, 10),
+    ('at-data-data_warehouse', 'D2', 8.0, 20),
+    ('at-data-data_warehouse', 'D4', 8.0, 30),
+    ('at-data-data_lake', 'D3', 8.0, 10),
+    ('at-data-data_lake', 'D8', 8.0, 20),
+    ('at-data-data_lake', 'D6', 8.0, 30),
+    ('at-data-streaming', 'D8', 8.0, 10),
+    ('at-data-streaming', 'IP6', 8.0, 20),
+    ('at-data-streaming', 'OR4', 8.0, 30),
+    ('at-data-ai_ml', 'D6', 8.0, 10),
+    ('at-data-ai_ml', 'D3', 8.0, 20),
+    ('at-data-ai_ml', 'OR4', 8.0, 30),
+    ('at-data-llm_rag', 'D6', 8.0, 10),
+    ('at-data-llm_rag', 'D7', 8.0, 20),
+    ('at-data-llm_rag', 'SCR1', 8.0, 30),
+    ('at-data-llm_rag', 'OR4', 8.0, 40),
+    ('at-data-master_data', 'D4', 8.0, 10),
+    ('at-data-master_data', 'D5', 8.0, 20),
+    ('at-data-master_data', 'D6', 8.0, 30),
+    ('at-security-zero_trust', 'SCR1', 8.0, 10),
+    ('at-security-zero_trust', 'SCR4', 8.0, 20),
+    ('at-security-zero_trust', 'SCR5', 8.0, 30),
+    ('at-security-iam_integration', 'SCR4', 8.0, 10),
+    ('at-security-iam_integration', 'SCR5', 8.0, 20),
+    ('at-security-iam_integration', 'SCR6', 8.0, 30),
+    ('at-security-iam_integration', 'A4', 8.0, 40),
+    ('at-security-perimeter_network', 'SCR1', 8.0, 10),
+    ('at-security-perimeter_network', 'SCR3', 8.0, 20),
+    ('at-security-perimeter_network', 'DIN2', 8.0, 30),
+    ('at-security-data_protection', 'SCR1', 8.0, 10),
+    ('at-security-data_protection', 'SCR2', 8.0, 20),
+    ('at-security-data_protection', 'D7', 8.0, 30),
+    ('at-security-compliance_driven', 'SCR7', 8.0, 10),
+    ('at-security-compliance_driven', 'D7', 8.0, 20),
+    ('at-security-compliance_driven', 'AGD1', 8.0, 30),
+    ('at-security-cross_border', 'D9', 8.0, 10),
+    ('at-security-cross_border', 'D7', 8.0, 20),
+    ('at-security-cross_border', 'DIN1', 8.0, 30),
+    ('at-security-cross_border', 'SCR7', 8.0, 40)
 ) AS m(rule_key, concern_key, score, sort_order)
 JOIN eam.avdm_concern_activation_rule r ON r.rule_key = m.rule_key
 JOIN eam.avdm_pact_concern c ON c.concern_key = m.concern_key
@@ -882,7 +965,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint_concern_mapping (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Seed: eam.avdm_viewpoint_concern_mapping (55 rows)
+-- Seed: eam.avdm_viewpoint_concern_mapping (55 base rows; additional dormant/future PACF concern
+-- mappings are inserted further below in the #8 disposition block)
 -- Canonical AVDM chain: questionnaire answers activate concerns; concerns classify viewpoints; viewpoints recommend artifacts.
 -- There is no direct concern->artifact mapping; artifacts are derived exclusively through viewpoints.
 -- Rationale: each row is (concern_key, viewpoint_number, sort_order). Base mappings are 1:1 -- a PACT
