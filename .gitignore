@@ -29,7 +29,7 @@ venv/
 .venv/
 __pycache__/
 *.pyc
-test-results/
+
 
 # Local assistant/IDE metadata
 .claude/
@@ -42,16 +42,27 @@ openspec/changes/
 
 # codex 
 AGENTS.md
-
+.pytest_cache/
 #
 docs/codex-collaboration-workflow.md
 paper/
+
+#Front End 
 frontend/src/lib/app-config.ts
-backend/.env
-backend/venv/
 frontend/.env
 frontend/node_modules/
 frontend/.next/
 frontend/test-results/
-.pytest_cache/
+
+#Backedn
+backend/.env
+backend/venv/
 backend/backup/
+backend/.pytest_cache/
+
+#Test Data
+test-data/
+test-results/
+
+superpowers/
+openspec/
