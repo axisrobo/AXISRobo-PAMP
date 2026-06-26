@@ -170,6 +170,13 @@ The seed configuration includes an active `cross-border-sensitive-data` combinat
 
 The walkthrough in the AVDM manuscript reports a *selected activation trace* that isolates convergent single-signal activation. The full rule set also supports the stronger combination-rule case when the additional checkpoint predicates are satisfied.
 
+### Activation rule kinds
+
+Activation rules come in two kinds, both stored in the same activation-rule table but distinct mechanisms:
+
+- **Single-signal** — one `in`/`equals` predicate over a single answer. The architecture-type rules over the multiselect `architectureTypeSection.*` fields are single-signal (array-valued) rules, *not* combination rules.
+- **Combination** — multiple `ALL`/`ANY` predicates across several answers (e.g. `cross-border-sensitive-data`).
+
 ## API
 
 81+ endpoints, all RBAC-gated. Swagger UI at `http://localhost:4000/docs`.
