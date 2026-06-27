@@ -27,6 +27,7 @@ from app.module_registry import (
 from app.auth import api as auth
 from app.ai_assessment import routes as ai_assessment
 from app.ai_model_registry import routes as ai_model_registry
+from app.ai_agent_registry import routes as ai_agent_registry
 from app.user_management import users as user_management
 
 
@@ -156,6 +157,7 @@ app.include_router(health.router, prefix="/api")
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(ai_assessment.router, prefix="/api/ai-assessment", tags=["AI Assessment"])
 app.include_router(ai_model_registry.router, prefix="/api/ai-models", tags=["AI Model Registry"])
+app.include_router(ai_agent_registry.router, prefix="/api/ai-agents", tags=["AI Agent Registry"])
 app.include_router(user_management.router, prefix="/api/users", tags=["Users"])
 
 enabled_modules = parse_enabled_modules(settings.ENABLED_MODULES)
