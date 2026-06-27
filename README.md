@@ -119,13 +119,14 @@ Set `AUTH_MODE=dev` in backend/.env to skip authentication during development. A
 
 | Module | Description |
 |--------|-------------|
+| **Project Management** | Project CRUD, team management |
 | **EA Review** | Architecture review workflow, meetings, actions, AI architecture checks, AVDM questionnaire |
 | **ADD — Architecture Decision & Design** | PACT concern catalog, viewpoint catalog, concern-to-viewpoint mapping, viewpoint-to-artifact mapping, questionnaire config, risk scoring, architecture governance matrix |
 | **AI Self-Assessment** | AI project self-assessment with AT0-AT8 adoption tier × L0-L4 governance maturity matrix, 11-section 49-item checklist, counterparty type (CP1-CP4) governance contexts |
 | **Application Portfolio** | BCM, BizCapability, CMDB — business capability mapping |
-| **Technology Stack** | Tech stack lifecycle, compliance checking |
-| **Project Management** | Project CRUD, team management |
+| **Technology Management** | Tech stack lifecycle, compliance checking |
 | **Data Management** | Enterprise data governance — master data, data classification, data flow, data-application mapping, resources, certifications |
+| **System Management** | RBAC, auth, users, audit logging |
 
 Modules selectively enabled via `ENABLED_MODULES` env var.
 
