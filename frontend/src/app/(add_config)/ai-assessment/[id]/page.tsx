@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, Card, Checkbox, Collapse, Input, message, Progress, Select, Tag, Typography } from 'antd';
+import { Alert, Button, Card, Checkbox, Collapse, Input, message, Progress, Select, Tag, Typography } from 'antd';
 import { ArrowLeft, Save } from 'lucide-react';
 import { api } from '@/shared/lib/api';
 
@@ -22,9 +22,12 @@ type AssessmentDetail = {
   selfAssessment: { scenarioClass: string; counterpartyType: string; adoptionTier: number; governanceMaturity: number; matrixPosition: string; description: string } | null;
   checklist: Array<{ sectionKey: string; sectionLabel: string; itemKey: string; itemLabel: string; isChecked: boolean; isCritical: boolean; notes: string }>;
   checklistSummary: { total: number; checked: number; critical: number; criticalChecked: number; score: number };
+  verdict?: { verdict: string; reason: string; unmetCritical: string[] };
 };
 
 const matrixColor: Record<string, string> = { CRITICAL: 'red', INSUFFICIENT: 'orange', HIGH_EXPOSURE: 'gold', FEASIBLE: 'blue', MANAGEABLE: 'green', MONITOR: 'default' };
+const statusColor: Record<string, string> = { approved: 'green', conditional: 'gold', blocked: 'red', draft: 'default', reviewed: 'green' };
+const verdictAlertType: Record<string, 'success' | 'warning' | 'error' | 'info'> = { PASS: 'success', CONDITIONAL: 'warning', BLOCKED: 'error', UNASSESSED: 'info' };
 
 export default function AiAssessmentDetailPage() {
   const params = useParams<{ id: string }>();
@@ -80,8 +83,24 @@ export default function AiAssessmentDetailPage() {
       <div className="flex items-center gap-3">
         <Button type="text" icon={<ArrowLeft className="h-4 w-4" />} onClick={() => router.push('/ai-assessment')} />
         <Title level={4} style={{ marginBottom: 0 }}>{data?.projectName || 'AI Project Self-Assessment'}</Title>
-        {data?.status && <Tag color={data.status === 'reviewed' ? 'green' : 'default'}>{data.status}</Tag>}
+        {data?.status && <Tag color={statusColor[data.status] || 'default'}>{data.status}</Tag>}
       </div>
+
+      {data?.verdict && (
+        <Alert
+          type={verdictAlertType[data.verdict.verdict] || 'info'}
+          showIcon
+          message={<span><strong>Deployment Verdict: {data.verdict.verdict}</strong></span>}
+          description={
+            <div className="space-y-1">
+              <div>{data.verdict.reason}</div>
+              {data.verdict.unmetCritical.length > 0 && (
+                <div className="text-xs">Unmet critical controls: {data.verdict.unmetCritical.join(', ')}</div>
+              )}
+            </div>
+          }
+        />
+      )}
 
       {/* Self-Assessment Card */}
       <Card title="Self-Assessment" size="small">
