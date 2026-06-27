@@ -141,6 +141,69 @@ def _compute_matrix_position(tier: int, maturity: int) -> str:
     return "MONITOR"
 
 
+VERDICT_LEGEND = {
+    "PASS": "Matrix position acceptable and all critical controls satisfied — deployment approved.",
+    "CONDITIONAL": "Deployment allowed only after the listed compensating / critical controls are in place.",
+    "BLOCKED": "Deployment must not proceed in the current tier × maturity position.",
+    "UNASSESSED": "Self-assessment not completed.",
+}
+
+_VERDICT_STATUS = {
+    "PASS": "approved",
+    "CONDITIONAL": "conditional",
+    "BLOCKED": "blocked",
+    "UNASSESSED": "draft",
+}
+
+
+def _compute_verdict(matrix_position: str | None, items: list[dict]) -> dict:
+    if not matrix_position or matrix_position == "unassessed":
+        return {"verdict": "UNASSESSED", "reason": VERDICT_LEGEND["UNASSESSED"], "unmetCritical": []}
+
+    unmet_critical = [i for i in items if i.get("isCritical") and not i.get("isChecked")]
+    n_unmet = len(unmet_critical)
+
+    if matrix_position in ("CRITICAL", "INSUFFICIENT"):
+        reason = {
+            "CRITICAL": "Adoption Tier AT0 (Shadow AI) is ungoverned — migrate to AT1+ before deployment.",
+            "INSUFFICIENT": "Governance maturity is insufficient for this adoption tier — raise maturity or lower the tier.",
+        }[matrix_position]
+        return {"verdict": "BLOCKED", "reason": reason, "unmetCritical": _unmet_keys(unmet_critical)}
+
+    if matrix_position == "HIGH_EXPOSURE" or n_unmet > 0:
+        parts = []
+        if matrix_position == "HIGH_EXPOSURE":
+            parts.append("High exposure position requires compensating controls (HITL + sandbox + review).")
+        if n_unmet > 0:
+            parts.append(f"{n_unmet} critical control(s) not yet satisfied.")
+        return {"verdict": "CONDITIONAL", "reason": " ".join(parts), "unmetCritical": _unmet_keys(unmet_critical)}
+
+    return {"verdict": "PASS", "reason": VERDICT_LEGEND["PASS"], "unmetCritical": []}
+
+
+def _unmet_keys(items: list[dict]) -> list[str]:
+    return [f"{i.get('sectionKey', '')}:{i.get('itemKey', '')}".strip(":") for i in items if i.get("itemKey")]
+
+
+async def _load_verdict(db: AsyncSession, assessment_id: str) -> dict:
+    sa = await db.execute(
+        text("SELECT matrix_position FROM eam.ai_self_assessment WHERE assessment_id = CAST(:id AS uuid)"),
+        {"id": assessment_id},
+    )
+    sa_row = sa.mappings().first()
+    matrix = sa_row["matrix_position"] if sa_row else None
+    cl = await db.execute(
+        text("SELECT section_key, item_key, is_checked, is_critical FROM eam.ai_review_checklist "
+             "WHERE assessment_id = CAST(:id AS uuid)"),
+        {"id": assessment_id},
+    )
+    items = [{
+        "sectionKey": r["section_key"], "itemKey": r["item_key"],
+        "isChecked": r["is_checked"], "isCritical": r["is_critical"],
+    } for r in cl.mappings().all()]
+    return _compute_verdict(matrix, items)
+
+
 class CreateAssessmentRequest(BaseModel):
     projectName: str
     projectIdRef: str = ""
@@ -196,6 +259,7 @@ async def get_assessment_meta():
             "MANAGEABLE": "Proceed with continuous monitoring",
             "MONITOR": "Proceed, monitor governance improvements",
         },
+        "verdictLegend": VERDICT_LEGEND,
     }
 
 
@@ -263,6 +327,7 @@ async def get_assessment(assessment_id: str, db: AsyncSession = Depends(get_db))
         "selfAssessment": self_assessment,
         "checklist": checklist_items,
         "checklistSummary": _checklist_summary(checklist_items),
+        "verdict": _compute_verdict(sa_row["matrix_position"] if sa_row else None, checklist_items),
     }
 
 
@@ -282,15 +347,18 @@ async def save_self_assessment(
         "ON CONFLICT (assessment_id) DO UPDATE SET scenario_class=EXCLUDED.scenario_class, counterparty_type=EXCLUDED.counterparty_type, "
         "adoption_tier=EXCLUDED.adoption_tier, governance_maturity=EXCLUDED.governance_maturity, matrix_position=EXCLUDED.matrix_position, description=EXCLUDED.description, updated_at=NOW()"
     ), {"aid": assessment_id, "sc": body.scenarioClass, "cp": body.counterpartyType, "at": body.adoptionTier, "gm": body.governanceMaturity, "mp": matrix, "desc": body.description})
-    await db.execute(text("UPDATE eam.ai_project_assessment SET updated_by = :ub, updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": assessment_id, "ub": user.id})
-    await db.commit()
 
     # Generate checklist if empty
     existing = await db.execute(text("SELECT COUNT(*) FROM eam.ai_review_checklist WHERE assessment_id = CAST(:id AS uuid)"), {"id": assessment_id})
     if existing.scalar() == 0:
         await _generate_checklist(db, assessment_id)
 
-    return {"matrixPosition": matrix}
+    verdict = await _load_verdict(db, assessment_id)
+    status = _VERDICT_STATUS[verdict["verdict"]]
+    await db.execute(text("UPDATE eam.ai_project_assessment SET status = :st, updated_by = :ub, updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": assessment_id, "ub": user.id, "st": status})
+    await db.commit()
+
+    return {"matrixPosition": matrix, "verdict": verdict, "status": status}
 
 
 @router.put("/{assessment_id}/checklist", dependencies=[Depends(require_permission("avdm", "write"))])
@@ -303,9 +371,11 @@ async def update_checklist(
             "UPDATE eam.ai_review_checklist SET is_checked = :chk, notes = :notes, updated_at = NOW() "
             "WHERE assessment_id = CAST(:aid AS uuid) AND section_key = :sk AND item_key = :ik"
         ), {"aid": assessment_id, "sk": item["sectionKey"], "ik": item["itemKey"], "chk": item.get("isChecked", False), "notes": item.get("notes", "") or ""})
-    await db.execute(text("UPDATE eam.ai_project_assessment SET status = 'reviewed', updated_by = :ub, updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": assessment_id, "ub": user.id})
+    verdict = await _load_verdict(db, assessment_id)
+    status = _VERDICT_STATUS[verdict["verdict"]]
+    await db.execute(text("UPDATE eam.ai_project_assessment SET status = :st, updated_by = :ub, updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": assessment_id, "ub": user.id, "st": status})
     await db.commit()
-    return {"message": "ok"}
+    return {"message": "ok", "status": status, "verdict": verdict}
 
 
 @router.delete("/{assessment_id}", dependencies=[Depends(require_role(Role.EA_ADMIN))])

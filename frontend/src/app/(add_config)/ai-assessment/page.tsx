@@ -10,6 +10,8 @@ import { api } from '@/shared/lib/api';
 
 const { Title } = Typography;
 
+const statusColor: Record<string, string> = { approved: 'green', conditional: 'gold', blocked: 'red', draft: 'default', reviewed: 'green' };
+
 type AssessmentItem = { id: string; projectName: string; projectIdRef: string; status: string; createdBy: string; createdAt: string };
 
 export default function AiAssessmentListPage() {
@@ -37,7 +39,7 @@ export default function AiAssessmentListPage() {
   const columns: ColumnsType<AssessmentItem> = [
     { title: 'Project Name', dataIndex: 'projectName', width: 280, render: (v: string) => <strong>{v}</strong> },
     { title: 'Project Ref', dataIndex: 'projectIdRef', width: 160 },
-    { title: 'Status', dataIndex: 'status', width: 100, render: (v: string) => <Tag color={v === 'reviewed' ? 'green' : v === 'draft' ? 'default' : 'blue'}>{v}</Tag> },
+    { title: 'Status', dataIndex: 'status', width: 100, render: (v: string) => <Tag color={statusColor[v] || 'blue'}>{v}</Tag> },
     { title: 'Created By', dataIndex: 'createdBy', width: 140 },
     { title: 'Created At', dataIndex: 'createdAt', width: 180, render: (v: string) => v ? new Date(v).toLocaleDateString() : '-' },
     {
