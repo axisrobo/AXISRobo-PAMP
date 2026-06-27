@@ -1,4 +1,4 @@
-import { authHeaders } from '@/shared/lib/auth-token';
+import { authHeaders, clearAuthToken } from '@/shared/lib/auth-token';
 import { keycloakService } from '@/shared/lib/keycloak-service';
 
 function resolveApiBase(): string {
@@ -21,6 +21,7 @@ function resolveApiBase(): string {
 
 export const API_BASE = resolveApiBase();
 const AUTH_DISABLED = process.env.NEXT_PUBLIC_AUTH_DISABLED === 'true';
+const AUTH_MODE = (process.env.NEXT_PUBLIC_AUTH_MODE as string) || 'dev';
 
 /* ── 401/403 handling ── */
 
@@ -45,7 +46,8 @@ function markRedirect(): void {
 }
 
 async function tryRefreshToken(): Promise<boolean> {
-  if (AUTH_DISABLED || _redirecting) return false;
+  // Local JWT auth has no silent refresh (no Keycloak). Skip the dead path.
+  if (AUTH_DISABLED || AUTH_MODE === 'local' || _redirecting) return false;
   if (_refreshPromise) return _refreshPromise;
   _refreshPromise = keycloakService.refreshToken().finally(() => { _refreshPromise = null; });
   return _refreshPromise;
@@ -55,6 +57,15 @@ function redirectToLogin(): void {
   if (AUTH_DISABLED || _redirecting || isInRedirectCooldown()) return;
   _redirecting = true;
   markRedirect();
+  // Local mode: clear the stale token and go to the local login page,
+  // never through the (uninitialized) Keycloak login flow.
+  if (AUTH_MODE === 'local') {
+    clearAuthToken();
+    if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+      window.location.href = '/login';
+    }
+    return;
+  }
   keycloakService.login();
 }
 
