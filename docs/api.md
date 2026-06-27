@@ -146,6 +146,22 @@ Design-time registration & governance of AI agents as governed architecture elem
 | PUT | `/api/ai-agents/{id}` | Update agent (lethal-trifecta HITL approval gate) | `avdm:write` |
 | DELETE | `/api/ai-agents/{id}` | Delete agent (admin) | EA_ADMIN |
 
+## MCP Governance
+
+Registration, approval, and provenance governance for MCP servers and their tools.
+
+| Method | Path | Description | Auth |
+|--------|------|-------------|------|
+| GET | `/api/mcp-servers/meta` | Registry metadata (transports, auth methods, tool lifecycle) | `avdm:read` |
+| GET | `/api/mcp-servers` | List MCP servers (paginated, `q` / `status` filters) | `avdm:read` |
+| POST | `/api/mcp-servers` | Register an MCP server | `avdm:write` |
+| GET | `/api/mcp-servers/{id}` | Get server with tools | `avdm:read` |
+| PUT | `/api/mcp-servers/{id}` | Update server (provenance approval gate) | `avdm:write` |
+| DELETE | `/api/mcp-servers/{id}` | Delete server (admin, cascades tools) | EA_ADMIN |
+| POST | `/api/mcp-servers/{id}/tools` | Add a tool (hash-pinned + production gate) | `avdm:write` |
+| PUT | `/api/mcp-servers/{id}/tools/{toolId}` | Update a tool | `avdm:write` |
+| DELETE | `/api/mcp-servers/{id}/tools/{toolId}` | Delete a tool (admin) | EA_ADMIN |
+
 ## Application Portfolio
 
 | Method | Path | Description | Auth |

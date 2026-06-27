@@ -25,7 +25,9 @@ export function isAdminPath(pathname: string): boolean {
     || pathname === '/ai-models'
     || pathname.startsWith('/ai-models/')
     || pathname === '/ai-agents'
-    || pathname.startsWith('/ai-agents/');
+    || pathname.startsWith('/ai-agents/')
+    || pathname === '/mcp-servers'
+    || pathname.startsWith('/mcp-servers/');
 }
 
 export function isSidebarItemActive(pathname: string, href: string): boolean {
