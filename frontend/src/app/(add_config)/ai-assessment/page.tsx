@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, Input, Modal, Table, Tag, Typography } from 'antd';
+import { Button, Modal, Select, Table, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
@@ -13,25 +13,37 @@ const { Title } = Typography;
 const statusColor: Record<string, string> = { approved: 'green', conditional: 'gold', blocked: 'red', draft: 'default', reviewed: 'green' };
 
 type AssessmentItem = { id: string; projectName: string; projectIdRef: string; status: string; createdBy: string; createdAt: string };
+type ProjectOption = { id: string; projectId: string; projectName: string };
 
 export default function AiAssessmentListPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
-  const [projectName, setProjectName] = useState('');
-  const [creating, setCreating] = useState(false);
+  const [projectId, setProjectId] = useState('');
 
   const { data, isLoading } = useQuery({
     queryKey: ['aiAssessments'],
     queryFn: () => api.get<{ data: AssessmentItem[]; total: number }>('/ai-assessment'),
   });
 
+  const { data: projectsData } = useQuery({
+    queryKey: ['aiAssessmentProjects'],
+    queryFn: () => api.get<{ data: ProjectOption[] }>('/projects', { page: 1, pageSize: 100 }),
+  });
+  const projects = projectsData?.data ?? [];
+
   const createMutation = useMutation({
-    mutationFn: () => api.post('/ai-assessment', { projectName, projectIdRef: '' }),
-    onSuccess: (result: any) => {
+    mutationFn: () => {
+      const proj = projects.find((p) => p.projectId === projectId);
+      return api.post<{ id: string }>('/ai-assessment', {
+        projectName: proj?.projectName || '',
+        projectIdRef: proj?.projectId || '',
+      });
+    },
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['aiAssessments'] });
       setModalOpen(false);
-      setProjectName('');
+      setProjectId('');
       router.push(`/ai-assessment/${result.id}`);
     },
   });
@@ -59,10 +71,12 @@ export default function AiAssessmentListPage() {
       </div>
       <Table columns={columns} dataSource={data?.data ?? []} rowKey="id" loading={isLoading} pagination={{ pageSize: 20 }} size="small" />
 
-      <Modal title="New AI Project Assessment" open={modalOpen} onCancel={() => setModalOpen(false)} onOk={() => { setCreating(true); createMutation.mutate(); }} confirmLoading={creating}>
+      <Modal title="New AI Project Assessment" open={modalOpen} onCancel={() => setModalOpen(false)} onOk={() => createMutation.mutate()} confirmLoading={createMutation.isPending} okButtonProps={{ disabled: !projectId }}>
         <div className="space-y-3 py-2">
-          <div><label className="text-sm font-medium">Project Name</label></div>
-          <Input value={projectName} onChange={(e) => setProjectName(e.target.value)} placeholder="Enter AI project name" />
+          <div><label className="text-sm font-medium">Project</label></div>
+          <Select showSearch value={projectId || undefined} onChange={(v) => setProjectId(v)} style={{ width: '100%' }}
+            placeholder="Select a project" optionFilterProp="label"
+            options={projects.map((p) => ({ label: `${p.projectId} — ${p.projectName}`, value: p.projectId }))} />
         </div>
       </Modal>
     </div>
