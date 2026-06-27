@@ -337,7 +337,7 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
             [
                 _section_field(
                     "businessArchitectureType",
-                    "Which business architecture patterns apply?",
+                    "Business Architecture Type",
                     control="multiselect",
                     options=[
                         {"label": "Capability-based", "value": "capability_based"},
@@ -349,7 +349,7 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                 ),
                 _section_field(
                     "applicationArchitectureType",
-                    "Which application architecture patterns apply?",
+                    "Application Architecture Type",
                     control="multiselect",
                     options=[
                         {"label": "Monolithic", "value": "monolith"},
@@ -362,7 +362,7 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                 ),
                 _section_field(
                     "technicalArchitectureType",
-                    "Which technical architecture styles apply?",
+                    "Technical Architecture Type",
                     control="multiselect",
                     options=[
                         {"label": "Cloud-native", "value": "cloud_native"},
@@ -375,7 +375,7 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                 ),
                 _section_field(
                     "dataArchitectureType",
-                    "Which data architecture patterns apply?",
+                    "Data Architecture Type",
                     control="multiselect",
                     options=[
                         {"label": "Relational / OLTP", "value": "relational_oltp"},
@@ -389,7 +389,7 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                 ),
                 _section_field(
                     "securityArchitectureType",
-                    "Which security architecture styles apply?",
+                    "Security Architecture Type",
                     control="multiselect",
                     options=[
                         {"label": "Zero trust", "value": "zero_trust"},
