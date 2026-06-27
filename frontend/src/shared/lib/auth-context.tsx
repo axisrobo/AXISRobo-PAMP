@@ -98,6 +98,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (!res.ok) {
         if (res.status === 401) {
+          if (AUTH_MODE === 'local') {
+            // Local JWT auth has no silent refresh — clear the stale token and
+            // require re-login. AuthGuard will route to /login.
+            clearAuthToken();
+            throw new Error('Your session has expired. Please sign in again.');
+          }
           // The token may have expired, so try refreshing it.
           const refreshed = await keycloakService.refreshToken();
           if (refreshed) {
