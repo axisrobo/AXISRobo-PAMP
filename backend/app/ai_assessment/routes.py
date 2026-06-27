@@ -229,7 +229,16 @@ async def get_assessment(assessment_id: str, db: AsyncSession = Depends(get_db))
         "SELECT section_key, section_label, item_key, item_label, is_checked, is_critical, notes, sort_order "
         "FROM eam.ai_review_checklist WHERE assessment_id = CAST(:id AS uuid) ORDER BY section_key, sort_order"
     ), {"id": assessment_id})
-    checklist_items = [dict(r) for r in cl.mappings().all()]
+    checklist_items = [{
+        "sectionKey": r["section_key"],
+        "sectionLabel": r["section_label"],
+        "itemKey": r["item_key"],
+        "itemLabel": r["item_label"],
+        "isChecked": r["is_checked"],
+        "isCritical": r["is_critical"],
+        "notes": r["notes"] or "",
+        "sortOrder": r["sort_order"],
+    } for r in cl.mappings().all()]
 
     self_assessment = None
     if sa_row:
@@ -322,8 +331,8 @@ def _checklist_summary(items: list[dict]) -> dict:
     if not items:
         return {"total": 0, "checked": 0, "critical": 0, "criticalChecked": 0, "score": 0}
     total = len(items)
-    checked = sum(1 for i in items if i.get("is_checked"))
-    critical = sum(1 for i in items if i.get("is_critical"))
-    critical_checked = sum(1 for i in items if i.get("is_critical") and i.get("is_checked"))
+    checked = sum(1 for i in items if i.get("isChecked"))
+    critical = sum(1 for i in items if i.get("isCritical"))
+    critical_checked = sum(1 for i in items if i.get("isCritical") and i.get("isChecked"))
     score = round(checked / total * 100, 1) if total > 0 else 0
     return {"total": total, "checked": checked, "critical": critical, "criticalChecked": critical_checked, "score": score}
