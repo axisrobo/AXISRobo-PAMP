@@ -227,12 +227,11 @@ async def get_concern_viewpoint_mapping(
     if includeUnmapped:
         rows = await db.execute(
             text(
-                "SELECT c.concern_key, c.concern_name, c.layer, vp.viewpoint_number, vp.viewpoint_name, vp.layer_name "
+                "SELECT c.concern_key, c.concern_name, c.layer, NULL::integer AS viewpoint_number, NULL::varchar AS viewpoint_name, NULL::varchar AS layer_name "
                 "FROM eam.avdm_pact_concern c "
-                "LEFT JOIN eam.avdm_viewpoint_concern_mapping m "
-                "ON m.concern_id = c.id AND m.is_active = TRUE "
-                "LEFT JOIN eam.avdm_viewpoint vp ON vp.id = m.viewpoint_id AND vp.is_active = TRUE "
-                "ORDER BY c.concern_key, vp.viewpoint_number"
+                "WHERE c.is_active = TRUE "
+                "AND NOT EXISTS (SELECT 1 FROM eam.avdm_viewpoint_concern_mapping m WHERE m.concern_id = c.id AND m.is_active = TRUE) "
+                "ORDER BY c.concern_key"
             )
         )
     else:

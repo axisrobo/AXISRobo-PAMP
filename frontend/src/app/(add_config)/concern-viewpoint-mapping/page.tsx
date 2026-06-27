@@ -68,7 +68,7 @@ export default function ConcernViewpointMappingPage() {
           <p className="text-sm text-text-secondary">Sorted by Concern Key — each concern mapped to its viewpoint(s)</p>
         </div>
         <Checkbox checked={includeUnmapped} onChange={(e) => setIncludeUnmapped(e.target.checked)}>
-          Show unmapped concerns
+          Show only unmapped
           {includeUnmapped && unmappedCount > 0 && (
             <Tag color="red" style={{ marginLeft: 8 }}>{unmappedCount}</Tag>
           )}
