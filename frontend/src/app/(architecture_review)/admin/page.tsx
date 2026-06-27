@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Alert } from 'antd';
-import { ClipboardList, FileJson, GitBranch, Layers3, Network, ShieldCheck } from 'lucide-react';
+import { BookOpen, ClipboardList, FileJson, GitBranch, Layers3, Network, ShieldCheck } from 'lucide-react';
 
 import { PageLayout } from '@/shared/components/layout/PageLayout';
 import { useAuth } from '@/shared/lib/auth-context';
@@ -14,6 +14,13 @@ const adminItems = [
     href: '/questionnaire-config',
     icon: ClipboardList,
     action: 'Open Config',
+  },
+  {
+    title: 'Project Type Guide',
+    description: 'Read the project-type-driven architecture artifact matrix without embedding the full guide in the questionnaire form.',
+    href: '/project-type-guide',
+    icon: BookOpen,
+    action: 'Open Guide',
   },
   {
     title: 'Questionnaire & Concern Mapping',
@@ -52,7 +59,7 @@ const adminItems = [
   },
   {
     title: 'Concern Catalog',
-    description: 'Maintain the 52 architecture concerns and active/inactive status through the AVDM concern master data API.',
+    description: 'Maintain the 68 architecture concerns and active/inactive status through the AVDM concern master data API.',
     href: '/pact-concern-catalog',
     icon: FileJson,
     action: 'Manage Catalog',

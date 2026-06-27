@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMediaQuery } from '@/shared/lib/useMediaQuery';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -22,6 +23,7 @@ import {
   type ConcernMappingConfig,
   type QuestionConfig,
   type AssessmentMatrixSection,
+  type QuestionnaireCategoryGroupKey,
   type QuestionnaireFieldValue,
   type QuestionnaireSection,
   type ConcernActivationCondition,
@@ -30,6 +32,38 @@ import {
 } from '@/features/review/stages/preparation';
 
 const { TextArea } = Input;
+
+const QUESTION_CATEGORY_GROUPS: Array<{
+  key: QuestionnaireCategoryGroupKey | 'other';
+  title: string;
+  description: string;
+}> = [
+  {
+    key: 'scale_overall',
+    title: 'Scale Questions',
+    description: 'Questions about project size, application scope, and delivery scale.',
+  },
+  {
+    key: 'complexity_overall',
+    title: 'Complexity Questions',
+    description: 'Questions about requirement, solution, technology, security, and delivery complexity.',
+  },
+  {
+    key: 'change',
+    title: 'Change Trigger Questions',
+    description: 'Questions that identify business, application, data, technology, compliance, and security changes.',
+  },
+  {
+    key: 'architecture_type',
+    title: 'Architecture Type Questions',
+    description: 'Questions that classify the dominant architecture style for concern activation.',
+  },
+  {
+    key: 'other',
+    title: 'Other Questions',
+    description: 'Additional questionnaire items not assigned to a configured group.',
+  },
+];
 
 /* ── Step definitions for left-side vertical stepper ── */
 const STEPS = [
@@ -225,6 +259,13 @@ export default function CreateRequestPage() {
 
   const activeQuestionBank = useMemo(() => questionnaireConfigState.questionBank.filter((question) => (question.sourceScope || 'question_bank') === 'question_bank'), [questionnaireConfigState.questionBank]);
   const activeQuestionnaireCategories = questionnaireConfigState.questionnaireCategories;
+  const groupedQuestionnaireCategories = useMemo(() => QUESTION_CATEGORY_GROUPS.map((group) => ({
+    ...group,
+    categories: activeQuestionnaireCategories.filter((category) => {
+      const categoryGroup = category.group || 'other';
+      return categoryGroup === group.key && activeQuestionBank.some((question) => question.category === category.key);
+    }),
+  })).filter((group) => group.categories.length > 0), [activeQuestionBank, activeQuestionnaireCategories]);
   const formCopy = defaultQuestionnaireFormCopy;
   const selectedProjectTypeProfile = questionnaireConfigState.projectTypeProfiles.find((item) => item.value === projectType);
   const projectTypeGuide = questionnaireConfigState.projectTypeGuide;
@@ -1446,7 +1487,7 @@ export default function CreateRequestPage() {
           </div>
         </div>
 
-        {(selectedProjectTypeProfile || projectTypeGuide.introduction.length > 0) && (
+        {(selectedProjectTypeProfile || projectTypeGuide.introduction.length > 0 || questionnaireConfigState.projectTypeProfiles.length > 0) && (
           <div className="mt-4 space-y-4">
             {selectedProjectTypeProfile && (
               <div className="rounded-md border border-slate-200 bg-slate-50 p-4">
@@ -1483,141 +1524,16 @@ export default function CreateRequestPage() {
               </div>
             )}
 
-            <details className="rounded-md border border-slate-200 bg-white p-4">
-              <summary className="cursor-pointer text-sm font-semibold text-slate-800">
-                {projectTypeGuide.title || 'Project Type Guidance'}
-              </summary>
-              <div className="mt-4 space-y-4 text-sm text-slate-600">
-                {projectTypeGuide.introduction.map((item) => (
-                  <p key={item}>{item}</p>
-                ))}
-
-                {projectTypeGuide.objectives.length > 0 && (
-                  <div>
-                    <div className="font-semibold text-slate-800">Objectives</div>
-                    <div className="mt-2 space-y-2">
-                      {projectTypeGuide.objectives.map((item) => (
-                        <div key={item.title}>
-                          <div className="font-medium text-slate-800">{item.title}</div>
-                          <div>{item.description}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {(projectTypeGuide.scopeIntro || projectTypeGuide.scopeProjectTypes.length > 0 || projectTypeGuide.scopeNote) && (
-                  <div>
-                    <div className="font-semibold text-slate-800">Scope</div>
-                    {projectTypeGuide.scopeIntro && <div className="mt-2">{projectTypeGuide.scopeIntro}</div>}
-                    {projectTypeGuide.scopeProjectTypes.length > 0 && (
-                      <ul className="mt-2 list-disc pl-5">
-                        {projectTypeGuide.scopeProjectTypes.map((item) => <li key={item}>{item}</li>)}
-                      </ul>
-                    )}
-                    {projectTypeGuide.scopeNote && <div className="mt-2">{projectTypeGuide.scopeNote}</div>}
-                  </div>
-                )}
-
-                {projectTypeGuide.corePrinciples.length > 0 && (
-                  <div>
-                    <div className="font-semibold text-slate-800">Core Principles</div>
-                    <div className="mt-2 space-y-2">
-                      {projectTypeGuide.corePrinciples.map((item) => (
-                        <div key={item.title}>
-                          <div className="font-medium text-slate-800">{item.title}</div>
-                          <div>{item.description}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {projectTypeGuide.governanceBoundary.length > 0 && (
-                  <div>
-                    <div className="font-semibold text-slate-800">EA Governance Boundary</div>
-                    <ul className="mt-2 list-disc pl-5">
-                      {projectTypeGuide.governanceBoundary.map((item) => <li key={item}>{item}</li>)}
-                    </ul>
-                  </div>
-                )}
-
-                {projectTypeGuide.recommendedUsage.length > 0 && (
-                  <div>
-                    <div className="font-semibold text-slate-800">Recommended Usage</div>
-                    <ul className="mt-2 list-disc pl-5">
-                      {projectTypeGuide.recommendedUsage.map((item) => <li key={item}>{item}</li>)}
-                    </ul>
-                  </div>
-                )}
-
-                {projectTypeGuide.artifactSelectionIntro.length > 0 && (
-                  <div>
-                    <div className="font-semibold text-slate-800">Architecture Artifact Selection</div>
-                    <div className="mt-2 space-y-2">
-                      {projectTypeGuide.artifactSelectionIntro.map((item) => <p key={item}>{item}</p>)}
-                    </div>
-                  </div>
-                )}
-
-                {questionnaireConfigState.projectTypeProfiles.length > 0 && (
-                  <div className="overflow-x-auto rounded border border-slate-200">
-                    <table className="min-w-full border-collapse text-xs sm:text-sm">
-                      <thead className="bg-slate-50 text-slate-700">
-                        <tr>
-                          <th className="border-b border-slate-200 px-3 py-2 text-left">Project Type</th>
-                          <th className="border-b border-slate-200 px-3 py-2 text-left">Description</th>
-                          <th className="border-b border-slate-200 px-3 py-2 text-left">Artifacts</th>
-                          <th className="border-b border-slate-200 px-3 py-2 text-left">Patterns</th>
-                          <th className="border-b border-slate-200 px-3 py-2 text-left">Risks</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {questionnaireConfigState.projectTypeProfiles.map((profile) => (
-                          <tr key={profile.value}>
-                            <td className="border-b border-slate-100 px-3 py-2 align-top font-medium text-slate-800">{profile.label}</td>
-                            <td className="border-b border-slate-100 px-3 py-2 align-top">{profile.description}</td>
-                            <td className="border-b border-slate-100 px-3 py-2 align-top">
-                              <div className="flex flex-wrap gap-2">
-                                {profile.artifactSelections.map((selection) => (
-                                  <span
-                                    key={`${profile.value}-${selection.artifactKey}`}
-                                    className={`rounded border px-2 py-1 text-xs font-medium ${projectTypeStatusClass(selection.status)}`}
-                                  >
-                                    {selection.artifactLabel}: {selection.status}
-                                  </span>
-                                ))}
-                              </div>
-                            </td>
-                            <td className="border-b border-slate-100 px-3 py-2 align-top">
-                              {profile.typicalPatterns.length > 0 ? profile.typicalPatterns.join(', ') : '-'}
-                            </td>
-                            <td className="border-b border-slate-100 px-3 py-2 align-top">
-                              {profile.typicalRisks.length > 0 ? profile.typicalRisks.join(', ') : '-'}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-
-                {projectTypeGuide.legend.length > 0 && (
-                  <div>
-                    <div className="font-semibold text-slate-800">Legend</div>
-                    <ul className="mt-2 list-disc pl-5">
-                      {projectTypeGuide.legend.map((item) => <li key={item.symbol}>{item.symbol}: {item.meaning}</li>)}
-                    </ul>
-                  </div>
-                )}
-
-                {projectTypeGuide.note && (
-                  <div className="rounded border border-blue-200 bg-blue-50 px-3 py-2 text-slate-700">
-                    {projectTypeGuide.note}
-                  </div>
-                )}
+            <div className="rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-slate-700">
+              <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <div>
+                  Project type guidance and the architecture artifact matrix are maintained separately from this questionnaire form.
+                </div>
+                <Link className="font-medium text-primary-blue hover:underline" href="/project-type-guide" target="_blank">
+                  Open Project Type Guide
+                </Link>
               </div>
-            </details>
+            </div>
           </div>
         )}
 
@@ -1769,106 +1685,115 @@ export default function CreateRequestPage() {
           );
         })}
 
-        {activeQuestionnaireCategories
-          .filter((category) => activeQuestionBank.some((question) => question.category === category.key))
-          .map((category) => (
-          <div key={category.key} className="mt-5">
-            <div className="mb-2 text-sm font-semibold text-gray-800">{category.label}</div>
-            {category.description && (
-              <div className="mb-3 text-xs text-gray-500">{category.description}</div>
-            )}
-            <div className="space-y-3">
-              {activeQuestionBank
-                .filter((q) => q.category === category.key)
-                .map((q, questionIndex) => {
-                  const answer = architectureAnswers.find((item) => item.id === q.id);
-                  const questionOptions = resolveQuestionOptions(q);
-                  const concernHints = concernMappingConfigState.questionConcernMappings
-                    .filter((mapping) => mapping.questionId === q.id)
-                    .flatMap((mapping) => mapping.hints || []);
-                  return (
-                    <div key={q.id} className="border border-gray-200 rounded-md p-3">
-                      <div className="text-sm font-medium">{questionIndex + 1}. {q.text}</div>
-                      {(q.designIntent || concernHints.length > 0) && (
-                        <div className="mt-1 text-xs text-gray-500">
-                          {q.designIntent && <div>{q.designIntent}</div>}
-                          {concernHints.length > 0 && (
-                            <div>{formCopy.concernActivationHintPrefix} {Array.from(new Set(concernHints)).join(', ')}</div>
-                          )}
-                        </div>
-                      )}
-                      <div className="mt-2">
-                        {q.control === 'radio' ? (
-                          <Radio.Group
-                            value={getQuestionAnswerStringValue(answer?.answer)}
-                            onChange={(e) => setArchitectureAnswers((prev) => prev.map((item) => (
-                              item.id === q.id ? { ...item, answer: String(e.target.value || '') } : item
-                            )))}
-                            disabled={isViewMode}
-                          >
-                            {questionOptions.map((option) => (
-                              <Radio key={`${q.id}-${option.value}`} value={option.value}>{option.label}</Radio>
-                            ))}
-                          </Radio.Group>
-                        ) : q.control === 'multiselect' ? (
-                          <Select
-                            mode="multiple"
-                            value={getQuestionAnswerArrayValue(answer?.answer)}
-                            onChange={(value) => setArchitectureAnswers((prev) => prev.map((item) => (
-                              item.id === q.id ? { ...item, answer: (value || []).map(String) } : item
-                            )))}
-                            disabled={isViewMode}
-                            allowClear
-                            options={questionOptions}
-                            placeholder={q.placeholder}
-                          />
-                        ) : q.control === 'text' ? (
-                          <Input
-                            value={getQuestionAnswerStringValue(answer?.answer)}
-                            onChange={(e) => setArchitectureAnswers((prev) => prev.map((item) => (
-                              item.id === q.id ? { ...item, answer: e.target.value } : item
-                            )))}
-                            disabled={isViewMode}
-                            placeholder={q.placeholder}
-                          />
-                        ) : q.control === 'textarea' ? (
-                          <TextArea
-                            value={getQuestionAnswerStringValue(answer?.answer)}
-                            onChange={(e) => setArchitectureAnswers((prev) => prev.map((item) => (
-                              item.id === q.id ? { ...item, answer: e.target.value } : item
-                            )))}
-                            disabled={isViewMode}
-                            placeholder={q.placeholder}
-                            rows={3}
-                          />
-                        ) : (
-                          <Select
-                            value={getQuestionAnswerStringValue(answer?.answer) || undefined}
-                            onChange={(value) => setArchitectureAnswers((prev) => prev.map((item) => (
-                              item.id === q.id ? { ...item, answer: String(value || '') } : item
-                            )))}
-                            disabled={isViewMode}
-                            allowClear
-                            options={questionOptions}
-                            placeholder={q.placeholder}
-                          />
-                        )}
-                      </div>
-                      <div className="mt-2">
-                        <Input
-                          value={answer?.comment || ''}
-                          onChange={(e) => setArchitectureAnswers((prev) => prev.map((item) => (
-                            item.id === q.id ? { ...item, comment: e.target.value } : item
-                          )))}
-                          disabled={isViewMode}
-                          placeholder="Comments (optional; required when answer is Y)"
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
+        {groupedQuestionnaireCategories.map((group) => (
+          <section key={group.key} className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <div className="mb-4">
+              <div className="text-base font-semibold text-slate-900">{group.title}</div>
+              <div className="mt-1 text-xs text-slate-500">{group.description}</div>
             </div>
-          </div>
+
+            <div className="space-y-5">
+              {group.categories.map((category) => (
+                <div key={category.key} className="rounded-md border border-slate-200 bg-white p-4">
+                  <div className="mb-2 text-sm font-semibold text-gray-800">{category.label}</div>
+                  {category.description && (
+                    <div className="mb-3 text-xs text-gray-500">{category.description}</div>
+                  )}
+                  <div className="space-y-3">
+                    {activeQuestionBank
+                      .filter((q) => q.category === category.key)
+                      .map((q, questionIndex) => {
+                        const answer = architectureAnswers.find((item) => item.id === q.id);
+                        const questionOptions = resolveQuestionOptions(q);
+                        const concernHints = concernMappingConfigState.questionConcernMappings
+                          .filter((mapping) => mapping.questionId === q.id)
+                          .flatMap((mapping) => mapping.hints || []);
+                        return (
+                          <div key={q.id} className="rounded-md border border-gray-200 p-3">
+                            <div className="text-sm font-medium">{questionIndex + 1}. {q.text}</div>
+                            {(q.designIntent || concernHints.length > 0) && (
+                              <div className="mt-1 text-xs text-gray-500">
+                                {q.designIntent && <div>{q.designIntent}</div>}
+                                {concernHints.length > 0 && (
+                                  <div>{formCopy.concernActivationHintPrefix} {Array.from(new Set(concernHints)).join(', ')}</div>
+                                )}
+                              </div>
+                            )}
+                            <div className="mt-2">
+                              {q.control === 'radio' ? (
+                                <Radio.Group
+                                  value={getQuestionAnswerStringValue(answer?.answer)}
+                                  onChange={(e) => setArchitectureAnswers((prev) => prev.map((item) => (
+                                    item.id === q.id ? { ...item, answer: String(e.target.value || '') } : item
+                                  )))}
+                                  disabled={isViewMode}
+                                >
+                                  {questionOptions.map((option) => (
+                                    <Radio key={`${q.id}-${option.value}`} value={option.value}>{option.label}</Radio>
+                                  ))}
+                                </Radio.Group>
+                              ) : q.control === 'multiselect' ? (
+                                <Select
+                                  mode="multiple"
+                                  value={getQuestionAnswerArrayValue(answer?.answer)}
+                                  onChange={(value) => setArchitectureAnswers((prev) => prev.map((item) => (
+                                    item.id === q.id ? { ...item, answer: (value || []).map(String) } : item
+                                  )))}
+                                  disabled={isViewMode}
+                                  allowClear
+                                  options={questionOptions}
+                                  placeholder={q.placeholder}
+                                />
+                              ) : q.control === 'text' ? (
+                                <Input
+                                  value={getQuestionAnswerStringValue(answer?.answer)}
+                                  onChange={(e) => setArchitectureAnswers((prev) => prev.map((item) => (
+                                    item.id === q.id ? { ...item, answer: e.target.value } : item
+                                  )))}
+                                  disabled={isViewMode}
+                                  placeholder={q.placeholder}
+                                />
+                              ) : q.control === 'textarea' ? (
+                                <TextArea
+                                  value={getQuestionAnswerStringValue(answer?.answer)}
+                                  onChange={(e) => setArchitectureAnswers((prev) => prev.map((item) => (
+                                    item.id === q.id ? { ...item, answer: e.target.value } : item
+                                  )))}
+                                  disabled={isViewMode}
+                                  placeholder={q.placeholder}
+                                  rows={3}
+                                />
+                              ) : (
+                                <Select
+                                  value={getQuestionAnswerStringValue(answer?.answer) || undefined}
+                                  onChange={(value) => setArchitectureAnswers((prev) => prev.map((item) => (
+                                    item.id === q.id ? { ...item, answer: String(value || '') } : item
+                                  )))}
+                                  disabled={isViewMode}
+                                  allowClear
+                                  options={questionOptions}
+                                  placeholder={q.placeholder}
+                                />
+                              )}
+                            </div>
+                            <div className="mt-2">
+                              <Input
+                                value={answer?.comment || ''}
+                                onChange={(e) => setArchitectureAnswers((prev) => prev.map((item) => (
+                                  item.id === q.id ? { ...item, comment: e.target.value } : item
+                                )))}
+                                disabled={isViewMode}
+                                placeholder="Comments (optional; required when answer is Y)"
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
         ))}
       </Card>
 
