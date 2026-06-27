@@ -1042,10 +1042,33 @@ WHERE NOT EXISTS (
       AND existing.viewpoint_id = v.id
 );
 
--- #8 disposition of previously unmapped concerns.
+-- -- Concern metadata updates — sync live-DB manual edits to seed.
+UPDATE eam.avdm_pact_concern SET concern_name = 'Operations', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'OR1';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Resilience & DR', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'OR2';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Reliability & SLO', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'OR3';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Monitoring & Observability', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'OR4';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Operational Feedback', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'OR5';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Application Domain Boundary', layer = 'Application', description = 'Clarify service boundaries and domain ownership.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'app_domain_boundary';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Application Resilience', layer = 'Application', description = 'Define fallback, retry, and graceful degradation strategy.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'app_resilience_pattern';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Control Traceability Matrix', layer = 'Governance', description = 'Trace controls to policies, systems, and responsible roles.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'governance_control_matrix';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Architecture Decision Record', layer = 'Governance', description = 'Document decision rationale and approval trail.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'governance_decision_log';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Disaster Recovery', layer = 'Infrastructure', description = 'Define backup, restore, and regional failover strategy.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'infra_recovery';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Scalability and Capacity', layer = 'Infrastructure', description = 'Plan horizontal and vertical scaling with bottleneck controls.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'infra_scalability';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Interface Contract Stability', layer = 'Integration', description = 'Specify APIs, versioning, and compatibility guarantees.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'integration_contract';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Dependency and Interaction Map', layer = 'Integration', description = 'Capture cross-system dependencies and communication paths.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'integration_dependency_map';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Observability and Alerting', layer = 'Operations', description = 'Define telemetry signals, SLOs, and alert ownership.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'ops_observability';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Operability Runbook', layer = 'Operations', description = 'Specify runbooks for incident, release, and rollback.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'ops_operability';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Change Readiness', layer = 'Risk', description = 'Assess migration and release readiness risks.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'risk_change_readiness';
+UPDATE eam.avdm_pact_concern SET concern_name = 'External Dependency Risk', layer = 'Risk', description = 'Assess vendor and API dependency contingency plans.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'risk_dependency';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Data Protection', layer = 'Security', description = 'Describe encryption, tokenization, and sensitive data handling.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'security_data_protection';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Identity and Access Control', layer = 'Security', description = 'Map authentication, authorization, and least privilege controls.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'security_identity_access';
+-- OR5 reactivated (user intent — was legacy-deactivated by earlier disposition); keep active with new name.
+UPDATE eam.avdm_pact_concern SET is_active = TRUE WHERE concern_key = 'OR5';
+
+#8 disposition of previously unmapped concerns.
 -- Legacy / artifact-like concerns are deactivated so the active catalog only contains mapped concerns.
 UPDATE eam.avdm_pact_concern SET is_active = FALSE, update_by = 'avdm_seed', update_at = now()
-WHERE concern_key IN ('OR5', 'governance_control_matrix', 'governance_decision_log') AND is_active = TRUE;
+WHERE concern_key IN ('governance_control_matrix', 'governance_decision_log') AND is_active = TRUE;
 
 -- Real architecture concerns get a viewpoint home. app_resilience_pattern stays active (mapped, live);
 -- the rest remain inactive as a future PACF/Risk catalog and their mapping is dormant (filtered by
