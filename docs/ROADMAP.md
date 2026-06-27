@@ -106,6 +106,7 @@ Govern AI projects, models, agents, and their architecture compliance.
 - [x] AI architecture diagram review (App Arch + Tech Arch) with scoring
 - [x] AI-related project flagging and tracking
 - [x] AI model registry with version and provenance tracking
+- [x] Agent registration & governance (scenario / counterparty / autonomy / trust + lethal-trifecta HITL approval gate)
 - [ ] AI Bill of Materials (AIBOM) generation and verification
 - [ ] Agent identity and naming service registry
 - [ ] MCP server and tool governance (registration, approval, provenance)

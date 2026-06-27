@@ -133,6 +133,19 @@
 | PUT | `/api/ai-models/{id}/versions/{versionId}` | Update a model version | `avdm:write` |
 | DELETE | `/api/ai-models/{id}/versions/{versionId}` | Delete a model version (admin) | EA_ADMIN |
 
+## AI Agent Registry
+
+Design-time registration & governance of AI agents as governed architecture elements (NOT runtime agent identity).
+
+| Method | Path | Description | Auth |
+|--------|------|-------------|------|
+| GET | `/api/ai-agents/meta` | Registry metadata (types, autonomy, trust, capabilities, lethal trifecta) | `avdm:read` |
+| GET | `/api/ai-agents` | List agents (paginated, `q` / `status` filters) | `avdm:read` |
+| POST | `/api/ai-agents` | Register an agent | `avdm:write` |
+| GET | `/api/ai-agents/{id}` | Get agent governance record | `avdm:read` |
+| PUT | `/api/ai-agents/{id}` | Update agent (lethal-trifecta HITL approval gate) | `avdm:write` |
+| DELETE | `/api/ai-agents/{id}` | Delete agent (admin) | EA_ADMIN |
+
 ## Application Portfolio
 
 | Method | Path | Description | Auth |

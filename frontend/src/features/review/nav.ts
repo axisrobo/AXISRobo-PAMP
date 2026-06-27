@@ -1,4 +1,4 @@
-import { Boxes, ClipboardList, FileText, ShieldCheck } from 'lucide-react';
+import { Bot, Boxes, ClipboardList, FileText, ShieldCheck } from 'lucide-react';
 import type { ModuleNavDefinition } from '@/shared/modules/types';
 
 export const architectureReviewNav: ModuleNavDefinition = {
@@ -35,6 +35,12 @@ export const architectureReviewNav: ModuleNavDefinition = {
           label: 'AI Model Registry',
           href: '/ai-models',
           icon: Boxes,
+          requiredRole: 'ea_admin',
+        },
+        {
+          label: 'Agent Registry',
+          href: '/ai-agents',
+          icon: Bot,
           requiredRole: 'ea_admin',
         },
       ],
