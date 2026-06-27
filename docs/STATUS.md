@@ -11,12 +11,13 @@
 | Application Portfolio | `app/application_management/` | `(application_management)/` | ~12 | Complete |
 | ADD (AVDM) | `app/add/` | `(add_config)/` | 28 | Complete |
 | AI Assessment | `app/ai_assessment/` | `(add_config)/ai-assessment/` | 7 | Complete |
+| AI Model Registry | `app/ai_model_registry/` | `(add_config)/ai-models/` | 9 | Complete |
 | Technology Management | `app/technology_stack_management/` | `(technology_stack_management)/` | ~22 | Complete |
 | Project Management | `app/project_management/` | `(project_management)/` | 6 | Complete |
 | Data Management | `app/data_management/` | `(data_management)/` | ~4 | Complete |
 | AI Review Agent | `app/architecture_review/ai.py` | review components | 2 | Complete |
 
-Total: ~95 API endpoints, 156+ FastAPI route handlers.
+Total: ~104 API endpoints, 165+ FastAPI route handlers.
 
 ## Recent Changes (2026-06-24)
 

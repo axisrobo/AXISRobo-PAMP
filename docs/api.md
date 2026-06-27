@@ -119,6 +119,20 @@
 | PUT | `/api/ai-assessment/{id}/checklist` | Save review checklist | `avdm:write` |
 | DELETE | `/api/ai-assessment/{id}` | Delete assessment (admin) | EA_ADMIN |
 
+## AI Model Registry
+
+| Method | Path | Description | Auth |
+|--------|------|-------------|------|
+| GET | `/api/ai-models/meta` | Registry metadata (types, statuses, provenance sources) | `avdm:read` |
+| GET | `/api/ai-models` | List models (paginated, `q` / `status` filters) | `avdm:read` |
+| POST | `/api/ai-models` | Register a model | `avdm:write` |
+| GET | `/api/ai-models/{id}` | Get model with versions | `avdm:read` |
+| PUT | `/api/ai-models/{id}` | Update model metadata | `avdm:write` |
+| DELETE | `/api/ai-models/{id}` | Delete model (admin, cascades versions) | EA_ADMIN |
+| POST | `/api/ai-models/{id}/versions` | Add a model version (provenance + production gating) | `avdm:write` |
+| PUT | `/api/ai-models/{id}/versions/{versionId}` | Update a model version | `avdm:write` |
+| DELETE | `/api/ai-models/{id}/versions/{versionId}` | Delete a model version (admin) | EA_ADMIN |
+
 ## Application Portfolio
 
 | Method | Path | Description | Auth |

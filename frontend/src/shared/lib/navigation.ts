@@ -21,7 +21,9 @@ export function isAdminPath(pathname: string): boolean {
     || pathname === '/viewpoint-artifact-mapping'
     || pathname === '/pact-concern-catalog'
     || pathname === '/ai-assessment'
-    || pathname.startsWith('/ai-assessment/');
+    || pathname.startsWith('/ai-assessment/')
+    || pathname === '/ai-models'
+    || pathname.startsWith('/ai-models/');
 }
 
 export function isSidebarItemActive(pathname: string, href: string): boolean {
