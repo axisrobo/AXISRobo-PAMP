@@ -2,6 +2,7 @@ import type { NavItem } from '@/shared/lib/constants';
 
 export type FrontendModuleKey =
   | 'architecture_review'
+  | 'ai_management'
   | 'add'
   | 'application_management'
   | 'data_management'

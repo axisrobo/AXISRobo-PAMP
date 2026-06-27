@@ -1,4 +1,4 @@
-import { Bot, Boxes, ClipboardList, FileText, Server, ShieldCheck } from 'lucide-react';
+import { ClipboardList, FileText } from 'lucide-react';
 import type { ModuleNavDefinition } from '@/shared/modules/types';
 
 export const architectureReviewNav: ModuleNavDefinition = {
@@ -24,30 +24,6 @@ export const architectureReviewNav: ModuleNavDefinition = {
           icon: ClipboardList,
           requiredResource: 'ea_request',
           requiredScope: 'read',
-        },
-        {
-          label: 'AI Self-Assessment',
-          href: '/ai-assessment',
-          icon: ShieldCheck,
-          requiredRole: 'ea_admin',
-        },
-        {
-          label: 'AI Model Registry',
-          href: '/ai-models',
-          icon: Boxes,
-          requiredRole: 'ea_admin',
-        },
-        {
-          label: 'Agent Registry',
-          href: '/ai-agents',
-          icon: Bot,
-          requiredRole: 'ea_admin',
-        },
-        {
-          label: 'MCP Governance',
-          href: '/mcp-servers',
-          icon: Server,
-          requiredRole: 'ea_admin',
         },
       ],
     },
