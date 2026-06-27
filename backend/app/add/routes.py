@@ -232,7 +232,6 @@ async def get_concern_viewpoint_mapping(
                 "LEFT JOIN eam.avdm_viewpoint_concern_mapping m "
                 "ON m.concern_id = c.id AND m.is_active = TRUE "
                 "LEFT JOIN eam.avdm_viewpoint vp ON vp.id = m.viewpoint_id AND vp.is_active = TRUE "
-                "WHERE c.is_active = TRUE "
                 "ORDER BY c.concern_key, vp.viewpoint_number"
             )
         )
