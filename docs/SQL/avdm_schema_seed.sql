@@ -1065,6 +1065,21 @@ UPDATE eam.avdm_pact_concern SET concern_name = 'Identity and Access Control', l
 -- OR5 reactivated (user intent — was legacy-deactivated by earlier disposition); keep active with new name.
 UPDATE eam.avdm_pact_concern SET is_active = TRUE WHERE concern_key = 'OR5';
 
+-- Mappings for previously-unmapped now-active concerns (AGD6/AGD7/OR5):
+INSERT INTO eam.avdm_viewpoint_concern_mapping (id, viewpoint_id, concern_id, sort_order, is_active, create_by, update_by, create_at, update_at)
+SELECT gen_random_uuid(), v.id, c.id, m.sort_order, TRUE, 'avdm_seed', 'avdm_seed', now(), now()
+FROM (VALUES
+    ('AGD6', 41, 10),
+    ('AGD7', 41, 10),
+    ('OR5', 42, 10)
+) AS m(concern_key, viewpoint_number, sort_order)
+JOIN eam.avdm_pact_concern c ON c.concern_key = m.concern_key
+JOIN eam.avdm_viewpoint v ON v.viewpoint_number = m.viewpoint_number
+WHERE NOT EXISTS (
+    SELECT 1 FROM eam.avdm_viewpoint_concern_mapping existing
+    WHERE existing.concern_id = c.id AND existing.viewpoint_id = v.id
+);
+
 #8 disposition of previously unmapped concerns.
 -- Governance concerns AGD6/AGD7 kept active (visible on concern catalog); artifact-like deactivation removed.
 -- Real architecture concerns get a viewpoint home. A6 stays active (mapped, live);

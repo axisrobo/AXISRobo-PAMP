@@ -222,25 +222,39 @@ async def put_viewpoint_artifact_mapping_config(
 @router.get("/concern-viewpoint-mapping", dependencies=[Depends(require_permission("avdm", "read"))])
 async def get_concern_viewpoint_mapping(
     db: AsyncSession = Depends(get_db),
+    includeUnmapped: bool = Query(False),
 ):
-    rows = await db.execute(
-        text(
-            "SELECT c.concern_key, c.concern_name, c.layer, vp.viewpoint_number, vp.viewpoint_name, vp.layer_name "
-            "FROM eam.avdm_viewpoint_concern_mapping m "
-            "JOIN eam.avdm_pact_concern c ON c.id = m.concern_id AND c.is_active = TRUE "
-            "JOIN eam.avdm_viewpoint vp ON vp.id = m.viewpoint_id AND vp.is_active = TRUE "
-            "WHERE m.is_active = TRUE ORDER BY vp.layer_name, vp.viewpoint_number, c.concern_key"
+    if includeUnmapped:
+        rows = await db.execute(
+            text(
+                "SELECT c.concern_key, c.concern_name, c.layer, vp.viewpoint_number, vp.viewpoint_name, vp.layer_name "
+                "FROM eam.avdm_pact_concern c "
+                "LEFT JOIN eam.avdm_viewpoint_concern_mapping m "
+                "ON m.concern_id = c.id AND m.is_active = TRUE "
+                "LEFT JOIN eam.avdm_viewpoint vp ON vp.id = m.viewpoint_id AND vp.is_active = TRUE "
+                "WHERE c.is_active = TRUE "
+                "ORDER BY c.concern_key, vp.viewpoint_number"
+            )
         )
-    )
+    else:
+        rows = await db.execute(
+            text(
+                "SELECT c.concern_key, c.concern_name, c.layer, vp.viewpoint_number, vp.viewpoint_name, vp.layer_name "
+                "FROM eam.avdm_viewpoint_concern_mapping m "
+                "JOIN eam.avdm_pact_concern c ON c.id = m.concern_id AND c.is_active = TRUE "
+                "JOIN eam.avdm_viewpoint vp ON vp.id = m.viewpoint_id AND vp.is_active = TRUE "
+                "WHERE m.is_active = TRUE ORDER BY c.concern_key, vp.viewpoint_number"
+            )
+        )
     items = []
     for row in rows.mappings().all():
         items.append({
             "concernKey": row["concern_key"],
             "concernName": row["concern_name"],
             "concernLayer": row["layer"],
-            "viewpointNumber": row["viewpoint_number"],
-            "viewpointName": row["viewpoint_name"],
-            "viewpointLayer": row["layer_name"],
+            "viewpointNumber": row["viewpoint_number"] or 0,
+            "viewpointName": row["viewpoint_name"] or "",
+            "viewpointLayer": row["layer_name"] or "",
         })
     return {"data": items, "total": len(items)}
 
