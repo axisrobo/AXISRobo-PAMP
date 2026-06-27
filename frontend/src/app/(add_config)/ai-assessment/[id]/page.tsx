@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Button, Card, Checkbox, Collapse, Input, message, Progress, Select, Tag, Typography } from 'antd';
-import { ArrowLeft, Save } from 'lucide-react';
+import { ArrowLeft, Download, Save } from 'lucide-react';
 import { api } from '@/shared/lib/api';
 
 const { Title, Text } = Typography;
@@ -68,6 +68,27 @@ export default function AiAssessmentDetailPage() {
     onError: (e: Error) => messageApi.error(e.message),
   });
 
+  const [exporting, setExporting] = useState(false);
+  const exportReport = async () => {
+    setExporting(true);
+    try {
+      const report = await api.get<{ markdown: string; projectName: string }>(`/ai-assessment/${id}/report`);
+      const blob = new Blob([report.markdown], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ai-assessment-${(report.projectName || 'report').replace(/[^\w.-]+/g, '_')}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      messageApi.error(e instanceof Error ? e.message : 'Export failed');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const sections = useMemo(() => {
     if (!data?.checklist) return [];
     const map = new Map<string, typeof data.checklist>();
@@ -84,6 +105,7 @@ export default function AiAssessmentDetailPage() {
         <Button type="text" icon={<ArrowLeft className="h-4 w-4" />} onClick={() => router.push('/ai-assessment')} />
         <Title level={4} style={{ marginBottom: 0 }}>{data?.projectName || 'AI Project Self-Assessment'}</Title>
         {data?.status && <Tag color={statusColor[data.status] || 'default'}>{data.status}</Tag>}
+        <Button className="ml-auto" icon={<Download className="h-4 w-4" />} onClick={exportReport} loading={exporting} disabled={!data}>Export Report</Button>
       </div>
 
       {data?.verdict && (

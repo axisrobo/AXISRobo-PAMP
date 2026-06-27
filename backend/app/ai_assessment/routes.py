@@ -141,6 +141,15 @@ def _compute_matrix_position(tier: int, maturity: int) -> str:
     return "MONITOR"
 
 
+MATRIX_LEGEND = {
+    "CRITICAL": "Cannot proceed — must migrate AT0 to AT1+ or block",
+    "INSUFFICIENT": "Must increase maturity or reduce tier",
+    "HIGH_EXPOSURE": "Must add HITL + sandbox + review",
+    "FEASIBLE": "Proceed with required controls",
+    "MANAGEABLE": "Proceed with continuous monitoring",
+    "MONITOR": "Proceed, monitor governance improvements",
+}
+
 VERDICT_LEGEND = {
     "PASS": "Matrix position acceptable and all critical controls satisfied — deployment approved.",
     "CONDITIONAL": "Deployment allowed only after the listed compensating / critical controls are in place.",
@@ -251,14 +260,7 @@ async def get_assessment_meta():
         "governanceMaturity": [{"value": t[0], "label": t[1], "description": t[2]} for t in GOVERNANCE_MATURITY],
         "scenarioClasses": [{"value": s[0], "label": s[1]} for s in SCENARIO_CLASSES],
         "counterpartyTypes": [{"value": c[0], "label": c[1]} for c in COUNTERPARTY_TYPES],
-        "matrixLegend": {
-            "CRITICAL": "Cannot proceed — must migrate AT0 to AT1+ or block",
-            "INSUFFICIENT": "Must increase maturity or reduce tier",
-            "HIGH_EXPOSURE": "Must add HITL + sandbox + review",
-            "FEASIBLE": "Proceed with required controls",
-            "MANAGEABLE": "Proceed with continuous monitoring",
-            "MONITOR": "Proceed, monitor governance improvements",
-        },
+        "matrixLegend": MATRIX_LEGEND,
         "verdictLegend": VERDICT_LEGEND,
     }
 
@@ -328,6 +330,109 @@ async def get_assessment(assessment_id: str, db: AsyncSession = Depends(get_db))
         "checklist": checklist_items,
         "checklistSummary": _checklist_summary(checklist_items),
         "verdict": _compute_verdict(sa_row["matrix_position"] if sa_row else None, checklist_items),
+    }
+
+
+@router.get("/{assessment_id}/report", dependencies=[Depends(require_permission("avdm", "read"))])
+async def get_assessment_report(assessment_id: str, db: AsyncSession = Depends(get_db)):
+    r = await db.execute(text("SELECT * FROM eam.ai_project_assessment WHERE id = CAST(:id AS uuid)"), {"id": assessment_id})
+    row = r.mappings().first()
+    if not row:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+
+    sa = await db.execute(text("SELECT * FROM eam.ai_self_assessment WHERE assessment_id = CAST(:id AS uuid)"), {"id": assessment_id})
+    sa_row = sa.mappings().first()
+
+    cl = await db.execute(text(
+        "SELECT section_key, section_label, item_key, item_label, is_checked, is_critical, notes "
+        "FROM eam.ai_review_checklist WHERE assessment_id = CAST(:id AS uuid) ORDER BY section_key, sort_order"
+    ), {"id": assessment_id})
+    checklist = [{
+        "sectionKey": c["section_key"], "sectionLabel": c["section_label"],
+        "itemKey": c["item_key"], "itemLabel": c["item_label"],
+        "isChecked": c["is_checked"], "isCritical": c["is_critical"], "notes": c["notes"] or "",
+    } for c in cl.mappings().all()]
+
+    matrix = sa_row["matrix_position"] if sa_row else None
+    verdict = _compute_verdict(matrix, checklist)
+    summary = _checklist_summary(checklist)
+    unmet = [c for c in checklist if c["isCritical"] and not c["isChecked"]]
+
+    tier_map = {t[0]: (t[1], t[2]) for t in ADOPTION_TIERS}
+    mat_map = {t[0]: (t[1], t[2]) for t in GOVERNANCE_MATURITY}
+    scen_map = {s[0]: s[1] for s in SCENARIO_CLASSES}
+    cp_map = {c[0]: c[1] for c in COUNTERPARTY_TYPES}
+
+    lines = [
+        f"# AI Security Assessment Report — {row['project_name']}",
+        "",
+        f"- Project Ref: {row['project_id_ref'] or '—'}",
+        f"- Status: {row['status']}",
+        "",
+    ]
+    if sa_row:
+        tier_label, tier_desc = tier_map.get(sa_row["adoption_tier"], (f"AT{sa_row['adoption_tier']}", ""))
+        mat_label, mat_desc = mat_map.get(sa_row["governance_maturity"], (f"L{sa_row['governance_maturity']}", ""))
+        lines += [
+            "## Self-Assessment",
+            "",
+            f"- Scenario Class: {scen_map.get(sa_row['scenario_class'], sa_row['scenario_class'])}",
+            f"- Counterparty Type: {cp_map.get(sa_row['counterparty_type'], sa_row['counterparty_type'])}",
+            f"- Adoption Tier: {tier_label} — {tier_desc}",
+            f"- Governance Maturity: {mat_label} — {mat_desc}",
+            f"- Matrix Position: {matrix} ({MATRIX_LEGEND.get(matrix, '')})",
+            "",
+        ]
+    else:
+        lines += ["## Self-Assessment", "", "_Not completed._", ""]
+
+    lines += [
+        f"## Deployment Verdict: {verdict['verdict']}",
+        "",
+        verdict["reason"],
+        "",
+        "## Checklist Summary",
+        "",
+        f"- Score: {summary['score']}%",
+        f"- Checked: {summary['checked']}/{summary['total']}",
+        f"- Critical satisfied: {summary['criticalChecked']}/{summary['critical']}",
+        "",
+        "## Unmet Critical Controls",
+        "",
+    ]
+    if unmet:
+        lines += [f"- [{c['sectionKey']}] {c['itemLabel']}" for c in unmet]
+    else:
+        lines.append("_None — all critical controls satisfied._")
+    lines += ["", "## Full Checklist", ""]
+
+    current = None
+    for c in checklist:
+        if c["sectionKey"] != current:
+            current = c["sectionKey"]
+            lines.append(f"### {c['sectionKey']}. {c['sectionLabel']}")
+        mark = "x" if c["isChecked"] else " "
+        crit = " (CRITICAL)" if c["isCritical"] else ""
+        note = f" — {c['notes']}" if c["notes"] else ""
+        lines.append(f"- [{mark}] {c['itemKey']} {c['itemLabel']}{crit}{note}")
+
+    markdown = "\n".join(lines)
+
+    return {
+        "id": str(row["id"]),
+        "projectName": row["project_name"],
+        "status": row["status"],
+        "selfAssessment": ({
+            "scenarioClass": sa_row["scenario_class"],
+            "counterpartyType": sa_row["counterparty_type"],
+            "adoptionTier": sa_row["adoption_tier"],
+            "governanceMaturity": sa_row["governance_maturity"],
+            "matrixPosition": matrix,
+        } if sa_row else None),
+        "verdict": verdict,
+        "checklistSummary": summary,
+        "unmetCritical": [{"sectionKey": c["sectionKey"], "itemKey": c["itemKey"], "itemLabel": c["itemLabel"]} for c in unmet],
+        "markdown": markdown,
     }
 
 
