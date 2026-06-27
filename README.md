@@ -10,7 +10,7 @@ AxisRobo-PAMP was sparked by the **PAMF series of papers** (PACT, AVDM, AADM, AR
 |-------|-----------|
 | Frontend | Next.js 16.2 (Turbopack), React 19, TanStack Query, Ant Design v6, Tailwind CSS |
 | Backend | FastAPI (Python 3.12+), SQLAlchemy asyncpg, Raw SQL via `text()` |
-| Database | PostgreSQL 14+, 98 tables in `eam` schema |
+| Database | PostgreSQL 14+, 100 tables in `eam` schema DDL |
 | Auth | Pluggable: OSS local (JWT + bcrypt), Keycloak SSO (EE), Dev mode. RBAC (3 roles, 24 resources) |
 | Storage | Pluggable: S3-compatible or database-backed (`eam_file_storage`) |
 | Testing | pytest (backend + API integration), Playwright (E2E) |
@@ -38,8 +38,8 @@ python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate on Windows
 pip install -r requirements.txt
 
-# Configure
-cp backend/.env.example backend/.env
+# Configure backend
+cp .env.example .env
 ```
 
 ### Start Database
@@ -141,7 +141,7 @@ Browser → Next.js :3000 → FastAPI :4000 → PostgreSQL :5432
 ### Key Design Principles
 
 1. **Modular by contract** — Each module self-contained with own DB access
-2. **Deny by default** — All 81+ API endpoints RBAC-gated via `require_permission(resource, scope)`
+2. **Deny by default** — All 95+ API endpoints RBAC-gated via `require_permission(resource, scope)`
 3. **Audit everything** — Append-only `eam_audit_log` with `audit_allow()` / `audit_deny()` hooks
 4. **Plugin-first** — Auth providers, email services, CMDB connectors, and storage backends are abstracted behind interfaces
 5. **Raw SQL over ORM** — SQLAlchemy `text()` for performance; Pydantic for request/response validation
@@ -180,7 +180,7 @@ Activation rules come in two kinds, both stored in the same activation-rule tabl
 
 ## API
 
-81+ endpoints, all RBAC-gated. Swagger UI at `http://localhost:4000/docs`.
+95+ endpoints, all RBAC-gated. Swagger UI at `http://localhost:4000/docs`.
 
 See [docs/api.md](docs/api.md) for full reference.
 
@@ -195,7 +195,7 @@ Files stored in `eam.eam_file_storage` table when S3 is unavailable.
 
 ## Database
 
-98 tables across the `eam` schema. Complete documentation at [docs/database-schema.md](docs/database-schema.md).
+100 tables across the `eam` schema DDL. Complete documentation at [docs/database-schema.md](docs/database-schema.md).
 
 ```bash
 # Generate fresh schema documentation
@@ -225,21 +225,11 @@ cd frontend && npx playwright test
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Development roadmap |
 | [docs/threat-model.md](docs/threat-model.md) | Security threat model |
 | [docs/design.md](docs/design.md) | Detailed design (Chinese) |
-| [docs/database-schema.md](docs/database-schema.md) | Complete DB schema (98 tables) |
+| [docs/database-schema.md](docs/database-schema.md) | Complete DB schema (100 tables) |
 | [docs/SQL/eam_schema_ddl.sql](docs/SQL/eam_schema_ddl.sql) | Complete schema DDL — `CREATE TABLE` definitions for all tables |
 | [docs/SQL/avdm_schema_seed.sql](docs/SQL/avdm_schema_seed.sql) | AVDM schema + seed data (concerns, viewpoints, artifacts, mappings) |
 | [docs/authorization.md](docs/authorization.md) | Auth model: RBAC + record-level ownership |
 | [docs/standards/](docs/standards/) | Coding conventions |
-
-## Superpowers Specs & Plans
-
-| Doc | Description |
-|-----|-------------|
-| [docs/superpowers/specs/2026-06-23-local-auth-design.md](docs/superpowers/specs/2026-06-23-local-auth-design.md) | OSS local auth design |
-| [docs/superpowers/specs/2026-06-23-concern-artifact-expand-design.md](docs/superpowers/specs/2026-06-23-concern-artifact-expand-design.md) | Concern & Artifact expandable view |
-| [docs/superpowers/plans/2026-06-23-local-auth-plan.md](docs/superpowers/plans/2026-06-23-local-auth-plan.md) | Local auth implementation plan |
-| [docs/superpowers/plans/2026-06-23-concern-artifact-expand-plan.md](docs/superpowers/plans/2026-06-23-concern-artifact-expand-plan.md) | Concern/Artifact expand implementation plan |
-| [docs/superpowers/plans/2026-06-22-global-optimization.md](docs/superpowers/plans/2026-06-22-global-optimization.md) | Global optimization |
 
 ## Citing AXISRobo-PAMP
 

@@ -1,4 +1,4 @@
-# PAMF Enterprise Edition (EE)
+# AXISRobo-PAMP Enterprise Edition (EE)
 
 > Enterprise features subject to commercial license. Contact for license terms.
 
@@ -30,4 +30,4 @@ KEYCLOAK_CLIENT_SECRET=your-client-secret
 
 ## Contact
 
-For enterprise licensing inquiries, contact the PAMF team.
+For enterprise licensing inquiries, contact the AXISRobo-PAMP team.

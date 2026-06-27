@@ -1,8 +1,8 @@
-# PAMF Architecture
+# AXISRobo-PAMP Architecture
 
 ## System Overview
 
-PAMF is a 3-tier web application for enterprise architecture management and governance:
+AXISRobo-PAMP is a 3-tier web application for enterprise architecture management and governance:
 - **Frontend**: Next.js 16 (React 19, TypeScript) -- UI rendering, routing, state management
 - **Backend**: FastAPI (Python 3.12+) -- API server, business logic, AI orchestration
 - **Database**: PostgreSQL 14+ -- persistent storage, async access via asyncpg
@@ -54,7 +54,7 @@ Seven independently deployable modules, controlled via `ENABLED_MODULES` env var
                              asyncpg
                                 |
                     PostgreSQL (schema: eam)
-                      98+ tables | 33 migrations
+                      100 tables | SQL DDL + seed scripts
 ```
 
 ## Module Descriptions
@@ -63,8 +63,8 @@ Seven independently deployable modules, controlled via `ENABLED_MODULES` env var
 |--------|------------|---------------------|-------------|
 | EA Review | `architecture_review` | `(architecture_review)` | Architecture review workflow: requests, meetings, actions, AI checks, reports |
 | Application Portfolio | `application_management` | `(application_management)` | BCM, BizCapability, CMDB -- business capability mapping, application CRUD |
-| ADD | `add` | `(add_config)` | Architecture Decision & Design: concern catalog, risk scoring, artifact mapping |
-| Technology Stack | `technology_stack_management` | `(technology_stack_management)` | Tech stack lifecycle management, compliance checking |
+| ADD | `add` | `(add_config)` | Architecture Decision & Design: questionnaire config, concern catalog, risk scoring, concern-to-viewpoint and viewpoint-to-artifact mapping |
+| Technology Management | `technology_stack_management` | `(technology_stack_management)` | Tech stack lifecycle management, compliance checking |
 | Project Management | `project_management` | `(project_management)` | Project CRUD, team member management |
 | Data Management | `data_management` | `(data_management)` | Master data, resources, certifications, dict options |
 | AI Self-Assessment | `ai_assessment` | `(ai_assessment)` | AI project self-assessment with adoption-tier × governance-maturity scoring |
@@ -81,17 +81,16 @@ Architecture Concerns are derived from the AVDM (Architecture Viewpoint Decision
 Questionnaire Submission
     |   POST /avdm/projects/{id}/questionnaire
     v
-Risk Item Extraction
-    |   questionnaire answers -> risk_items (code, severity, likelihood)
+Concern Activation
+    |   question-answer mappings and activation rules produce scored PACT concerns
+    |   single-signal rules cover one answer, including architectureTypeSection.* multiselect fields
+    |   combination rules cover multi-answer predicates such as cross-border-sensitive-data
     v
-Concern Evaluation (evaluate_avdm -- backend/app/add/service.py:148)
-    |   For each of 52 PACT concerns (CONCERN_CATALOG):
-    |
-    |   +-- Direct Match: risk_items[concern_key] -> score = (severity/5) * (likelihood/5)
-    |   +-- Tag Match: average score of risk_items matching concern.risk_tags[]
-    |   +-- risk_score = max(direct_score, tagged_score)
-    |   +-- final_score = min(1.0, risk_score + project_complexity * 0.15)
-    |   +-- Classification: >=0.66 Mandatory | >=0.38 Recommended | else Optional
+Concern Aggregation
+    |   scores are aggregated into Mandatory / Recommended / Optional decisions
+    v
+Viewpoint and Artifact Derivation
+    |   concern -> viewpoint -> artifact (no direct concern -> artifact mapping)
     v
 Storage
     |   avdm_project_assessment.evaluation (JSONB) -> { decisions[], contributions{}, layerSummary[] }
@@ -109,7 +108,7 @@ Frontend Display (AVDMConcernExpandSection)
 ```json
 {
   "concernKey": "B1",
-  "concernName": "Business Capability View",
+  "concernName": "Business Capability",
   "layer": "Business / Organization",
   "score": 0.85,
   "classification": "Mandatory",
@@ -138,9 +137,9 @@ Frontend Display (AVDMConcernExpandSection)
 
 | Layer | File | Purpose |
 |-------|------|---------|
-| Catalog | `backend/app/add/catalog.py` | 52 PACT concerns with risk_tags, layer mapping |
-| Evaluation | `backend/app/add/service.py:148` | `evaluate_avdm()` -- score computation |
-| Contributions | `backend/app/add/service.py` | `build_concern_contributions()` -- direct/tag/rule mapping |
+| Catalog | `eam.avdm_pact_concern` | 68 PACT concerns with risk_tags, layer mapping |
+| Evaluation | `backend/app/add/master_data_repository.py` and `backend/app/add/service.py` | Questionnaire mapping, activation-rule scoring, and compatibility evaluation |
+| Contributions | `avdm_project_assessment.evaluation` | Stores concern decisions and contribution details for request-level views |
 | API | `backend/app/architecture_review/concerns.py` | `GET /ea-requests/{id}/concerns` |
 | Frontend | `AVDMConcernExpandSection.tsx` | Expandable concern table with item breakdown |
 

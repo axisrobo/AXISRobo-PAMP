@@ -1,4 +1,4 @@
-# PAMF — Roadmap
+# AXISRobo-PAMP Roadmap
 
 > **Product positioning**: Enterprise Architecture Management & Governance Platform
 > **Grounded in**: industry security practices — OWASP Agentic Top 10, CAEP, Zero Trust, SPIFFE
@@ -214,11 +214,11 @@ Platform-level technical infrastructure — identity, access, audit, and system 
 - [x] Align development harness (AGENTS.md, OpenCode)
 - [x] OSS local auth (username/password + JWT, 3 roles)
 - [x] Database-backed file storage (S3 fallback)
-- [x] AVDM concern catalog, viewpoint catalog, concern↔artifact mapping
+- [x] AVDM concern catalog, viewpoint catalog, concern-to-viewpoint and viewpoint-to-artifact mappings
 - [x] Questionnaire → Concern → Viewpoint → Artifact data chain
-- [x] Expandable Concern/Artifact views in EA Review
+- [x] Expandable Concern, Viewpoint, and Artifact views in EA Review
 - [x] Project form PM/DT/IT selector fixes
-- [x] DB schema documentation (98 tables)
+- [x] DB schema documentation (100 tables)
 - [ ] Verify build + test suite passes
 
 ## v1.1 — Clean Architecture Refactoring (In Progress)
@@ -246,69 +246,69 @@ Platform-level technical infrastructure — identity, access, audit, and system 
 
 ## v2.0 — Architecture Policy & Decision Governance
 
-*PAMF as the single source of truth for architecture decisions, policies, and their traceability*
+*AXISRobo-PAMP as the single source of truth for architecture decisions, policies, and their traceability*
 
-PAMF governs architecture at **design-time and review-time** — it defines what architectures should look like and verifies compliance, without runtime enforcement. Established AI security identity and policy patterns are adapted as architecture governance capabilities that PAMF provides to organizations.
+AXISRobo-PAMP governs architecture at **design-time and review-time** — it defines what architectures should look like and verifies compliance, without runtime enforcement. Established AI security identity and policy patterns are adapted as architecture governance capabilities that AXISRobo-PAMP provides to organizations.
 
 - [ ] **Architecture Element Registry** — Single registry for all governed elements: applications, data assets, integration flows, technology stacks, AI agents. Each element carries scenario class, stakeholder type, owner, trust level, and linked architecture decisions.
 - [ ] **Architecture Policy Engine** — Define architecture rules as version-controlled policy code. Example: "All applications handling PII must complete Data Architecture Viewpoint review and produce a Data Flow artifact." Policy compliance evaluated during architecture review.
 - [ ] **Architecture Decision Traceability** — Full chain from questionnaire → concern → viewpoint → artifact → review outcome → implementation. Every architecture decision has provenance: who decided what, based on which evidence, resulting in which prescribed artifacts.
 - [ ] **Architecture Identity Model** — Application identity, data asset identity, integration identity, AI agent identity — all registered, classified, and linked to architecture policies and review requirements.
-- [ ] **Shadow Architecture Governance** — Discovery and registration of ungoverned architecture elements (Shadow AI, unregistered APIs, undocumented data flows). PAMF as the detection and onboarding mechanism for AT0 elements.
+- [ ] **Shadow Architecture Governance** — Discovery and registration of ungoverned architecture elements (Shadow AI, unregistered APIs, undocumented data flows). AXISRobo-PAMP as the detection and onboarding mechanism for AT0 elements.
 
 ## v2.1 — Continuous Architecture Compliance Assessment
 
-*PAMF as the continuous governance layer between declared architecture and implementation reality*
+*AXISRobo-PAMP as the continuous governance layer between declared architecture and implementation reality*
 
-Architecture governance is not a one-time review. PAMF provides continuous assessment: comparing what was declared (AVDM questionnaire → concerns → viewpoints → artifacts) against what exists. When implementations drift, PAMF flags, escalates, and triggers re-review.
+Architecture governance is not a one-time review. AXISRobo-PAMP provides continuous assessment: comparing what was declared (AVDM questionnaire → concerns → viewpoints → artifacts) against what exists. When implementations drift, AXISRobo-PAMP flags, escalates, and triggers re-review.
 
 - [ ] **Architecture-Implementation Drift Detection** — Compare declared architecture (AVDM questionnaire results, prescribed artifacts, review decisions) against actual implementations. Deviation → automated re-review trigger or governance escalation.
-- [ ] **Architecture Risk Boundary Definition** — Define critical risk combinations for architecture governance: "data with sensitivity X + integration with untrusted partner + external communication capability" → mandatory architecture review gate. PAMF identifies these combinations and enforces review requirements.
+- [ ] **Architecture Risk Boundary Definition** — Define critical risk combinations for architecture governance: "data with sensitivity X + integration with untrusted partner + external communication capability" → mandatory architecture review gate. AXISRobo-PAMP identifies these combinations and enforces review requirements.
 - [ ] **Architecture Audit Trail** — Complete time-series record of all architecture governance actions: who reviewed what, when, with which evidence, resulting in which decision. Supports EU AI Act Art. 72 trajectory-level requirements for architecture decisions.
 - [x] **Architecture Review Automation** — Workflow-driven architecture review with automated compliance scoring. Each review gate evaluates against defined architecture policies. Non-negotiable gates halt progression until resolved.
 
 ## v2.2 — Architecture Supply Chain Governance
 
-*PAMF as the governance authority for architecture component provenance and composition*
+*AXISRobo-PAMP as the governance authority for architecture component provenance and composition*
 
-Every architecture is composed of components — frameworks, platforms, tools, APIs, data sources, AI models. PAMF governs their provenance, version, and compliance status, providing an Architecture Bill of Materials that traces what each architecture element depends on.
+Every architecture is composed of components — frameworks, platforms, tools, APIs, data sources, AI models. AXISRobo-PAMP governs their provenance, version, and compliance status, providing an Architecture Bill of Materials that traces what each architecture element depends on.
 
-- [ ] **Architecture Bill of Materials (ABOM)** — Multi-layer traceability for each governed architecture: framework layer / platform layer / tool layer / data source layer / external dependency layer. PAMF generates and verifies ABOM completeness.
-- [ ] **Component Provenance Verification** — Every architecture component (MCP server, plugin, external API, SDK, model) carries verified provenance: origin, version, approval status, known vulnerabilities. PAMF flags unverified components during architecture review.
-- [ ] **Architecture Composition Governance** — When architectures change (new dependency, new integration, new data source), PAMF evaluates the impact against existing policies and triggers re-review for affected elements.
-- [ ] **Coding Agent Architecture Governance** — Define separate architecture policies for IDE-resident vs CI-resident coding agents. PAMF tracks which architectures are modified by which agents, with distinct review requirements per trust model.
+- [ ] **Architecture Bill of Materials (ABOM)** — Multi-layer traceability for each governed architecture: framework layer / platform layer / tool layer / data source layer / external dependency layer. AXISRobo-PAMP generates and verifies ABOM completeness.
+- [ ] **Component Provenance Verification** — Every architecture component (MCP server, plugin, external API, SDK, model) carries verified provenance: origin, version, approval status, known vulnerabilities. AXISRobo-PAMP flags unverified components during architecture review.
+- [ ] **Architecture Composition Governance** — When architectures change (new dependency, new integration, new data source), AXISRobo-PAMP evaluates the impact against existing policies and triggers re-review for affected elements.
+- [ ] **Coding Agent Architecture Governance** — Define separate architecture policies for IDE-resident vs CI-resident coding agents. AXISRobo-PAMP tracks which architectures are modified by which agents, with distinct review requirements per trust model.
 
 ## v2.3 — Stakeholder-Context Architecture Governance
 
-*PAMF as the multi-stakeholder governance platform — one platform, multiple governance contexts*
+*AXISRobo-PAMP as the multi-stakeholder governance platform — one platform, multiple governance contexts*
 
-Different stakeholders need different governance models. PAMF provides context-appropriate architecture governance views: what a supplier sees vs what an internal reviewer sees vs what a consumer sees — all from the same architecture governance platform, with data isolation between contexts.
+Different stakeholders need different governance models. AXISRobo-PAMP provides context-appropriate architecture governance views: what a supplier sees vs what an internal reviewer sees vs what a consumer sees — all from the same architecture governance platform, with data isolation between contexts.
 
 - [ ] **Stakeholder Governance Contexts** — Internal employee / External partner / Supplier / Consumer — each with distinct architecture visibility scope, data classification boundaries, consent requirements, and review authority.
-- [ ] **Supplier Architecture Governance** — Per-supplier architecture governance domains with data isolation (supplier A must not see supplier B's architecture data, BOM, pricing, or quality metrics). PAMF enforces this at the governance layer through data classification and access policy.
-- [ ] **Consumer-Facing Architecture Governance** — Governance of architectures that directly serve consumers (CP4). PAMF tracks consent records, data subject rights, and regulatory obligations linked to architecture decisions that affect consumer data.
+- [ ] **Supplier Architecture Governance** — Per-supplier architecture governance domains with data isolation (supplier A must not see supplier B's architecture data, BOM, pricing, or quality metrics). AXISRobo-PAMP enforces this at the governance layer through data classification and access policy.
+- [ ] **Consumer-Facing Architecture Governance** — Governance of architectures that directly serve consumers (CP4). AXISRobo-PAMP tracks consent records, data subject rights, and regulatory obligations linked to architecture decisions that affect consumer data.
 - [ ] **Multi-Architecture Governance Dashboard** — Unified governance view across all architecture domains and stakeholder contexts. Governance maturity scoring per domain, compliance gap analysis, cross-domain impact assessment.
 
 ## v2.4 — Architecture Data Governance & Observability
 
-*PAMF as the guardian of architecture-sensitive data — classification, protection, and governance of what enters AI systems*
+*AXISRobo-PAMP as the guardian of architecture-sensitive data — classification, protection, and governance of what enters AI systems*
 
-Architecture data itself is sensitive: BOM data, supplier costs, quality metrics, architecture decisions, security assessments. PAMF must classify, protect, and govern access to this data — especially before it enters any AI-assisted analysis or recommendation pipeline.
+Architecture data itself is sensitive: BOM data, supplier costs, quality metrics, architecture decisions, security assessments. AXISRobo-PAMP must classify, protect, and govern access to this data — especially before it enters any AI-assisted analysis or recommendation pipeline.
 
-- [ ] **Architecture Data Classification Engine** — Classify architecture data by sensitivity tier. PAMF applies data handling rules before architecture data enters any analysis, report, or AI recommendation context.
-- [ ] **Crown Jewels Architecture Mapping** — Identify and catalog enterprise-critical architecture assets. Manufacturing-specific: BOM structures, supplier cost data, cross-supplier quality comparisons, strategic procurement plans. PAMF governs who can see what.
-- [ ] **Architecture Knowledge Base Governance** — All architecture knowledge sources (standards documents, review templates, architecture decisions, reference architectures) governed for provenance, version, and access. PAMF ensures AI-assisted architecture analysis uses only trusted, governed sources.
+- [ ] **Architecture Data Classification Engine** — Classify architecture data by sensitivity tier. AXISRobo-PAMP applies data handling rules before architecture data enters any analysis, report, or AI recommendation context.
+- [ ] **Crown Jewels Architecture Mapping** — Identify and catalog enterprise-critical architecture assets. Manufacturing-specific: BOM structures, supplier cost data, cross-supplier quality comparisons, strategic procurement plans. AXISRobo-PAMP governs who can see what.
+- [ ] **Architecture Knowledge Base Governance** — All architecture knowledge sources (standards documents, review templates, architecture decisions, reference architectures) governed for provenance, version, and access. AXISRobo-PAMP ensures AI-assisted architecture analysis uses only trusted, governed sources.
 - [ ] **Architecture Governance Observability** — Dashboards and metrics for architecture governance health: policy compliance rates, drift detection alerts, review cycle times, governance maturity trends. Prometheus + Grafana integration for governance metrics.
 - [ ] **Audit Log Integrity** — All architecture governance actions cryptographically hashed in append-only audit log for regulatory compliance and forensic traceability.
 
 ## v3.0 — Architecture Governance Maturity & Regulatory Compliance
 
-*PAMF as the enterprise-grade architecture governance platform — maturity assessment, regulatory compliance mapping, decision-level accountability*
+*AXISRobo-PAMP as the enterprise-grade architecture governance platform — maturity assessment, regulatory compliance mapping, decision-level accountability*
 
-PAMF provides the governance infrastructure for organizations to assess, improve, and demonstrate architecture governance maturity. From self-assessment to regulatory compliance mapping to decision-level accountability.
+AXISRobo-PAMP provides the governance infrastructure for organizations to assess, improve, and demonstrate architecture governance maturity. From self-assessment to regulatory compliance mapping to decision-level accountability.
 
-- [x] **Architecture Governance Maturity Assessment** — AT0-AT8 adoption tier × L0-L4 governance maturity self-assessment matrix. Automated go/no-go gates based on architecture risk profile. PAMF as the assessment engine.
-- [ ] **Regulatory Architecture Compliance Mapping** — Architecture decisions → applicable regulations → compliance evidence. PAMF maps which architecture reviews satisfy which regulatory requirements (GDPR Art. 33, NIS2 24h, EU AI Act Art. 72, PIPL, DORA conditional).
+- [x] **Architecture Governance Maturity Assessment** — AT0-AT8 adoption tier × L0-L4 governance maturity self-assessment matrix. Automated go/no-go gates based on architecture risk profile. AXISRobo-PAMP as the assessment engine.
+- [ ] **Regulatory Architecture Compliance Mapping** — Architecture decisions → applicable regulations → compliance evidence. AXISRobo-PAMP maps which architecture reviews satisfy which regulatory requirements (GDPR Art. 33, NIS2 24h, EU AI Act Art. 72, PIPL, DORA conditional).
 - [ ] **Decision-Level Architecture Accountability** — Full reconstruction of any governed architecture outcome: which questionnaire triggered which concern, which concern selected which viewpoint, which viewpoint prescribed which artifact, who reviewed, who approved, with what evidence. Audit-ready, regulator-ready.
 - [ ] **Architecture Governance Policy as Code** — All architecture governance rules expressed as version-controlled, testable policy code. Architecture governance CI/CD pipeline with automated policy testing. Policy changes require architecture review approval.
 - [ ] **Cross-Organization Architecture Governance Federation** — Multi-tenant governance for organizations managing architectures across business units, geographies, and regulatory jurisdictions. Each domain with independent policy sets, shared governance platform.
