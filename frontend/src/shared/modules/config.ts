@@ -2,6 +2,7 @@ import type { FrontendModuleKey } from '@/shared/modules/types';
 
 const DEFAULT_ENABLED_MODULES: FrontendModuleKey[] = [
   'architecture_review',
+  'ai_management',
   'add',
   'application_management',
   'data_management',

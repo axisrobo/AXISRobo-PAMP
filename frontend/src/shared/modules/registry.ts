@@ -2,6 +2,7 @@ import type { NavItem } from '@/shared/lib/constants';
 import type { FrontendModuleKey, ModuleNavDefinition } from '@/shared/modules/types';
 import { coreNav } from '@/features/core/nav';
 import { architectureReviewNav } from '@/features/review/nav';
+import { aiManagementNav } from '@/features/ai-management/nav';
 import { addNav } from '@/features/add/nav';
 import { applicationManagementNav } from '@/features/portfolio/nav';
 import { dataManagementNav } from '@/features/data-management/nav';
@@ -11,6 +12,7 @@ import { enabledModules } from '@/shared/modules/config';
 
 const MODULE_NAV_REGISTRY: Record<FrontendModuleKey, ModuleNavDefinition> = {
   architecture_review: architectureReviewNav,
+  ai_management: aiManagementNav,
   add: addNav,
   application_management: applicationManagementNav,
   data_management: dataManagementNav,
