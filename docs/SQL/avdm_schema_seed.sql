@@ -1050,8 +1050,8 @@ UPDATE eam.avdm_pact_concern SET concern_name = 'Monitoring & Observability', up
 UPDATE eam.avdm_pact_concern SET concern_name = 'Operational Feedback', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'OR5';
 UPDATE eam.avdm_pact_concern SET concern_name = 'Application Domain Boundary', layer = 'layer = 'Context & Application'', description = 'Clarify service boundaries and domain ownership.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'A5';
 UPDATE eam.avdm_pact_concern SET concern_name = 'Application Resilience', layer = 'layer = 'Context & Application'', description = 'Define fallback, retry, and graceful degradation strategy.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'A6';
-UPDATE eam.avdm_pact_concern SET concern_name = 'Control Traceability Matrix', layer = 'Governance', description = 'Trace controls to policies, systems, and responsible roles.', is_active = TRUE, update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'AGD6';
-UPDATE eam.avdm_pact_concern SET concern_name = 'Architecture Decision Record', layer = 'Governance', description = 'Document decision rationale and approval trail.', is_active = TRUE, update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'AGD7';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Control Traceability Matrix', layer = 'Architecture Governance & Decision', description = 'Trace controls to policies, systems, and responsible roles.', is_active = TRUE, update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'AGD6';
+UPDATE eam.avdm_pact_concern SET concern_name = 'Architecture Decision Record', layer = 'Architecture Governance & Decision', description = 'Document decision rationale and approval trail.', is_active = TRUE, update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'AGD7';
 UPDATE eam.avdm_pact_concern SET concern_name = 'Disaster Recovery', layer = 'Deployment / Infrastructure / Networking', description = 'Define backup, restore, and regional failover strategy.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'DIN5';
 UPDATE eam.avdm_pact_concern SET concern_name = 'Scalability and Capacity', layer = 'Deployment / Infrastructure / Networking', description = 'Plan horizontal and vertical scaling with bottleneck controls.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'DIN6';
 UPDATE eam.avdm_pact_concern SET concern_name = 'Interface Contract Stability', layer = 'Integration & Processing', description = 'Specify APIs, versioning, and compatibility guarantees.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'IP7';
@@ -1064,6 +1064,9 @@ UPDATE eam.avdm_pact_concern SET concern_name = 'Data Protection', layer = 'Secu
 UPDATE eam.avdm_pact_concern SET concern_name = 'Identity and Access Control', layer = 'Security, Compliance & Risk', description = 'Map authentication, authorization, and least privilege controls.', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'SCR11';
 -- OR5 reactivated (user intent — was legacy-deactivated by earlier disposition); keep active with new name.
 UPDATE eam.avdm_pact_concern SET is_active = TRUE WHERE concern_key = 'OR5';
+UPDATE eam.avdm_pact_concern SET layer = 'Data Architecture', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'D12';
+UPDATE eam.avdm_pact_concern SET layer = 'Data Architecture', update_by = 'avdm_seed', update_at = now() WHERE concern_key = 'D13';
+
 
 -- Mappings for previously-unmapped now-active concerns (AGD6/AGD7/OR5):
 INSERT INTO eam.avdm_viewpoint_concern_mapping (id, viewpoint_id, concern_id, sort_order, is_active, create_by, update_by, create_at, update_at)
