@@ -13,12 +13,13 @@
 | AI Assessment | `app/ai_assessment/` | `(add_config)/ai-assessment/` | 7 | Complete |
 | AI Model Registry | `app/ai_model_registry/` | `(add_config)/ai-models/` | 9 | Complete |
 | AI Agent Registry | `app/ai_agent_registry/` | `(add_config)/ai-agents/` | 6 | Complete |
+| MCP Governance | `app/mcp_governance/` | `(add_config)/mcp-servers/` | 9 | Complete |
 | Technology Management | `app/technology_stack_management/` | `(technology_stack_management)/` | ~22 | Complete |
 | Project Management | `app/project_management/` | `(project_management)/` | 6 | Complete |
 | Data Management | `app/data_management/` | `(data_management)/` | ~4 | Complete |
 | AI Review Agent | `app/architecture_review/ai.py` | review components | 2 | Complete |
 
-Total: ~110 API endpoints, 171+ FastAPI route handlers.
+Total: ~119 API endpoints, 180+ FastAPI route handlers.
 
 ## Recent Changes (2026-06-24)
 

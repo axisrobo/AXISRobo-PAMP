@@ -109,7 +109,7 @@ Govern AI projects, models, agents, and their architecture compliance.
 - [x] Agent registration & governance (scenario / counterparty / autonomy / trust + lethal-trifecta HITL approval gate)
 - [ ] AI Bill of Materials (AIBOM) generation and verification
 - [ ] Agent identity and naming service registry
-- [ ] MCP server and tool governance (registration, approval, provenance)
+- [x] MCP server and tool governance (registration, approval, provenance)
 - [ ] AI governance maturity scoring and benchmarking
 
 ### Architecture Governance

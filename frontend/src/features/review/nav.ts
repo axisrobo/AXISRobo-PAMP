@@ -1,4 +1,4 @@
-import { Bot, Boxes, ClipboardList, FileText, ShieldCheck } from 'lucide-react';
+import { Bot, Boxes, ClipboardList, FileText, Server, ShieldCheck } from 'lucide-react';
 import type { ModuleNavDefinition } from '@/shared/modules/types';
 
 export const architectureReviewNav: ModuleNavDefinition = {
@@ -41,6 +41,12 @@ export const architectureReviewNav: ModuleNavDefinition = {
           label: 'Agent Registry',
           href: '/ai-agents',
           icon: Bot,
+          requiredRole: 'ea_admin',
+        },
+        {
+          label: 'MCP Governance',
+          href: '/mcp-servers',
+          icon: Server,
           requiredRole: 'ea_admin',
         },
       ],
