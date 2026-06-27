@@ -1,7 +1,7 @@
 # Database Schema Documentation
 
 **Schema**: `eam`
-**Total Tables**: 101
+**Total Tables**: 100
 **Total Foreign Key Relationships**: 23
 
 > Auto-generated from live database using `information_schema`.
@@ -10,7 +10,7 @@
 
 ## `eam.avdm_pact_concern`
 
-PACT concern master catalog (52 architecture concerns). Defines concern keys, names, layers, risk tags.
+PACT concern master catalog (68 architecture concerns). Defines concern keys, names, layers, risk tags.
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|

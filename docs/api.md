@@ -1,6 +1,6 @@
 # AxisArch API Reference
 
-> **Last verified:** 2026-06-22  |  **Source:** FastAPI OpenAPI (backend/app)
+> **Last verified:** 2026-06-27  |  **Source:** FastAPI OpenAPI (backend/app)
 
 ## Base
 - Base URL: `/api`
@@ -31,6 +31,8 @@
 | DELETE | `/api/ea-requests/attachments/{id}` | Delete attachment | `ea_request:write` |
 | POST | `/api/ea-requests/attachments/ai-check` | Trigger AI architecture check | `ea_request:write` |
 | GET | `/api/ea-requests/filter-options` | Distinct filter option values | `ea_request:read` |
+| GET | `/api/ea-requests/{id}/concerns` | AVDM concerns derived for an EA request | `ea_request:read` |
+| GET | `/api/ea-requests/{id}/viewpoints` | AVDM viewpoints derived through concern-to-viewpoint mapping | `ea_request:read` |
 
 ## Meetings & Decks
 
@@ -87,6 +89,8 @@
 | PUT | `/api/avdm/artifact-catalog-config` | Update artifact catalog config | EA_ADMIN |
 | GET | `/api/avdm/viewpoint-artifact-mapping-config` | Get viewpoint-artifact mapping | `avdm:read` |
 | PUT | `/api/avdm/viewpoint-artifact-mapping-config` | Update viewpoint-artifact mapping | EA_ADMIN |
+| GET | `/api/avdm/concern-viewpoint-mapping` | List concern-to-viewpoint mappings, or unmapped concerns with `includeUnmapped=true` | `avdm:read` |
+| GET | `/api/avdm/viewpoints` | List viewpoint catalog | `avdm:read` |
 | GET | `/api/avdm/concerns` | List concern catalog | `avdm:read` |
 | PUT | `/api/avdm/concerns` | Upsert concern | EA_ADMIN |
 | GET | `/api/avdm/concerns/export` | Export concern catalog | `avdm:read` |
