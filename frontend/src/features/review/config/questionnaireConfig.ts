@@ -267,7 +267,7 @@ export type ConcernMappingConfig = {
 };
 
 export const defaultQuestionnaireFormCopy: QuestionnaireFormCopy = {
-  projectTypeLabel: 'Technical Architecture Type',
+  projectTypeLabel: 'Project Type',
   projectComplexityScoreLabel: 'Project Complexity (0~1)',
   projectScaleTitle: 'Project Scale',
   applicationsInScopeLabel: 'How many applications are in scope?',
@@ -324,6 +324,79 @@ export const emptyQuestionnaireConfig: QuestionnaireConfig = {
   cloudRegionScopeOptions: [],
   techStackKindsCountRangeOptions: [],
   integrationTechKindsCountRangeOptions: [],
+};
+
+const defaultArchitectureTypeSection: QuestionnaireSection = {
+  key: 'architectureTypeSection',
+  title: 'Architecture Type',
+  description: 'Dominant architecture style(s) for this project. Select all that apply.',
+  fields: [
+    {
+      key: 'businessArchitectureType',
+      label: 'Business Architecture Type',
+      control: 'multiselect',
+      options: [
+        { label: 'Capability-based', value: 'capability_based' },
+        { label: 'Process-centric / workflow', value: 'process_centric' },
+        { label: 'Customer / actor-journey', value: 'customer_journey' },
+        { label: 'Multi-entity / cross-organization', value: 'multi_entity' },
+        { label: 'Platform / ecosystem business', value: 'platform_business' },
+      ],
+    },
+    {
+      key: 'applicationArchitectureType',
+      label: 'Application Architecture Type',
+      control: 'multiselect',
+      options: [
+        { label: 'Monolithic', value: 'monolith' },
+        { label: 'Modular monolith', value: 'modular_monolith' },
+        { label: 'Microservices', value: 'microservices' },
+        { label: 'Event-driven', value: 'event_driven' },
+        { label: 'Web application', value: 'web_application' },
+        { label: 'Mobile / rich client', value: 'mobile_or_client' },
+      ],
+    },
+    {
+      key: 'technicalArchitectureType',
+      label: 'Technical Architecture Type',
+      control: 'multiselect',
+      options: [
+        { label: 'Cloud-native', value: 'cloud_native' },
+        { label: 'Containerized / Kubernetes', value: 'containerized' },
+        { label: 'On-premise', value: 'on_premise' },
+        { label: 'Hybrid / multi-cloud', value: 'hybrid_multicloud' },
+        { label: 'Legacy modernization', value: 'legacy_modernization' },
+        { label: 'High-availability / DR', value: 'high_availability' },
+      ],
+    },
+    {
+      key: 'dataArchitectureType',
+      label: 'Data Architecture Type',
+      control: 'multiselect',
+      options: [
+        { label: 'Relational / OLTP', value: 'relational_oltp' },
+        { label: 'Data warehouse / analytics', value: 'data_warehouse' },
+        { label: 'Data lake / lakehouse', value: 'data_lake' },
+        { label: 'Streaming / real-time', value: 'streaming' },
+        { label: 'AI / ML', value: 'ai_ml' },
+        { label: 'LLM / RAG', value: 'llm_rag' },
+        { label: 'Master data management', value: 'master_data' },
+      ],
+    },
+    {
+      key: 'securityArchitectureType',
+      label: 'Security Architecture Type',
+      control: 'multiselect',
+      options: [
+        { label: 'Zero trust', value: 'zero_trust' },
+        { label: 'Identity / IAM integration', value: 'iam_integration' },
+        { label: 'Perimeter / network security', value: 'perimeter_network' },
+        { label: 'Data protection / encryption', value: 'data_protection' },
+        { label: 'Compliance-driven', value: 'compliance_driven' },
+        { label: 'Cross-border / data sovereignty', value: 'cross_border' },
+      ],
+    },
+  ],
 };
 
 export const emptyConcernMappingConfig: ConcernMappingConfig = {
@@ -546,6 +619,32 @@ function normalizeQuestionnaireSections(raw: any): QuestionnaireSection[] {
     : [];
 }
 
+function withArchitectureTypeSection(sections: QuestionnaireSection[]): QuestionnaireSection[] {
+  const sectionIndex = sections.findIndex((section) => section.key === defaultArchitectureTypeSection.key);
+  if (sectionIndex === -1) {
+    return [...sections, defaultArchitectureTypeSection];
+  }
+
+  const section = sections[sectionIndex];
+  const fieldsByKey = new Map(section.fields.map((field) => [field.key, field]));
+  const fields = defaultArchitectureTypeSection.fields.map((defaultField) => ({
+    ...defaultField,
+    ...(fieldsByKey.get(defaultField.key) || {}),
+    label: defaultField.label,
+    control: 'multiselect' as const,
+    options: (fieldsByKey.get(defaultField.key)?.options?.length ? fieldsByKey.get(defaultField.key)?.options : defaultField.options) || [],
+  }));
+
+  const nextSections = [...sections];
+  nextSections[sectionIndex] = {
+    ...section,
+    title: defaultArchitectureTypeSection.title,
+    description: section.description || defaultArchitectureTypeSection.description,
+    fields,
+  };
+  return nextSections;
+}
+
 function normalizeQuestionnaireCategories(raw: any): CategoryConfig[] {
   if (!Array.isArray(raw)) {
     return [];
@@ -622,7 +721,7 @@ export function mergeQuestionnaireConfig(raw: any): QuestionnaireConfig {
   const optionSets = normalizeOptionSets(raw.optionSets);
 
   return {
-    questionnaireSections: normalizeQuestionnaireSections(raw.questionnaireSections),
+    questionnaireSections: withArchitectureTypeSection(normalizeQuestionnaireSections(raw.questionnaireSections)),
     questionnaireCategories: Array.isArray(raw.questionnaireCategories)
       ? normalizeQuestionnaireCategories(raw.questionnaireCategories)
       : emptyQuestionnaireConfig.questionnaireCategories,
