@@ -348,10 +348,8 @@ async def save_self_assessment(
         "adoption_tier=EXCLUDED.adoption_tier, governance_maturity=EXCLUDED.governance_maturity, matrix_position=EXCLUDED.matrix_position, description=EXCLUDED.description, updated_at=NOW()"
     ), {"aid": assessment_id, "sc": body.scenarioClass, "cp": body.counterpartyType, "at": body.adoptionTier, "gm": body.governanceMaturity, "mp": matrix, "desc": body.description})
 
-    # Generate checklist if empty
-    existing = await db.execute(text("SELECT COUNT(*) FROM eam.ai_review_checklist WHERE assessment_id = CAST(:id AS uuid)"), {"id": assessment_id})
-    if existing.scalar() == 0:
-        await _generate_checklist(db, assessment_id)
+    # Reconcile checklist to the controls applicable for this counterparty & adoption tier
+    await _reconcile_checklist(db, assessment_id, body.counterpartyType, body.adoptionTier)
 
     verdict = await _load_verdict(db, assessment_id)
     status = _VERDICT_STATUS[verdict["verdict"]]
@@ -385,16 +383,57 @@ async def delete_assessment(assessment_id: str, db: AsyncSession = Depends(get_d
     return {"message": "deleted"}
 
 
-async def _generate_checklist(db: AsyncSession, assessment_id: str) -> None:
+def _item_applies(section_key: str, item_key: str, counterparty: str, tier: int) -> bool:
+    # Counterparty-specific controls only apply to their counterparty type
+    if item_key == "K4":
+        return counterparty == "cp2"
+    if item_key == "K5":
+        return counterparty == "cp3"
+    if item_key == "K6":
+        return counterparty == "cp4"
+    # Agent-protocol controls (MCP / A2A) only relevant once externally connected
+    if section_key == "H":
+        if item_key == "H5":
+            return tier >= 7  # multi-agent
+        return tier >= 6  # external / MCP-connected
+    # AIBOM and Lethal-Trifecta/HITL only relevant once code-executing / agentic
+    if section_key in ("I", "J"):
+        return tier >= 4
+    return True
+
+
+async def _reconcile_checklist(db: AsyncSession, assessment_id: str, counterparty: str, tier: int) -> None:
+    applicable: list[tuple] = []
     for sk, sl, section_items in CHECKLIST_SECTIONS:
         so = 0
         for ik, il, critical in section_items:
+            if _item_applies(sk, ik, counterparty, tier):
+                applicable.append((sk, sl, ik, il, critical, so))
+                so += 1
+    applicable_keys = {(sk, ik) for (sk, _, ik, _, _, _) in applicable}
+
+    existing = await db.execute(text(
+        "SELECT section_key, item_key FROM eam.ai_review_checklist WHERE assessment_id = CAST(:aid AS uuid)"
+    ), {"aid": assessment_id})
+    existing_keys = {(r["section_key"], r["item_key"]) for r in existing.mappings().all()}
+
+    for sk, sl, ik, il, critical, so in applicable:
+        if (sk, ik) in existing_keys:
             await db.execute(text(
-                "INSERT INTO eam.ai_review_checklist (assessment_id, section_key, section_label, item_key, item_label, is_critical, sort_order) "
-                "VALUES (CAST(:aid AS uuid), :sk, :sl, :ik, :il, :cr, :so) "
-                "ON CONFLICT (assessment_id, section_key, item_key) DO NOTHING"
-            ), {"aid": assessment_id, "sk": sk, "sl": sl, "ik": ik, "il": il, "cr": critical, "so": so})
-            so += 1
+                "UPDATE eam.ai_review_checklist SET sort_order = :so WHERE assessment_id = CAST(:aid AS uuid) "
+                "AND section_key = :sk AND item_key = :ik"
+            ), {"aid": assessment_id, "sk": sk, "ik": ik, "so": so})
+            continue
+        await db.execute(text(
+            "INSERT INTO eam.ai_review_checklist (assessment_id, section_key, section_label, item_key, item_label, is_critical, sort_order) "
+            "VALUES (CAST(:aid AS uuid), :sk, :sl, :ik, :il, :cr, :so) "
+            "ON CONFLICT (assessment_id, section_key, item_key) DO NOTHING"
+        ), {"aid": assessment_id, "sk": sk, "sl": sl, "ik": ik, "il": il, "cr": critical, "so": so})
+
+    for sk, ik in existing_keys - applicable_keys:
+        await db.execute(text(
+            "DELETE FROM eam.ai_review_checklist WHERE assessment_id = CAST(:aid AS uuid) AND section_key = :sk AND item_key = :ik"
+        ), {"aid": assessment_id, "sk": sk, "ik": ik})
 
 
 def _checklist_summary(items: list[dict]) -> dict:
