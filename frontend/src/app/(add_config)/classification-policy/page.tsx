@@ -131,7 +131,7 @@ export default function ClassificationPolicyPage() {
   return (
     <div className="p-6">
       {contextHolder}
-      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Space orientation="vertical" size="large" style={{ width: '100%' }}>
         <Space align="center" style={{ justifyContent: 'space-between', width: '100%' }}>
           <div>
             <Typography.Title level={3} style={{ marginBottom: 0 }}>
@@ -155,7 +155,7 @@ export default function ClassificationPolicyPage() {
         </Space>
 
         {data?.source === 'default' && (
-          <Alert type="info" showIcon message="Using built-in defaults until the policy is saved." />
+          <Alert type="info" showIcon title="Using built-in defaults until the policy is saved." />
         )}
 
         <Card>

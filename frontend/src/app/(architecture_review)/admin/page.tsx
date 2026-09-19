@@ -97,7 +97,7 @@ export default function AdminWorkspacePage() {
 
         <div className="px-6 pb-8">
           {!loading && !isAdmin && (
-            <Alert type="warning" showIcon message="Only EA Admin can access this workspace." />
+            <Alert type="warning" showIcon title="Only EA Admin can access this workspace." />
           )}
 
           {isAdmin && (

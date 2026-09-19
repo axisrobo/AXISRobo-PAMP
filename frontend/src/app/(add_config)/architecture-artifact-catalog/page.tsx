@@ -277,7 +277,7 @@ export default function ArchitectureArtifactCatalogPage() {
         <Alert
           type="error"
           showIcon
-          message="Access denied"
+          title="Access denied"
           description="Only EA Admin can maintain the architecture artifact catalog."
         />
       </div>

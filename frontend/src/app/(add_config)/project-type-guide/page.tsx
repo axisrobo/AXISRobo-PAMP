@@ -161,7 +161,7 @@ function renderGuide(guide: ProjectTypeGuide, profiles: ProjectTypeProfile[]) {
         </GuideSection>
       )}
 
-      {guide.note && <Alert type="info" showIcon message={guide.note} />}
+      {guide.note && <Alert type="info" showIcon title={guide.note} />}
     </div>
   );
 }

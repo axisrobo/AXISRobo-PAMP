@@ -112,7 +112,7 @@ export default function AiAssessmentDetailPage() {
         <Alert
           type={verdictAlertType[data.verdict.verdict] || 'info'}
           showIcon
-          message={<span><strong>Deployment Verdict: {data.verdict.verdict}</strong></span>}
+          title={<span><strong>Deployment Verdict: {data.verdict.verdict}</strong></span>}
           description={
             <div className="space-y-1">
               <div>{data.verdict.reason}</div>

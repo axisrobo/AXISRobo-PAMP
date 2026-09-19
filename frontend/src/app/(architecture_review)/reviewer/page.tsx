@@ -106,7 +106,7 @@ export default function ReviewerPage() {
         </section>
 
         {!authLoading && !canReview && (
-          <Alert type="warning" showIcon message="You do not have reviewer permission for this workspace." />
+          <Alert type="warning" showIcon title="You do not have reviewer permission for this workspace." />
         )}
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
