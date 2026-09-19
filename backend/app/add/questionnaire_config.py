@@ -77,6 +77,14 @@ def _yes_no_not_sure_options() -> list[dict]:
     ]
 
 
+def _gated_by(field_key: str) -> dict:
+    """Only enable and require this field when another field equals 'Yes'."""
+    return {
+        "enabled_when": [_section_condition(field_key, equals="Yes")],
+        "required_when": [_section_condition(field_key, equals="Yes")],
+    }
+
+
 DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
     "questionnaireSections": [
         _questionnaire_section(
@@ -213,6 +221,7 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                         {"label": "General Personal Data", "value": "General Personal Data"},
                         {"label": "Sensitive Personal Data", "value": "Sensitive Personal Data"},
                     ],
+                    **_gated_by("required"),
                 ),
                 _section_field(
                     "companyRecords",
@@ -223,18 +232,21 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                         {"label": "Accounting", "value": "Accounting"},
                         {"label": "Employee Record", "value": "Employee Record"},
                     ],
+                    **_gated_by("required"),
                 ),
                 _section_field(
                     "governmentSecurityData",
                     "Government & Security Data",
                     control="radio",
                     options=_yes_no_options(),
+                    **_gated_by("required"),
                 ),
                 _section_field(
                     "criticalInfrastructureData",
                     "Critical Infrastructure Data",
                     control="radio",
                     options=_yes_no_options(),
+                    **_gated_by("required"),
                 ),
                 _section_field(
                     "comments",
@@ -263,6 +275,7 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                         {"label": "General Personal Data", "value": "General Personal Data"},
                         {"label": "Sensitive Personal Data", "value": "Sensitive Personal Data"},
                     ],
+                    **_gated_by("required"),
                 ),
                 _section_field(
                     "personalDataVolume",
@@ -272,6 +285,7 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                         {"label": "More than 1,000,000", "value": "More than 1,000,000"},
                         {"label": "Less than 1,000,000", "value": "Less than 1,000,000"},
                     ],
+                    **_gated_by("required"),
                 ),
                 _section_field(
                     "sensitiveDataVolume",
@@ -281,18 +295,21 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                         {"label": "More than 100,000", "value": "More than 100,000"},
                         {"label": "Less than 100,000", "value": "Less than 100,000"},
                     ],
+                    **_gated_by("required"),
                 ),
                 _section_field(
                     "ciio",
                     "CIIO",
                     control="radio",
                     options=_yes_no_not_sure_options(),
+                    **_gated_by("required"),
                 ),
                 _section_field(
                     "importantData",
                     "Important Data",
                     control="radio",
                     options=_yes_no_not_sure_options(),
+                    **_gated_by("required"),
                 ),
                 _section_field(
                     "crossBorderTransfer",
