@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import ArtifactRecommendationItem
 from .master_data_seeds import DEFAULT_QUESTION_ANSWER_TYPES, DEFAULT_QUESTION_GROUPS
+from .policy import DEFAULT_CLASSIFICATION_POLICY, normalize_policy
 from .questionnaire_config import (
     DEFAULT_QUESTIONNAIRE_CONFIG,
 )
@@ -20,6 +21,7 @@ CONCERN_MAPPING_DOMAIN = "concern_mapping"
 ARTIFACT_CATALOG_DOMAIN = "artifact_catalog"
 VIEWPOINT_ARTIFACT_MAPPING_DOMAIN = "viewpoint_artifact_mapping"
 PROJECT_TYPE_PROFILE_DOMAIN = "project_type_profiles"
+CLASSIFICATION_POLICY_DOMAIN = "classification_policy"
 
 STATIC_DOCUMENT_KEYS = {
     "questionnaireSections": "questionnaire_sections",
@@ -27,6 +29,7 @@ STATIC_DOCUMENT_KEYS = {
     "projectTypeGuide": "project_type_guide",
     "projectTypeProfiles": "project_type_profiles",
     "viewpointArtifactMapping": "viewpoint_artifact_mapping",
+    "classificationPolicy": "classification_policy",
 }
 
 QUESTIONNAIRE_OPTION_KEYS = [
@@ -132,6 +135,8 @@ def _default_static_payload(document_key: str) -> Any:
         return _clone(DEFAULT_QUESTIONNAIRE_CONFIG.get("assessmentMatrices", []))
     if document_key == STATIC_DOCUMENT_KEYS["projectTypeGuide"]:
         return _clone(DEFAULT_QUESTIONNAIRE_CONFIG.get("projectTypeGuide", {}))
+    if document_key == STATIC_DOCUMENT_KEYS["classificationPolicy"]:
+        return _clone(DEFAULT_CLASSIFICATION_POLICY)
     if document_key == STATIC_DOCUMENT_KEYS["viewpointArtifactMapping"]:
         return {
             "guideName": "Architecture Viewpoint and Artifact Mapping Guide",
@@ -1478,6 +1483,37 @@ async def save_viewpoint_artifact_mapping_config(
     )
     await db.commit()
     return {"config": await load_viewpoint_artifact_mapping_config(db), **revision}
+
+
+async def load_classification_policy_config(db: AsyncSession) -> dict[str, Any]:
+    payload = await _get_static_document(
+        db, document_key=STATIC_DOCUMENT_KEYS["classificationPolicy"]
+    )
+    return normalize_policy(payload if isinstance(payload, dict) else None)
+
+
+async def save_classification_policy_config(
+    db: AsyncSession,
+    *,
+    config: dict[str, Any] | None,
+    change_note: str | None,
+    operator: str,
+) -> dict[str, Any]:
+    policy = normalize_policy(config)
+    await _upsert_static_document(
+        db,
+        document_key=STATIC_DOCUMENT_KEYS["classificationPolicy"],
+        payload=policy,
+        operator=operator,
+    )
+    revision = await _bump_revision(
+        db,
+        domain_key=CLASSIFICATION_POLICY_DOMAIN,
+        change_note=change_note or "classification policy update",
+        operator=operator,
+    )
+    await db.commit()
+    return {"config": policy, **revision}
 
 
 async def get_config_metadata(

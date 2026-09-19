@@ -52,6 +52,12 @@ export const addNav: ModuleNavDefinition = {
           icon: Network,
           requiredRole: 'ea_admin',
         },
+        {
+          label: 'Classification Policy',
+          href: '/classification-policy',
+          icon: GitBranch,
+          requiredRole: 'ea_admin',
+        },
       ],
     },
   ],

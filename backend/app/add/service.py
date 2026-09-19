@@ -6,6 +6,12 @@ from datetime import datetime
 from typing import Any
 
 from .catalog import CONCERN_CATALOG, PACT_LAYERS
+from .policy import (
+    apply_policy,
+    classify as classify_score,
+    complexity_boost as policy_complexity_boost,
+    normalize_policy,
+)
 from .models import (
     AVDMEvaluateRequest,
     AVDMEvaluateResponse,
@@ -137,12 +143,8 @@ def _risk_score_by_code(risk_items) -> dict[str, float]:
     return score_map
 
 
-def _classify(score: float) -> str:
-    if score >= 0.66:
-        return "Mandatory"
-    if score >= 0.38:
-        return "Recommended"
-    return "Optional"
+def _classify(score: float, policy: dict[str, Any] | None = None) -> str:
+    return classify_score(score, normalize_policy(policy))
 
 
 def build_concern_contributions(
@@ -195,14 +197,15 @@ def build_concern_contributions(
 def evaluate_avdm(
     payload: AVDMEvaluateRequest,
     concern_catalog: list[dict[str, object]] | None = None,
+    policy: dict[str, Any] | None = None,
 ) -> AVDMEvaluateResponse:
     risk_map = _risk_score_by_code(payload.riskItems)
-    complexity_boost = max(0.0, min(payload.projectComplexity, 1.0)) * 0.15
+    active_policy = normalize_policy(policy)
+    complexity_boost = policy_complexity_boost(payload.projectComplexity, active_policy)
     catalog = concern_catalog or CONCERN_CATALOG
 
-    decisions: list[ConcernDecision] = []
-
-    for concern in catalog:
+    scored: list[dict[str, Any]] = []
+    for index, concern in enumerate(catalog):
         concern_key = str(concern["key"])
         tags = [str(tag).lower() for tag in concern.get("risk_tags", [])]
         direct_score = risk_map.get(concern_key.lower(), 0.0)
@@ -213,19 +216,35 @@ def evaluate_avdm(
 
         risk_score = max(direct_score, tagged_score)
         score = min(1.0, round(risk_score + complexity_boost, 4))
-        classification = _classify(score)
-        decisions.append(
-            ConcernDecision(
-                concernKey=concern_key,
-                concernName=str(concern["name"]),
-                layer=str(concern["layer"]),
-                score=score,
-                classification=classification,
-                rationale=(
-                    "Risk-driven AVDM scoring using activated concern keys, matched risk tags, and project complexity."
-                ),
-            )
+        scored.append(
+            {
+                "concernKey": concern_key,
+                "concernName": str(concern["name"]),
+                "layer": str(concern["layer"]),
+                "score": score,
+                "catalogIndex": index,
+                "inputIndex": index,
+            }
         )
+
+    apply_policy(scored, active_policy)
+
+    decisions = [
+        ConcernDecision(
+            concernKey=item["concernKey"],
+            concernName=item["concernName"],
+            layer=item["layer"],
+            score=item["score"],
+            classification=item["classification"],
+            rationale=(
+                "Risk-driven AVDM scoring using activated concern keys, matched risk tags, "
+                "project complexity, and the active classification policy."
+            ),
+            priorityRank=item.get("priorityRank"),
+            priority=bool(item.get("priority", False)),
+        )
+        for item in scored
+    ]
 
     decisions.sort(
         key=lambda item: (

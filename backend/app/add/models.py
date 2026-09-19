@@ -45,6 +45,8 @@ class ConcernDecision(BaseModel):
     score: float
     classification: str
     rationale: str
+    priorityRank: int | None = None
+    priority: bool = False
 
 
 class LayerSummary(BaseModel):

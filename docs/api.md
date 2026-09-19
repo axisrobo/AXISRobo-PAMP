@@ -89,6 +89,8 @@
 | PUT | `/api/avdm/artifact-catalog-config` | Update artifact catalog config | EA_ADMIN |
 | GET | `/api/avdm/viewpoint-artifact-mapping-config` | Get viewpoint-artifact mapping | `avdm:read` |
 | PUT | `/api/avdm/viewpoint-artifact-mapping-config` | Update viewpoint-artifact mapping | EA_ADMIN |
+| GET | `/api/avdm/classification-policy` | Get configurable classification policy (thresholds, complexity coefficient, Mandatory caps, top-N budget, tie-break) | `avdm:read` |
+| PUT | `/api/avdm/classification-policy` | Update classification policy | EA_ADMIN |
 | GET | `/api/avdm/concern-viewpoint-mapping` | List concern-to-viewpoint mappings, or unmapped concerns with `includeUnmapped=true` | `avdm:read` |
 | GET | `/api/avdm/viewpoints` | List viewpoint catalog | `avdm:read` |
 | GET | `/api/avdm/concerns` | List concern catalog | `avdm:read` |

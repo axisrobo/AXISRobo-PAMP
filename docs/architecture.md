@@ -127,6 +127,12 @@ Frontend Display (AVDMConcernExpandSection)
 
 ### Concern Categories
 
+The reference configuration uses the thresholds below. They are configurable at
+runtime through `GET/PUT /api/avdm/classification-policy` (stored in
+`eam.avdm_static_document` under `classification_policy`), together with the
+project-complexity coefficient, optional Mandatory count/ratio caps, an optional
+top-N priority budget, and the tie-break strategy.
+
 | Classification | Score Range | Color | Action |
 |---------------|------------|-------|--------|
 | Mandatory | >= 0.66 | Red | Must be addressed in architecture review |

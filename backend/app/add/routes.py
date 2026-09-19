@@ -40,16 +40,19 @@ from .questionnaire_config import (
 )
 from .master_data_repository import (
     ARTIFACT_CATALOG_DOMAIN,
+    CLASSIFICATION_POLICY_DOMAIN,
     CONCERN_MAPPING_DOMAIN,
     QUESTIONNAIRE_DOMAIN,
     VIEWPOINT_ARTIFACT_MAPPING_DOMAIN,
     get_config_metadata,
     list_viewpoint_artifact_recommendation_items,
     load_artifact_catalog_config,
+    load_classification_policy_config,
     load_concern_mapping_config,
     load_questionnaire_config,
     load_viewpoint_artifact_mapping_config,
     save_artifact_catalog_config,
+    save_classification_policy_config,
     save_concern_mapping_config,
     save_questionnaire_config,
     save_viewpoint_artifact_mapping_config,
@@ -217,6 +220,45 @@ async def put_viewpoint_artifact_mapping_config(
         operator=operator,
     )
     return _build_config_response(configKey, result["config"], result)
+
+
+@router.get(
+    "/classification-policy",
+    response_model=QuestionnaireConfigResponse,
+    dependencies=[Depends(require_permission("avdm", "read"))],
+)
+async def get_classification_policy(
+    configKey: str = Query("default"),
+    db: AsyncSession = Depends(get_db),
+):
+    config = await load_classification_policy_config(db)
+    metadata = await get_config_metadata(
+        db,
+        domain_key=CLASSIFICATION_POLICY_DOMAIN,
+        default_change_note="AVDM classification policy defaults",
+    )
+    return _build_config_response(configKey, {"policy": config}, metadata)
+
+
+@router.put(
+    "/classification-policy",
+    response_model=QuestionnaireConfigResponse,
+    dependencies=[Depends(require_role(Role.EA_ADMIN))],
+)
+async def put_classification_policy(
+    payload: QuestionnaireConfigUpsertRequest,
+    configKey: str = Query("default"),
+    db: AsyncSession = Depends(get_db),
+):
+    operator = payload.operator.strip() or "system"
+    raw = payload.config.get("policy") if isinstance(payload.config, dict) else None
+    result = await save_classification_policy_config(
+        db,
+        config=raw if isinstance(raw, dict) else payload.config,
+        change_note=payload.changeNote,
+        operator=operator,
+    )
+    return _build_config_response(configKey, {"policy": result["config"]}, result)
 
 
 @router.get("/concern-viewpoint-mapping", dependencies=[Depends(require_permission("avdm", "read"))])
@@ -496,7 +538,8 @@ def _to_catalog(items: list[dict]) -> list[dict[str, object]]:
 async def evaluate(payload: AVDMEvaluateRequest, db: AsyncSession = Depends(get_db)):
     concerns = await list_concerns(db, include_inactive=False)
     catalog = _to_catalog(concerns) if concerns else CONCERN_CATALOG
-    return evaluate_avdm(payload, concern_catalog=catalog)
+    policy = await load_classification_policy_config(db)
+    return evaluate_avdm(payload, concern_catalog=catalog, policy=policy)
 
 
 @router.post("/review", response_model=AVDMReviewResponse, dependencies=[Depends(require_permission("avdm", "write"))])
@@ -520,6 +563,7 @@ async def upsert_project_questionnaire(
 ):
     concerns = await list_concerns(db, include_inactive=False)
     catalog = _to_catalog(concerns) if concerns else CONCERN_CATALOG
+    policy = await load_classification_policy_config(db)
 
     risk_items = [
         RiskItem(
@@ -539,6 +583,7 @@ async def upsert_project_questionnaire(
             riskItems=risk_items,
         ),
         concern_catalog=catalog,
+        policy=policy,
     )
     judgement = judge_avdm_need(evaluation)
 

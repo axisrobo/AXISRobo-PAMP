@@ -1265,6 +1265,10 @@ CREATE TABLE IF NOT EXISTS eam.avdm_static_document (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
+-- Required by the ON CONFLICT (document_key) upsert used for configuration.
+CREATE UNIQUE INDEX IF NOT EXISTS avdm_static_document_document_key_key
+    ON eam.avdm_static_document (document_key);
+
 -- Table: eam.avdm_master_data_revision
 CREATE TABLE IF NOT EXISTS eam.avdm_master_data_revision (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

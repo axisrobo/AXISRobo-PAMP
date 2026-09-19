@@ -37,6 +37,13 @@ const adminItems = [
     action: 'Manage Artifacts',
   },
   {
+    title: 'AVDM Classification Policy',
+    description: 'Configure Mandatory/Recommended thresholds, the complexity coefficient, Mandatory caps, the top-N priority budget, and tie-breaking.',
+    href: '/classification-policy',
+    icon: GitBranch,
+    action: 'Configure Policy',
+  },
+  {
     title: 'Viewpoint Catalog',
     description: 'Browse the 45 architecture viewpoints organized by PACT layers with logical/physical and structure/behavior dimensions.',
     href: '/viewpoint-catalog',
