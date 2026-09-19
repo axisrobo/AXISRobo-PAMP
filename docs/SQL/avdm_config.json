@@ -2190,11 +2190,47 @@
     },
     {
       "stable_question_id": "34",
+      "concern_key": "D7",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 15.0,
+      "sort_order": 60,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "34",
       "concern_key": "D8",
       "match_operator": "equals",
       "answer_value": "Yes",
       "mapping_score": 6.0,
       "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "34",
+      "concern_key": "D9",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 15.0,
+      "sort_order": 60,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "34",
+      "concern_key": "DIN1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 8.0,
+      "sort_order": 60,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "34",
+      "concern_key": "DIN2",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 8.0,
+      "sort_order": 60,
       "is_active": true
     },
     {
@@ -2213,6 +2249,15 @@
       "answer_value": "Yes",
       "mapping_score": 6.0,
       "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "34",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 15.0,
+      "sort_order": 60,
       "is_active": true
     },
     {
