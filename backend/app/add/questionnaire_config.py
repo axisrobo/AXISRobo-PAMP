@@ -187,14 +187,8 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                 _section_field(
                     "subsidiaries",
                     "Subsidiary / JV / holding data",
-                    control="multiselect",
-                    options=[
-                        {"label": "Example Corp", "value": "example_corp"},
-                        {"label": "Kaitian", "value": "Kaitian"},
-                        {"label": "NECPC", "value": "NECPC"},
-                        {"label": "FCCL", "value": "FCCL"},
-                        {"label": "Other", "value": "Other"},
-                    ],
+                    control="radio",
+                    options=_yes_no_options(),
                 ),
                 _section_field(
                     "hasThirdPartyData",
@@ -223,7 +217,7 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
             [
                 _section_field(
                     "required",
-                    "Does Checkpoint 2 apply?",
+                    "Does the project process data from regions such as the EU, North America, South America, Asia-Pacific, or Africa?",
                     control="radio",
                     options=_yes_no_options(),
                 ),
@@ -273,7 +267,7 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
             [
                 _section_field(
                     "required",
-                    "Does Checkpoint 3 apply?",
+                    "Does the project process data from mainland China?",
                     control="radio",
                     options=_yes_no_options(),
                 ),
@@ -320,7 +314,7 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                     "crossBorderTransfer",
                     "Cross-border Transfer",
                     control="radio",
-                    options=_yes_no_not_sure_options(),
+                    options=_yes_no_options(),
                 ),
                 _section_field(
                     "comments",

@@ -985,25 +985,25 @@ export default function QuestionnaireConfigPage() {
                   <Form.List name="options">
                     {(fields, { add, remove }) => (
                       <Space orientation="vertical" size={8} style={{ width: '100%', marginTop: 8 }}>
-                        {fields.map((field) => (
-                          <Space key={field.key} align="baseline" style={{ width: '100%' }}>
+                        {fields.map(({ key, name, ...restField }) => (
+                          <Space key={key} align="baseline" style={{ width: '100%' }}>
                             <Form.Item
-                              {...field}
-                              name={[field.name, 'label']}
+                              {...restField}
+                              name={[name, 'label']}
                               rules={[{ required: true, whitespace: true }]}
                               style={{ flex: 1 }}
                             >
                               <Input placeholder="Option label" />
                             </Form.Item>
                             <Form.Item
-                              {...field}
-                              name={[field.name, 'value']}
+                              {...restField}
+                              name={[name, 'value']}
                               rules={[{ required: true, whitespace: true }]}
                               style={{ flex: 1 }}
                             >
                               <Input placeholder="Option value" />
                             </Form.Item>
-                            <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(field.name)} />
+                            <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(name)} />
                           </Space>
                         ))}
                         <Button icon={<Plus className="h-4 w-4" />} onClick={() => add({ label: '', value: '' })}>Add Inline Option</Button>

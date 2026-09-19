@@ -1713,3 +1713,19 @@ CREATE TABLE IF NOT EXISTS pamp.v_user_role_scope (
     itcode TEXT,
     role TEXT
 );
+
+-- Natural-key unique indexes required by repository ON CONFLICT upserts.
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_master_data_revision_domain_key ON pamp.avdm_master_data_revision (domain_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_question_group_group_key ON pamp.avdm_question_group (group_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_question_answer_type_answer_type_key ON pamp.avdm_question_answer_type (answer_type_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_question_option_set_option_set_key ON pamp.avdm_question_option_set (option_set_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_question_option_item_option_set_id_option_value ON pamp.avdm_question_option_item (option_set_id, option_value);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_question_category_category_key ON pamp.avdm_question_category (category_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_question_stable_question_id ON pamp.avdm_question (stable_question_id);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_project_type_profile_project_type_key ON pamp.avdm_project_type_profile (project_type_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_project_type_artifact_mapping_project_type_profile_id_artifact_id ON pamp.avdm_project_type_artifact_mapping (project_type_profile_id, artifact_id);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_artifact_category_category_key ON pamp.avdm_artifact_category (category_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_artifact_artifact_key ON pamp.avdm_artifact (artifact_key);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_viewpoint_viewpoint_number ON pamp.avdm_viewpoint (viewpoint_number);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_viewpoint_concern_mapping_viewpoint_id_concern_id ON pamp.avdm_viewpoint_concern_mapping (viewpoint_id, concern_id);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_avdm_viewpoint_artifact_mapping_viewpoint_id_artifact_id_recommendation_status ON pamp.avdm_viewpoint_artifact_mapping (viewpoint_id, artifact_id, recommendation_status);

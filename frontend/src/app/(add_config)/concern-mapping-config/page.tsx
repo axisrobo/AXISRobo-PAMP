@@ -259,13 +259,15 @@ export default function ConcernMappingConfigPage() {
     return [];
   }, [questionConfig, selectedQuestion]);
 
-  const questionOptions = useMemo(() => questionConfig.questionBank.map((item) => {
-    const q = questionById.get(item.id) as (QuestionConfig & { displayId: string }) | undefined;
-    return {
-      label: `${q?.displayId || questionDisplayId(item.id)}. ${item.text}`,
-      value: item.id,
-    };
-  }), [questionConfig.questionBank, questionById]);
+  const questionOptions = useMemo(() => [...questionConfig.questionBank]
+    .sort((left, right) => left.id - right.id)
+    .map((item) => {
+      const q = questionById.get(item.id) as (QuestionConfig & { displayId: string }) | undefined;
+      return {
+        label: `${q?.displayId || questionDisplayId(item.id)}. ${item.text}`,
+        value: item.id,
+      };
+    }), [questionConfig.questionBank, questionById]);
 
   const concernOptions = useMemo(() => {
     const fromCatalog = (concernCatalog?.items || []).map((item) => ({
@@ -379,10 +381,10 @@ export default function ConcernMappingConfigPage() {
 
   const renderConcernScores = (scores: ConcernScoreMapping[]) => (
     <Space size={[4, 4]} wrap>
-      {(scores || []).map((item) => {
+      {(scores || []).map((item, index) => {
         const concern = concernByKey.get(item.concernKey);
         return (
-          <Tag key={`${item.concernKey}-${item.score}`} color="blue">
+          <Tag key={`${item.concernKey}-${item.score}-${index}`} color="blue">
             {item.concernKey} +{item.score}{concern ? ` ${concern.concernName}` : ''}
           </Tag>
         );
@@ -411,7 +413,7 @@ export default function ConcernMappingConfigPage() {
       title: 'Hints',
       dataIndex: 'hints',
       width: 260,
-      render: (hints?: string[]) => <Space size={[4, 4]} wrap>{(hints || []).map((hint) => <Tag key={hint}>{hint}</Tag>)}</Space>,
+      render: (hints?: string[]) => <Space size={[4, 4]} wrap>{(hints || []).map((hint, index) => <Tag key={`${hint}-${index}`}>{hint}</Tag>)}</Space>,
     },
     {
       title: 'Action',
@@ -541,15 +543,15 @@ export default function ConcernMappingConfigPage() {
           <Form.List name="concernScores">
             {(fields, { add, remove }) => (
               <Space orientation="vertical" size={8} style={{ width: '100%', marginTop: 8 }}>
-                {fields.map((field) => (
-                  <Space key={field.key} align="baseline" style={{ width: '100%' }}>
-                    <Form.Item {...field} name={[field.name, 'concernKey']} rules={[{ required: true }]} style={{ width: 420 }}>
+                {fields.map(({ key, name, ...restField }) => (
+                  <Space key={key} align="baseline" style={{ width: '100%' }}>
+                    <Form.Item {...restField} name={[name, 'concernKey']} rules={[{ required: true }]} style={{ width: 420 }}>
                       <Select options={concernOptions} showSearch optionFilterProp="label" placeholder="Concern" />
                     </Form.Item>
-                    <Form.Item {...field} name={[field.name, 'score']} rules={[{ required: true }]} style={{ width: 140 }}>
+                    <Form.Item {...restField} name={[name, 'score']} rules={[{ required: true }]} style={{ width: 140 }}>
                       <InputNumber min={0} max={100} placeholder="Score" style={{ width: '100%' }} />
                     </Form.Item>
-                    <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(field.name)} />
+                    <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(name)} />
                   </Space>
                 ))}
                 <Button icon={<Plus className="h-4 w-4" />} onClick={() => add({ concernKey: undefined, score: 8 })}>Add Concern Score</Button>
@@ -572,18 +574,18 @@ export default function ConcernMappingConfigPage() {
           <Form.List name="all">
             {(fields, { add, remove }) => (
               <Space orientation="vertical" size={8} style={{ width: '100%', marginTop: 8, marginBottom: 16 }}>
-                {fields.map((field) => (
-                  <Space key={field.key} align="baseline" style={{ width: '100%' }}>
-                    <Form.Item {...field} name={[field.name, 'source']} style={{ width: 360 }}>
+                {fields.map(({ key, name, ...restField }) => (
+                  <Space key={key} align="baseline" style={{ width: '100%' }}>
+                    <Form.Item {...restField} name={[name, 'source']} style={{ width: 360 }}>
                       <Input placeholder="question.7.answer" />
                     </Form.Item>
-                    <Form.Item {...field} name={[field.name, 'operator']} style={{ width: 140 }}>
+                    <Form.Item {...restField} name={[name, 'operator']} style={{ width: 140 }}>
                       <Select options={[{ label: 'equals', value: 'equals' }, { label: 'in', value: 'in' }, { label: 'notEquals', value: 'notEquals' }]} />
                     </Form.Item>
-                    <Form.Item {...field} name={[field.name, 'value']} style={{ width: 260 }}>
+                    <Form.Item {...restField} name={[name, 'value']} style={{ width: 260 }}>
                       <Input placeholder="Y or Yes, No" />
                     </Form.Item>
-                    <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(field.name)} />
+                    <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(name)} />
                   </Space>
                 ))}
                 <Button icon={<Plus className="h-4 w-4" />} onClick={() => add({ source: '', operator: 'equals', value: '' })}>Add ALL Condition</Button>
@@ -595,18 +597,18 @@ export default function ConcernMappingConfigPage() {
           <Form.List name="any">
             {(fields, { add, remove }) => (
               <Space orientation="vertical" size={8} style={{ width: '100%', marginTop: 8, marginBottom: 16 }}>
-                {fields.map((field) => (
-                  <Space key={field.key} align="baseline" style={{ width: '100%' }}>
-                    <Form.Item {...field} name={[field.name, 'source']} style={{ width: 360 }}>
+                {fields.map(({ key, name, ...restField }) => (
+                  <Space key={key} align="baseline" style={{ width: '100%' }}>
+                    <Form.Item {...restField} name={[name, 'source']} style={{ width: 360 }}>
                       <Input placeholder="question.20.answer" />
                     </Form.Item>
-                    <Form.Item {...field} name={[field.name, 'operator']} style={{ width: 140 }}>
+                    <Form.Item {...restField} name={[name, 'operator']} style={{ width: 140 }}>
                       <Select options={[{ label: 'equals', value: 'equals' }, { label: 'in', value: 'in' }, { label: 'notEquals', value: 'notEquals' }]} />
                     </Form.Item>
-                    <Form.Item {...field} name={[field.name, 'value']} style={{ width: 260 }}>
+                    <Form.Item {...restField} name={[name, 'value']} style={{ width: 260 }}>
                       <Input placeholder="Y or Yes, No" />
                     </Form.Item>
-                    <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(field.name)} />
+                    <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(name)} />
                   </Space>
                 ))}
                 <Button icon={<Plus className="h-4 w-4" />} onClick={() => add({ source: '', operator: 'equals', value: '' })}>Add ANY Condition</Button>
@@ -618,15 +620,15 @@ export default function ConcernMappingConfigPage() {
           <Form.List name="concernScores">
             {(fields, { add, remove }) => (
               <Space orientation="vertical" size={8} style={{ width: '100%', marginTop: 8 }}>
-                {fields.map((field) => (
-                  <Space key={field.key} align="baseline" style={{ width: '100%' }}>
-                    <Form.Item {...field} name={[field.name, 'concernKey']} rules={[{ required: true }]} style={{ width: 420 }}>
+                {fields.map(({ key, name, ...restField }) => (
+                  <Space key={key} align="baseline" style={{ width: '100%' }}>
+                    <Form.Item {...restField} name={[name, 'concernKey']} rules={[{ required: true }]} style={{ width: 420 }}>
                       <Select options={concernOptions} showSearch optionFilterProp="label" placeholder="Concern" />
                     </Form.Item>
-                    <Form.Item {...field} name={[field.name, 'score']} rules={[{ required: true }]} style={{ width: 140 }}>
+                    <Form.Item {...restField} name={[name, 'score']} rules={[{ required: true }]} style={{ width: 140 }}>
                       <InputNumber min={0} max={100} placeholder="Score" style={{ width: '100%' }} />
                     </Form.Item>
-                    <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(field.name)} />
+                    <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(name)} />
                   </Space>
                 ))}
                 <Button icon={<Plus className="h-4 w-4" />} onClick={() => add({ concernKey: undefined, score: 10 })}>Add Concern Score</Button>

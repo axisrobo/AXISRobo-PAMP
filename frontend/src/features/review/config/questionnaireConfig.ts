@@ -678,6 +678,7 @@ function normalizeQuestionnaireCategories(raw: any): CategoryConfig[] {
 }
 
 function normalizeQuestionBank(raw: any): QuestionConfig[] {
+  const seenIds = new Set<number>();
   return Array.isArray(raw)
     ? raw
       .filter((item: any) => Number.isFinite(Number(item.id)) && typeof item.text === 'string' && typeof item.category === 'string')
@@ -707,6 +708,13 @@ function normalizeQuestionBank(raw: any): QuestionConfig[] {
             : 'question_bank',
           sourceRef: typeof item.sourceRef === 'string' ? item.sourceRef : undefined,
         };
+      })
+      .filter((item) => {
+        if (seenIds.has(item.id)) {
+          return false;
+        }
+        seenIds.add(item.id);
+        return true;
       })
       .sort((left, right) => left.id - right.id)
     : [];
