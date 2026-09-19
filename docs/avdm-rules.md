@@ -7,19 +7,34 @@ by `scripts/db/init_db.py` after the base seed.
 
 ## Scoring
 
-For each concern, the questionnaire produces an **aggregated mapping score**
-(`raw`), the sum of the mapping scores of every answered question and fired
-activation rule that targets it.
+Every mapping and activation-rule contribution uses a defined **0-5 scale**:
+
+| Value | Meaning |
+|------:|---------|
+| 1 | minor |
+| 2 | low |
+| 3 | moderate |
+| 4 | high |
+| 5 | critical |
+
+For each concern, contributions are aggregated as **strongest signal plus a
+small bonus per extra contributor** (not a sum), then mapped to `[0,1]`:
 
 ```
-raw = 0 (not activated) : score = 0.0                       -> Optional
-raw > 0                 : base  = min(25, raw) / 25
-                          score = min(1, round(base + complexityCoefficient * complexity, 4))
+contribs = [c1, c2, ...] each in 0..5
+aggregated = min(5, max(contribs) + 0.25 * (len(contribs) - 1))
+
+aggregated = 0 : score = 0.0                                  -> Optional
+aggregated > 0 : score = min(1, round(aggregated / 5 + complexityCoefficient * complexity, 4))
 ```
 
 * `complexityCoefficient` default `0.15`; `complexity` is normalised to `[0,1]`.
-* Classification thresholds: `Mandatory >= 0.66`, `Recommended >= 0.38`,
-  otherwise `Optional`.
+* Classification thresholds: `Mandatory >= 0.90`, `Recommended >= 0.50`,
+  otherwise `Optional`. On the 0-5 scale this means a single `5` is Mandatory,
+  a single `3-4` is Recommended, and `1-2` is Optional (modulo the complexity
+  boost).
+* Aggregating by max+bonus prevents several weak mappings from accumulating
+  into a false Mandatory; the previous plain sum did exactly that.
 * The mapping is **continuous and floor-zero**: the previous `ceil(sqrt())`
   risk-level transform produced only nine distinct base values
   (`0.04 … 1.0`), which quantised classifications into coarse bands. The

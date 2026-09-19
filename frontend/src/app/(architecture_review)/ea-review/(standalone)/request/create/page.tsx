@@ -550,11 +550,10 @@ export default function CreateRequestPage() {
   };
 
   const riskLevelsFromScore = (score: number) => {
-    // Continuous mapping: severity = likelihood = sqrt(min(25, score)) so the
-    // backend itemScore ((s/5)*(l/5)) becomes min(25, score) / 25. This avoids
-    // the coarse nine-value quantisation of the previous ceil(sqrt()) transform.
-    const cappedScore = Math.min(25, Math.max(1, score));
-    const level = Math.min(5, Math.sqrt(cappedScore));
+    // score is a 0-5 activation. severity = likelihood = sqrt(score*5) so the
+    // backend itemScore ((s/5)*(l/5)) equals score/5.
+    const cappedScore = Math.min(5, Math.max(0, score));
+    const level = Math.sqrt(cappedScore * 5);
     return { severity: level, likelihood: level };
   };
 
@@ -618,6 +617,25 @@ export default function CreateRequestPage() {
       });
     });
 
+    // Section fields (questionnaire_section scope) were previously ignored by
+    // the activation builder, leaving their questionConcernMappings inert.
+    // Resolve each section question's current value and apply the mapping.
+    concernMappingConfigState.questionConcernMappings.forEach((mapping) => {
+      const question = getQuestionById(mapping.questionId);
+      if (!question || question.sourceScope !== 'questionnaire_section' || !question.sourceRef) {
+        return;
+      }
+      const rawValue = valueFromSource(question.sourceRef);
+      const values = Array.isArray(rawValue) ? rawValue : [rawValue];
+      if (!values.includes(mapping.answer)) {
+        return;
+      }
+      contributions.push(...toContributions(
+        mapping.concernScores,
+        question.text || `Section ${question.sourceRef} selected ${mapping.answer}`,
+      ));
+    });
+
     concernMappingConfigState.concernActivationRules
       .filter(ruleMatches)
       .forEach((rule) => {
@@ -638,10 +656,14 @@ export default function CreateRequestPage() {
         activationMap.set(item.concernKey, item);
         return;
       }
+      // Aggregate as strongest signal plus a small bonus per extra contributor
+      // (capped at 5) instead of a plain sum, so many weak mappings cannot
+      // accumulate into Mandatory.
+      const aggregated = Math.min(5, Math.max(existing.score, item.score) + 0.25);
       activationMap.set(item.concernKey, {
         concernKey: item.concernKey,
-        score: existing.score + item.score,
-        ...riskLevelsFromScore(existing.score + item.score),
+        score: aggregated,
+        ...riskLevelsFromScore(aggregated),
         note: [existing.note, item.note].filter(Boolean).join('; '),
       });
     });

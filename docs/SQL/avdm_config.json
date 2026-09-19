@@ -861,7 +861,7 @@
       "concern_key": "A1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -870,7 +870,7 @@
       "concern_key": "A2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -879,7 +879,7 @@
       "concern_key": "A3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -888,7 +888,7 @@
       "concern_key": "AGD2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -897,7 +897,7 @@
       "concern_key": "B1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -906,7 +906,7 @@
       "concern_key": "B2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -915,7 +915,7 @@
       "concern_key": "B5",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -924,7 +924,7 @@
       "concern_key": "C1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -933,7 +933,7 @@
       "concern_key": "C2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -942,7 +942,7 @@
       "concern_key": "C3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -951,7 +951,7 @@
       "concern_key": "C4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -960,7 +960,7 @@
       "concern_key": "D7",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 27.0,
+      "mapping_score": 5.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -969,7 +969,7 @@
       "concern_key": "D9",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 27.0,
+      "mapping_score": 5.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -978,7 +978,7 @@
       "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 27.0,
+      "mapping_score": 5.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -987,7 +987,7 @@
       "concern_key": "A3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -996,7 +996,7 @@
       "concern_key": "D1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1005,7 +1005,7 @@
       "concern_key": "D3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -1014,7 +1014,7 @@
       "concern_key": "IP1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1023,7 +1023,7 @@
       "concern_key": "IP2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1032,7 +1032,7 @@
       "concern_key": "D1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1041,7 +1041,7 @@
       "concern_key": "D2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1050,7 +1050,7 @@
       "concern_key": "D3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1059,7 +1059,7 @@
       "concern_key": "D7",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1068,7 +1068,7 @@
       "concern_key": "IP1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -1086,7 +1086,7 @@
       "concern_key": "AGD3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1095,7 +1095,7 @@
       "concern_key": "C4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1104,7 +1104,7 @@
       "concern_key": "OR1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1113,7 +1113,7 @@
       "concern_key": "AGD3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1122,7 +1122,7 @@
       "concern_key": "C3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1131,7 +1131,7 @@
       "concern_key": "C4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1140,7 +1140,7 @@
       "concern_key": "OR1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1149,7 +1149,7 @@
       "concern_key": "C4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1158,7 +1158,7 @@
       "concern_key": "DIN3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1167,7 +1167,7 @@
       "concern_key": "DIN4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1176,7 +1176,7 @@
       "concern_key": "OR1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1185,7 +1185,7 @@
       "concern_key": "AGD1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1194,7 +1194,7 @@
       "concern_key": "C4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1203,7 +1203,7 @@
       "concern_key": "OR1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1212,7 +1212,7 @@
       "concern_key": "AGD3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1221,7 +1221,7 @@
       "concern_key": "SCR2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1230,7 +1230,7 @@
       "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1239,7 +1239,7 @@
       "concern_key": "C5",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1248,7 +1248,7 @@
       "concern_key": "DIN2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1257,7 +1257,7 @@
       "concern_key": "IP2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1266,7 +1266,7 @@
       "concern_key": "IP6",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1275,7 +1275,7 @@
       "concern_key": "OR4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -1284,7 +1284,7 @@
       "concern_key": "IP2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1293,7 +1293,7 @@
       "concern_key": "SCR1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1302,7 +1302,7 @@
       "concern_key": "SCR4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1311,7 +1311,7 @@
       "concern_key": "A4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1320,7 +1320,7 @@
       "concern_key": "SCR1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1329,7 +1329,7 @@
       "concern_key": "SCR5",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1338,7 +1338,7 @@
       "concern_key": "A1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1347,7 +1347,7 @@
       "concern_key": "A2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1356,7 +1356,7 @@
       "concern_key": "AGD1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -1365,7 +1365,7 @@
       "concern_key": "AGD2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 16.0,
+      "mapping_score": 5.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -1374,7 +1374,7 @@
       "concern_key": "C1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1383,7 +1383,7 @@
       "concern_key": "C2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1392,7 +1392,7 @@
       "concern_key": "C3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -1401,7 +1401,7 @@
       "concern_key": "C4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -1410,7 +1410,7 @@
       "concern_key": "C5",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -1419,7 +1419,7 @@
       "concern_key": "IP1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -1428,7 +1428,7 @@
       "concern_key": "IP2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 16.0,
+      "mapping_score": 5.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -1437,7 +1437,7 @@
       "concern_key": "SCR1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 15.0,
+      "mapping_score": 5.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -1446,7 +1446,7 @@
       "concern_key": "AGD1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1455,7 +1455,7 @@
       "concern_key": "SCR6",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1464,7 +1464,7 @@
       "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1473,7 +1473,7 @@
       "concern_key": "D9",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1482,7 +1482,7 @@
       "concern_key": "DIN1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1491,7 +1491,7 @@
       "concern_key": "DIN2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1500,7 +1500,7 @@
       "concern_key": "DIN3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1509,7 +1509,7 @@
       "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -1518,7 +1518,7 @@
       "concern_key": "A3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1536,7 +1536,7 @@
       "concern_key": "AGD2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1545,7 +1545,7 @@
       "concern_key": "AGD5",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -1554,7 +1554,7 @@
       "concern_key": "C3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1563,7 +1563,7 @@
       "concern_key": "IP1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1572,7 +1572,7 @@
       "concern_key": "A1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1581,7 +1581,7 @@
       "concern_key": "A2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1590,7 +1590,7 @@
       "concern_key": "C1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1599,7 +1599,7 @@
       "concern_key": "DIN1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1608,7 +1608,7 @@
       "concern_key": "SCR5",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -1617,7 +1617,7 @@
       "concern_key": "A1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1626,7 +1626,7 @@
       "concern_key": "A2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1635,7 +1635,7 @@
       "concern_key": "C1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1644,7 +1644,7 @@
       "concern_key": "DIN1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1653,7 +1653,7 @@
       "concern_key": "OR4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -1662,7 +1662,7 @@
       "concern_key": "SCR5",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -1671,7 +1671,7 @@
       "concern_key": "AGD3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -1680,7 +1680,7 @@
       "concern_key": "D2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1689,7 +1689,7 @@
       "concern_key": "D3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1698,7 +1698,7 @@
       "concern_key": "D8",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1707,7 +1707,7 @@
       "concern_key": "SCR2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1716,7 +1716,7 @@
       "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -1724,54 +1724,90 @@
       "stable_question_id": "26",
       "concern_key": "C3",
       "match_operator": "equals",
-      "answer_value": "4-6",
-      "mapping_score": 5.0,
-      "sort_order": 20,
+      "answer_value": "LE_5",
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "26",
       "concern_key": "C3",
       "match_operator": "equals",
-      "answer_value": "1-3",
-      "mapping_score": 3.0,
-      "sort_order": 20,
+      "answer_value": "6_20",
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "26",
       "concern_key": "C3",
       "match_operator": "equals",
-      "answer_value": "7+",
-      "mapping_score": 7.0,
-      "sort_order": 20,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "26",
-      "concern_key": "IP5",
-      "match_operator": "equals",
-      "answer_value": "7+",
-      "mapping_score": 7.0,
-      "sort_order": 10,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "26",
-      "concern_key": "IP5",
-      "match_operator": "equals",
-      "answer_value": "1-3",
+      "answer_value": "21_50",
       "mapping_score": 3.0,
-      "sort_order": 10,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "C3",
+      "match_operator": "equals",
+      "answer_value": "51_100",
+      "mapping_score": 3.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "C3",
+      "match_operator": "equals",
+      "answer_value": "GT_100",
+      "mapping_score": 3.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "26",
       "concern_key": "IP5",
       "match_operator": "equals",
-      "answer_value": "4-6",
-      "mapping_score": 5.0,
-      "sort_order": 10,
+      "answer_value": "LE_5",
+      "mapping_score": 2.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "IP5",
+      "match_operator": "equals",
+      "answer_value": "6_20",
+      "mapping_score": 2.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "IP5",
+      "match_operator": "equals",
+      "answer_value": "21_50",
+      "mapping_score": 3.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "IP5",
+      "match_operator": "equals",
+      "answer_value": "51_100",
+      "mapping_score": 3.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "IP5",
+      "match_operator": "equals",
+      "answer_value": "GT_100",
+      "mapping_score": 3.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
@@ -1779,7 +1815,7 @@
       "concern_key": "IP1",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1788,7 +1824,7 @@
       "concern_key": "IP2",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 5.0,
+      "mapping_score": 2.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1797,7 +1833,7 @@
       "concern_key": "SCR3",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 4.0,
+      "mapping_score": 2.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1806,6 +1842,24 @@
       "concern_key": "IP2",
       "match_operator": "equals",
       "answer_value": "LE_5",
+      "mapping_score": 2.0,
+      "sort_order": 70,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "28",
+      "concern_key": "IP2",
+      "match_operator": "equals",
+      "answer_value": "5_20",
+      "mapping_score": 2.0,
+      "sort_order": 70,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "28",
+      "concern_key": "IP2",
+      "match_operator": "equals",
+      "answer_value": "20_50",
       "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
@@ -1814,26 +1868,8 @@
       "stable_question_id": "28",
       "concern_key": "IP2",
       "match_operator": "equals",
-      "answer_value": "5_20",
-      "mapping_score": 5.0,
-      "sort_order": 70,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "28",
-      "concern_key": "IP2",
-      "match_operator": "equals",
-      "answer_value": "20_50",
-      "mapping_score": 7.0,
-      "sort_order": 70,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "28",
-      "concern_key": "IP2",
-      "match_operator": "equals",
       "answer_value": "GT_50",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -1842,7 +1878,7 @@
       "concern_key": "IP8",
       "match_operator": "equals",
       "answer_value": "5_20",
-      "mapping_score": 5.0,
+      "mapping_score": 2.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -1851,7 +1887,7 @@
       "concern_key": "IP8",
       "match_operator": "equals",
       "answer_value": "20_50",
-      "mapping_score": 7.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -1860,7 +1896,7 @@
       "concern_key": "IP8",
       "match_operator": "equals",
       "answer_value": "GT_50",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -1869,7 +1905,7 @@
       "concern_key": "A1",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1878,7 +1914,7 @@
       "concern_key": "A2",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 5.0,
+      "mapping_score": 2.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1887,7 +1923,7 @@
       "concern_key": "C1",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 5.0,
+      "mapping_score": 2.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1896,7 +1932,7 @@
       "concern_key": "A3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -1905,7 +1941,7 @@
       "concern_key": "AGD2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -1914,7 +1950,7 @@
       "concern_key": "AGD3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -1923,7 +1959,7 @@
       "concern_key": "C2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -1932,7 +1968,7 @@
       "concern_key": "C3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -1941,7 +1977,7 @@
       "concern_key": "IP6",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -1950,7 +1986,7 @@
       "concern_key": "OR1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -1959,7 +1995,7 @@
       "concern_key": "OR4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 80,
       "is_active": true
     },
@@ -1968,6 +2004,24 @@
       "concern_key": "A2",
       "match_operator": "equals",
       "answer_value": "1",
+      "mapping_score": 2.0,
+      "sort_order": 70,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "30",
+      "concern_key": "A2",
+      "match_operator": "equals",
+      "answer_value": "2_5",
+      "mapping_score": 2.0,
+      "sort_order": 70,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "30",
+      "concern_key": "A2",
+      "match_operator": "equals",
+      "answer_value": "5_20",
       "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
@@ -1976,26 +2030,8 @@
       "stable_question_id": "30",
       "concern_key": "A2",
       "match_operator": "equals",
-      "answer_value": "2_5",
-      "mapping_score": 5.0,
-      "sort_order": 70,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "30",
-      "concern_key": "A2",
-      "match_operator": "equals",
-      "answer_value": "5_20",
-      "mapping_score": 7.0,
-      "sort_order": 70,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "30",
-      "concern_key": "A2",
-      "match_operator": "equals",
       "answer_value": "20_50",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -2004,7 +2040,7 @@
       "concern_key": "A2",
       "match_operator": "equals",
       "answer_value": "GT_50",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -2013,7 +2049,7 @@
       "concern_key": "C1",
       "match_operator": "equals",
       "answer_value": "2_5",
-      "mapping_score": 5.0,
+      "mapping_score": 2.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -2022,7 +2058,7 @@
       "concern_key": "C1",
       "match_operator": "equals",
       "answer_value": "5_20",
-      "mapping_score": 7.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -2031,7 +2067,7 @@
       "concern_key": "C1",
       "match_operator": "equals",
       "answer_value": "20_50",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -2040,7 +2076,7 @@
       "concern_key": "C1",
       "match_operator": "equals",
       "answer_value": "GT_50",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -2049,6 +2085,24 @@
       "concern_key": "AGD2",
       "match_operator": "equals",
       "answer_value": "1",
+      "mapping_score": 2.0,
+      "sort_order": 70,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "31",
+      "concern_key": "AGD2",
+      "match_operator": "equals",
+      "answer_value": "2_5",
+      "mapping_score": 2.0,
+      "sort_order": 70,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "31",
+      "concern_key": "AGD2",
+      "match_operator": "equals",
+      "answer_value": "5_20",
       "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
@@ -2057,26 +2111,8 @@
       "stable_question_id": "31",
       "concern_key": "AGD2",
       "match_operator": "equals",
-      "answer_value": "2_5",
-      "mapping_score": 5.0,
-      "sort_order": 70,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "31",
-      "concern_key": "AGD2",
-      "match_operator": "equals",
-      "answer_value": "5_20",
-      "mapping_score": 7.0,
-      "sort_order": 70,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "31",
-      "concern_key": "AGD2",
-      "match_operator": "equals",
       "answer_value": "20_50",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -2085,7 +2121,7 @@
       "concern_key": "AGD2",
       "match_operator": "equals",
       "answer_value": "GT_50",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -2094,7 +2130,7 @@
       "concern_key": "C3",
       "match_operator": "equals",
       "answer_value": "2_5",
-      "mapping_score": 5.0,
+      "mapping_score": 2.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -2103,7 +2139,7 @@
       "concern_key": "C3",
       "match_operator": "equals",
       "answer_value": "5_20",
-      "mapping_score": 7.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -2112,7 +2148,7 @@
       "concern_key": "C3",
       "match_operator": "equals",
       "answer_value": "20_50",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -2121,17 +2157,8 @@
       "concern_key": "C3",
       "match_operator": "equals",
       "answer_value": "GT_50",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "32",
-      "concern_key": "DIN1",
-      "match_operator": "equals",
-      "answer_value": "4+",
-      "mapping_score": 7.0,
-      "sort_order": 10,
       "is_active": true
     },
     {
@@ -2139,53 +2166,107 @@
       "concern_key": "DIN1",
       "match_operator": "equals",
       "answer_value": "1",
-      "mapping_score": 3.0,
-      "sort_order": 10,
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "32",
       "concern_key": "DIN1",
       "match_operator": "equals",
-      "answer_value": "2-3",
-      "mapping_score": 5.0,
-      "sort_order": 10,
+      "answer_value": "2_3",
+      "mapping_score": 2.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "32",
+      "concern_key": "DIN1",
+      "match_operator": "equals",
+      "answer_value": "4_10",
+      "mapping_score": 3.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "32",
+      "concern_key": "DIN1",
+      "match_operator": "equals",
+      "answer_value": "GT_10",
+      "mapping_score": 3.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "32",
       "concern_key": "DIN6",
       "match_operator": "equals",
-      "answer_value": "4+",
-      "mapping_score": 5.0,
-      "sort_order": 90,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "33",
-      "concern_key": "DIN2",
-      "match_operator": "equals",
-      "answer_value": "4+",
-      "mapping_score": 7.0,
-      "sort_order": 10,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "33",
-      "concern_key": "DIN2",
-      "match_operator": "equals",
-      "answer_value": "2-3",
-      "mapping_score": 5.0,
-      "sort_order": 10,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "33",
-      "concern_key": "DIN2",
-      "match_operator": "equals",
       "answer_value": "1",
+      "mapping_score": 2.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "32",
+      "concern_key": "DIN6",
+      "match_operator": "equals",
+      "answer_value": "2_3",
+      "mapping_score": 2.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "32",
+      "concern_key": "DIN6",
+      "match_operator": "equals",
+      "answer_value": "4_10",
       "mapping_score": 3.0,
-      "sort_order": 10,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "32",
+      "concern_key": "DIN6",
+      "match_operator": "equals",
+      "answer_value": "GT_10",
+      "mapping_score": 3.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "33",
+      "concern_key": "DIN2",
+      "match_operator": "equals",
+      "answer_value": "SINGLE_CLOUD_SINGLE_REGION",
+      "mapping_score": 2.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "33",
+      "concern_key": "DIN2",
+      "match_operator": "equals",
+      "answer_value": "SINGLE_CLOUD_MULTI_REGION",
+      "mapping_score": 2.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "33",
+      "concern_key": "DIN2",
+      "match_operator": "equals",
+      "answer_value": "MULTI_CLOUD_SINGLE_REGION",
+      "mapping_score": 3.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "33",
+      "concern_key": "DIN2",
+      "match_operator": "equals",
+      "answer_value": "MULTI_CLOUD_MULTI_REGION",
+      "mapping_score": 3.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
@@ -2193,7 +2274,7 @@
       "concern_key": "D7",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 15.0,
+      "mapping_score": 5.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -2202,7 +2283,7 @@
       "concern_key": "D8",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2211,7 +2292,7 @@
       "concern_key": "D9",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 15.0,
+      "mapping_score": 5.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -2220,7 +2301,7 @@
       "concern_key": "DIN1",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 8.0,
+      "mapping_score": 5.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -2229,7 +2310,7 @@
       "concern_key": "DIN2",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 8.0,
+      "mapping_score": 5.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -2238,7 +2319,7 @@
       "concern_key": "SCR4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 7.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2247,7 +2328,7 @@
       "concern_key": "SCR5",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -2256,7 +2337,7 @@
       "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 15.0,
+      "mapping_score": 5.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -2264,126 +2345,234 @@
       "stable_question_id": "35",
       "concern_key": "C4",
       "match_operator": "equals",
-      "answer_value": "1-2",
-      "mapping_score": 3.0,
-      "sort_order": 10,
+      "answer_value": "1_2",
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "35",
       "concern_key": "C4",
       "match_operator": "equals",
-      "answer_value": "3-5",
-      "mapping_score": 5.0,
-      "sort_order": 10,
+      "answer_value": "3_5",
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "35",
       "concern_key": "C4",
       "match_operator": "equals",
-      "answer_value": "6+",
-      "mapping_score": 7.0,
-      "sort_order": 10,
+      "answer_value": "6_10",
+      "mapping_score": 3.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "35",
+      "concern_key": "C4",
+      "match_operator": "equals",
+      "answer_value": "GT_10",
+      "mapping_score": 3.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "35",
       "concern_key": "C5",
       "match_operator": "equals",
-      "answer_value": "3-5",
-      "mapping_score": 5.0,
-      "sort_order": 20,
+      "answer_value": "1_2",
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "35",
       "concern_key": "C5",
       "match_operator": "equals",
-      "answer_value": "1-2",
-      "mapping_score": 3.0,
-      "sort_order": 20,
+      "answer_value": "3_5",
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "35",
       "concern_key": "C5",
       "match_operator": "equals",
-      "answer_value": "6+",
-      "mapping_score": 7.0,
-      "sort_order": 20,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "36",
-      "concern_key": "IP1",
-      "match_operator": "equals",
-      "answer_value": "3-5",
-      "mapping_score": 5.0,
-      "sort_order": 10,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "36",
-      "concern_key": "IP1",
-      "match_operator": "equals",
-      "answer_value": "1-2",
+      "answer_value": "6_10",
       "mapping_score": 3.0,
-      "sort_order": 10,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "35",
+      "concern_key": "C5",
+      "match_operator": "equals",
+      "answer_value": "GT_10",
+      "mapping_score": 3.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "36",
       "concern_key": "IP1",
       "match_operator": "equals",
-      "answer_value": "6+",
-      "mapping_score": 7.0,
-      "sort_order": 10,
+      "answer_value": "1_2",
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "36",
-      "concern_key": "IP3",
+      "concern_key": "IP1",
       "match_operator": "equals",
-      "answer_value": "6+",
-      "mapping_score": 7.0,
-      "sort_order": 20,
+      "answer_value": "3_5",
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "36",
-      "concern_key": "IP3",
+      "concern_key": "IP1",
       "match_operator": "equals",
-      "answer_value": "3-5",
-      "mapping_score": 5.0,
-      "sort_order": 20,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "36",
-      "concern_key": "IP3",
-      "match_operator": "equals",
-      "answer_value": "1-2",
+      "answer_value": "6_10",
       "mapping_score": 3.0,
-      "sort_order": 20,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "36",
+      "concern_key": "IP1",
+      "match_operator": "equals",
+      "answer_value": "GT_10",
+      "mapping_score": 3.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "36",
+      "concern_key": "IP3",
+      "match_operator": "equals",
+      "answer_value": "1_2",
+      "mapping_score": 2.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "36",
+      "concern_key": "IP3",
+      "match_operator": "equals",
+      "answer_value": "3_5",
+      "mapping_score": 2.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "36",
+      "concern_key": "IP3",
+      "match_operator": "equals",
+      "answer_value": "6_10",
+      "mapping_score": 3.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "36",
+      "concern_key": "IP3",
+      "match_operator": "equals",
+      "answer_value": "GT_10",
+      "mapping_score": 3.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "37",
       "concern_key": "SCR1",
       "match_operator": "equals",
-      "answer_value": "Yes",
-      "mapping_score": 6.0,
-      "sort_order": 10,
+      "answer_value": "FCCL",
+      "mapping_score": 3.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "37",
+      "concern_key": "SCR1",
+      "match_operator": "equals",
+      "answer_value": "Kaitian",
+      "mapping_score": 3.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "37",
+      "concern_key": "SCR1",
+      "match_operator": "equals",
+      "answer_value": "NECPC",
+      "mapping_score": 3.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "37",
+      "concern_key": "SCR1",
+      "match_operator": "equals",
+      "answer_value": "Other",
+      "mapping_score": 3.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "37",
+      "concern_key": "SCR1",
+      "match_operator": "equals",
+      "answer_value": "example_corp",
+      "mapping_score": 3.0,
+      "sort_order": 45,
       "is_active": true
     },
     {
       "stable_question_id": "37",
       "concern_key": "SCR4",
       "match_operator": "equals",
-      "answer_value": "Yes",
-      "mapping_score": 5.0,
-      "sort_order": 20,
+      "answer_value": "FCCL",
+      "mapping_score": 2.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "37",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Kaitian",
+      "mapping_score": 2.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "37",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "NECPC",
+      "mapping_score": 2.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "37",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Other",
+      "mapping_score": 2.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "37",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "example_corp",
+      "mapping_score": 2.0,
+      "sort_order": 45,
       "is_active": true
     },
     {
@@ -2391,7 +2580,7 @@
       "concern_key": "D8",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2400,7 +2589,7 @@
       "concern_key": "SCR2",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 7.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2409,7 +2598,7 @@
       "concern_key": "SCR4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -2418,7 +2607,7 @@
       "concern_key": "SCR3",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 7.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2427,7 +2616,7 @@
       "concern_key": "SCR4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2436,7 +2625,7 @@
       "concern_key": "A3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2445,7 +2634,7 @@
       "concern_key": "AGD2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -2454,7 +2643,7 @@
       "concern_key": "D3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2463,7 +2652,7 @@
       "concern_key": "D4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -2472,7 +2661,7 @@
       "concern_key": "SCR2",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 7.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2481,7 +2670,7 @@
       "concern_key": "SCR4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2489,27 +2678,45 @@
       "stable_question_id": "42",
       "concern_key": "SCR2",
       "match_operator": "equals",
-      "answer_value": "personal",
-      "mapping_score": 5.0,
-      "sort_order": 10,
+      "answer_value": "General Personal Data",
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "42",
       "concern_key": "SCR2",
       "match_operator": "equals",
-      "answer_value": "sensitive_personal",
-      "mapping_score": 8.0,
-      "sort_order": 10,
+      "answer_value": "Sensitive Personal Data",
+      "mapping_score": 3.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "43",
       "concern_key": "SCR5",
       "match_operator": "equals",
-      "answer_value": "Yes",
-      "mapping_score": 5.0,
-      "sort_order": 10,
+      "answer_value": "Accounting",
+      "mapping_score": 2.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "43",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Employee Record",
+      "mapping_score": 2.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "43",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Tax",
+      "mapping_score": 2.0,
+      "sort_order": 45,
       "is_active": true
     },
     {
@@ -2517,7 +2724,7 @@
       "concern_key": "SCR4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2526,7 +2733,7 @@
       "concern_key": "SCR5",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 7.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2535,7 +2742,7 @@
       "concern_key": "DIN3",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2544,7 +2751,7 @@
       "concern_key": "SCR5",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2553,7 +2760,7 @@
       "concern_key": "D8",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2562,8 +2769,62 @@
       "concern_key": "SCR4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 7.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "48",
+      "concern_key": "SCR2",
+      "match_operator": "equals",
+      "answer_value": "General Personal Data",
+      "mapping_score": 2.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "48",
+      "concern_key": "SCR2",
+      "match_operator": "equals",
+      "answer_value": "Sensitive Personal Data",
+      "mapping_score": 3.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "49",
+      "concern_key": "D9",
+      "match_operator": "equals",
+      "answer_value": "More than 1,000,000",
+      "mapping_score": 3.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "49",
+      "concern_key": "D9",
+      "match_operator": "equals",
+      "answer_value": "Less than 1,000,000",
+      "mapping_score": 2.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "49",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "More than 1,000,000",
+      "mapping_score": 3.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "49",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Less than 1,000,000",
+      "mapping_score": 2.0,
+      "sort_order": 45,
       "is_active": true
     },
     {
@@ -2571,7 +2832,7 @@
       "concern_key": "A1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2580,7 +2841,7 @@
       "concern_key": "A3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2589,7 +2850,7 @@
       "concern_key": "IP1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -2598,7 +2859,7 @@
       "concern_key": "SCR4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -2607,7 +2868,7 @@
       "concern_key": "SCR5",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -2616,7 +2877,7 @@
       "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -2624,18 +2885,36 @@
       "stable_question_id": "50",
       "concern_key": "DIN3",
       "match_operator": "equals",
-      "answer_value": "Yes",
-      "mapping_score": 6.0,
-      "sort_order": 20,
+      "answer_value": "More than 100,000",
+      "mapping_score": 3.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "50",
+      "concern_key": "DIN3",
+      "match_operator": "equals",
+      "answer_value": "Less than 100,000",
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
       "stable_question_id": "50",
       "concern_key": "SCR5",
       "match_operator": "equals",
-      "answer_value": "Yes",
-      "mapping_score": 8.0,
-      "sort_order": 10,
+      "answer_value": "More than 100,000",
+      "mapping_score": 3.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "50",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Less than 100,000",
+      "mapping_score": 2.0,
+      "sort_order": 50,
       "is_active": true
     },
     {
@@ -2643,7 +2922,7 @@
       "concern_key": "D5",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 5.0,
+      "mapping_score": 2.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2652,7 +2931,7 @@
       "concern_key": "SCR4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2661,7 +2940,7 @@
       "concern_key": "D8",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 7.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2670,8 +2949,62 @@
       "concern_key": "SCR4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 6.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "53",
+      "concern_key": "D7",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 5.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "53",
+      "concern_key": "D7",
+      "match_operator": "equals",
+      "answer_value": "Not Sure",
+      "mapping_score": 4.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "53",
+      "concern_key": "D9",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 5.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "53",
+      "concern_key": "D9",
+      "match_operator": "equals",
+      "answer_value": "Not Sure",
+      "mapping_score": 4.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "53",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 5.0,
+      "sort_order": 45,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "53",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Not Sure",
+      "mapping_score": 4.0,
+      "sort_order": 45,
       "is_active": true
     },
     {
@@ -2679,7 +3012,7 @@
       "concern_key": "B1",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 3.0,
+      "mapping_score": 2.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2688,7 +3021,7 @@
       "concern_key": "B2",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 3.0,
+      "mapping_score": 2.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2751,7 +3084,7 @@
       "concern_key": "B5",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 2.0,
+      "mapping_score": 1.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2760,7 +3093,7 @@
       "concern_key": "D9",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 2.0,
+      "mapping_score": 1.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2769,7 +3102,7 @@
       "concern_key": "AGD4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -2778,7 +3111,7 @@
       "concern_key": "DIN4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2787,7 +3120,7 @@
       "concern_key": "OR3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2796,7 +3129,7 @@
       "concern_key": "A3",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 3.0,
+      "mapping_score": 2.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2805,7 +3138,7 @@
       "concern_key": "C3",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 3.0,
+      "mapping_score": 2.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2850,7 +3183,7 @@
       "concern_key": "AGD4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 3.0,
+      "mapping_score": 2.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2859,7 +3192,7 @@
       "concern_key": "OR3",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 3.0,
+      "mapping_score": 2.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2877,7 +3210,7 @@
       "concern_key": "A3",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 2.0,
+      "mapping_score": 1.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2886,7 +3219,7 @@
       "concern_key": "IP1",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 2.0,
+      "mapping_score": 1.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2895,7 +3228,7 @@
       "concern_key": "DIN4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 2.0,
+      "mapping_score": 1.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2904,7 +3237,7 @@
       "concern_key": "IP6",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 2.0,
+      "mapping_score": 1.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2913,7 +3246,7 @@
       "concern_key": "A1",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 10.0,
+      "mapping_score": 4.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2922,7 +3255,7 @@
       "concern_key": "AGD1",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 10.0,
+      "mapping_score": 4.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2940,7 +3273,7 @@
       "concern_key": "C1",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 10.0,
+      "mapping_score": 4.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -2958,7 +3291,7 @@
       "concern_key": "SCR1",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 2.0,
+      "mapping_score": 1.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2967,7 +3300,7 @@
       "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 2.0,
+      "mapping_score": 1.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2976,7 +3309,7 @@
       "concern_key": "DIN4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 3.0,
+      "mapping_score": 2.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -2985,7 +3318,7 @@
       "concern_key": "OR3",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 3.0,
+      "mapping_score": 2.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -2994,7 +3327,7 @@
       "concern_key": "AGD4",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 3.0,
+      "mapping_score": 2.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -3003,7 +3336,7 @@
       "concern_key": "OR3",
       "match_operator": "equals",
       "answer_value": "Yes",
-      "mapping_score": 3.0,
+      "mapping_score": 2.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -3012,7 +3345,7 @@
       "concern_key": "A4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -3021,7 +3354,7 @@
       "concern_key": "B3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -3030,7 +3363,7 @@
       "concern_key": "SCR6",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -3039,7 +3372,7 @@
       "concern_key": "A1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -3048,7 +3381,7 @@
       "concern_key": "A3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -3057,7 +3390,7 @@
       "concern_key": "DIN2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -3066,7 +3399,7 @@
       "concern_key": "SCR1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -3075,7 +3408,7 @@
       "concern_key": "SCR2",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -3084,7 +3417,7 @@
       "concern_key": "SCR3",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -3093,7 +3426,7 @@
       "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 70,
       "is_active": true
     },
@@ -3102,7 +3435,7 @@
       "concern_key": "D4",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
@@ -3111,7 +3444,7 @@
       "concern_key": "D7",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -3120,7 +3453,7 @@
       "concern_key": "D9",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -3129,7 +3462,7 @@
       "concern_key": "SCR1",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -3138,7 +3471,7 @@
       "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Y",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 50,
       "is_active": true
     }
@@ -3699,378 +4032,378 @@
     {
       "rule_key": "at-application-event_driven",
       "concern_key": "C5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-application-event_driven",
       "concern_key": "IP5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-application-event_driven",
       "concern_key": "IP6",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-application-microservices",
       "concern_key": "A3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-application-microservices",
       "concern_key": "C1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-application-microservices",
       "concern_key": "C2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-application-microservices",
       "concern_key": "C5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
     {
       "rule_key": "at-application-mobile_or_client",
       "concern_key": "A1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-application-mobile_or_client",
       "concern_key": "A4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-application-mobile_or_client",
       "concern_key": "C5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-application-modular_monolith",
       "concern_key": "A1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-application-modular_monolith",
       "concern_key": "A2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-application-modular_monolith",
       "concern_key": "C2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-application-monolith",
       "concern_key": "A2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-application-monolith",
       "concern_key": "C1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-application-web_application",
       "concern_key": "A1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-application-web_application",
       "concern_key": "A2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-application-web_application",
       "concern_key": "A4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-business-capability_based",
       "concern_key": "B1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-business-capability_based",
       "concern_key": "B5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-business-customer_journey",
       "concern_key": "A4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-business-customer_journey",
       "concern_key": "B3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-business-multi_entity",
       "concern_key": "AGD5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-business-multi_entity",
       "concern_key": "B4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-business-multi_entity",
       "concern_key": "B5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-business-platform_business",
       "concern_key": "A3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-business-platform_business",
       "concern_key": "B1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-business-platform_business",
       "concern_key": "B5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-business-process_centric",
       "concern_key": "B2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-business-process_centric",
       "concern_key": "IP4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-business-process_centric",
       "concern_key": "IP5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-data-ai_ml",
       "concern_key": "D3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-data-ai_ml",
       "concern_key": "D6",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-data-ai_ml",
       "concern_key": "OR4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-data-data_lake",
       "concern_key": "D3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-data-data_lake",
       "concern_key": "D6",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-data-data_lake",
       "concern_key": "D8",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-data-data_warehouse",
       "concern_key": "D1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-data-data_warehouse",
       "concern_key": "D2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-data-data_warehouse",
       "concern_key": "D4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-data-llm_rag",
       "concern_key": "D6",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-data-llm_rag",
       "concern_key": "D7",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-data-llm_rag",
       "concern_key": "OR4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
     {
       "rule_key": "at-data-llm_rag",
       "concern_key": "SCR1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-data-master_data",
       "concern_key": "D4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-data-master_data",
       "concern_key": "D5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-data-master_data",
       "concern_key": "D6",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-data-relational_oltp",
       "concern_key": "D10",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-data-relational_oltp",
       "concern_key": "D11",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-data-relational_oltp",
       "concern_key": "D5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-data-streaming",
       "concern_key": "D8",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-data-streaming",
       "concern_key": "IP6",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-data-streaming",
       "concern_key": "OR4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-security-compliance_driven",
       "concern_key": "AGD1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -4091,70 +4424,70 @@
     {
       "rule_key": "at-security-compliance_driven",
       "concern_key": "D7",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-security-compliance_driven",
       "concern_key": "SCR7",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-security-cross_border",
       "concern_key": "D7",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-security-cross_border",
       "concern_key": "D9",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-security-cross_border",
       "concern_key": "DIN1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-security-cross_border",
       "concern_key": "SCR7",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
     {
       "rule_key": "at-security-data_protection",
       "concern_key": "D7",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-security-data_protection",
       "concern_key": "SCR1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-security-data_protection",
       "concern_key": "SCR2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-security-iam_integration",
       "concern_key": "A4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -4168,112 +4501,112 @@
     {
       "rule_key": "at-security-iam_integration",
       "concern_key": "SCR4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-security-iam_integration",
       "concern_key": "SCR5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-security-iam_integration",
       "concern_key": "SCR6",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-security-perimeter_network",
       "concern_key": "DIN2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-security-perimeter_network",
       "concern_key": "SCR1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-security-perimeter_network",
       "concern_key": "SCR3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-security-zero_trust",
       "concern_key": "SCR1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-security-zero_trust",
       "concern_key": "SCR4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-security-zero_trust",
       "concern_key": "SCR5",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-technical-cloud_native",
       "concern_key": "C4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-technical-cloud_native",
       "concern_key": "DIN3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-technical-cloud_native",
       "concern_key": "DIN4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-technical-containerized",
       "concern_key": "C1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-technical-containerized",
       "concern_key": "DIN3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-technical-containerized",
       "concern_key": "DIN4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-technical-high_availability",
       "concern_key": "A6",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
@@ -4287,14 +4620,14 @@
     {
       "rule_key": "at-technical-high_availability",
       "concern_key": "OR2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-technical-high_availability",
       "concern_key": "OR3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
@@ -4308,203 +4641,203 @@
     {
       "rule_key": "at-technical-hybrid_multicloud",
       "concern_key": "DIN1",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-technical-hybrid_multicloud",
       "concern_key": "DIN2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-technical-hybrid_multicloud",
       "concern_key": "DIN3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-technical-legacy_modernization",
       "concern_key": "AGD2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-technical-legacy_modernization",
       "concern_key": "C3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "at-technical-legacy_modernization",
       "concern_key": "C4",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "at-technical-on_premise",
       "concern_key": "DIN2",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "at-technical-on_premise",
       "concern_key": "DIN3",
-      "mapping_score": 8.0,
+      "mapping_score": 3.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "cross-border-sensitive-data",
       "concern_key": "D7",
-      "mapping_score": 15.0,
+      "mapping_score": 5.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "cross-border-sensitive-data",
       "concern_key": "D9",
-      "mapping_score": 15.0,
+      "mapping_score": 5.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "cross-border-sensitive-data",
       "concern_key": "SCR1",
-      "mapping_score": 15.0,
+      "mapping_score": 5.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "cross-border-sensitive-data",
       "concern_key": "SCR7",
-      "mapping_score": 15.0,
+      "mapping_score": 5.0,
       "sort_order": 40,
       "is_active": true
     },
     {
       "rule_key": "identity-and-authorization-combination",
       "concern_key": "A4",
-      "mapping_score": 12.0,
+      "mapping_score": 4.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "identity-and-authorization-combination",
       "concern_key": "SCR5",
-      "mapping_score": 12.0,
+      "mapping_score": 4.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "identity-and-authorization-combination",
       "concern_key": "SCR6",
-      "mapping_score": 12.0,
+      "mapping_score": 4.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "identity-and-authorization-combination",
       "concern_key": "SCR7",
-      "mapping_score": 12.0,
+      "mapping_score": 4.0,
       "sort_order": 40,
       "is_active": true
     },
     {
       "rule_key": "large-scale-integration",
       "concern_key": "A3",
-      "mapping_score": 10.0,
+      "mapping_score": 4.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "large-scale-integration",
       "concern_key": "DIN4",
-      "mapping_score": 10.0,
+      "mapping_score": 4.0,
       "sort_order": 50,
       "is_active": true
     },
     {
       "rule_key": "large-scale-integration",
       "concern_key": "IP1",
-      "mapping_score": 10.0,
+      "mapping_score": 4.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "large-scale-integration",
       "concern_key": "IP2",
-      "mapping_score": 10.0,
+      "mapping_score": 4.0,
       "sort_order": 30,
       "is_active": true
     },
     {
       "rule_key": "large-scale-integration",
       "concern_key": "IP6",
-      "mapping_score": 10.0,
+      "mapping_score": 4.0,
       "sort_order": 40,
       "is_active": true
     },
     {
       "rule_key": "large-scale-integration",
       "concern_key": "OR3",
-      "mapping_score": 10.0,
+      "mapping_score": 4.0,
       "sort_order": 60,
       "is_active": true
     },
     {
       "rule_key": "large-scale-integration",
       "concern_key": "OR4",
-      "mapping_score": 10.0,
+      "mapping_score": 4.0,
       "sort_order": 70,
       "is_active": true
     },
     {
       "rule_key": "technology-exception-stack-complexity",
       "concern_key": "AGD1",
-      "mapping_score": 12.0,
+      "mapping_score": 4.0,
       "sort_order": 40,
       "is_active": true
     },
     {
       "rule_key": "technology-exception-stack-complexity",
       "concern_key": "AGD3",
-      "mapping_score": 12.0,
+      "mapping_score": 4.0,
       "sort_order": 50,
       "is_active": true
     },
     {
       "rule_key": "technology-exception-stack-complexity",
       "concern_key": "C4",
-      "mapping_score": 12.0,
+      "mapping_score": 4.0,
       "sort_order": 10,
       "is_active": true
     },
     {
       "rule_key": "technology-exception-stack-complexity",
       "concern_key": "OR1",
-      "mapping_score": 12.0,
+      "mapping_score": 4.0,
       "sort_order": 60,
       "is_active": true
     },
     {
       "rule_key": "technology-exception-stack-complexity",
       "concern_key": "SCR2",
-      "mapping_score": 12.0,
+      "mapping_score": 4.0,
       "sort_order": 20,
       "is_active": true
     },
     {
       "rule_key": "technology-exception-stack-complexity",
       "concern_key": "SCR7",
-      "mapping_score": 12.0,
+      "mapping_score": 4.0,
       "sort_order": 30,
       "is_active": true
     }
@@ -4535,7 +4868,6 @@
       "AGD6",
       "AGD7",
       "DIN5",
-      "DIN6",
       "IP7",
       "OR5",
       "SCR11"
