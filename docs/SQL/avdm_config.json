@@ -1,0 +1,4067 @@
+{
+  "version": "2.0",
+  "key_scheme": "code",
+  "concerns": [
+    {
+      "concern_key": "A1",
+      "concern_name": "System Context View",
+      "layer": "Context & Application",
+      "description": "System boundary. What is inside and outside the system?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "A2",
+      "concern_name": "Application Functional View",
+      "layer": "Context & Application",
+      "description": "Functional decomposition. How are application functions grouped?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "A3",
+      "concern_name": "Application Interaction View",
+      "layer": "Context & Application",
+      "description": "Application collaboration. How do applications interact and depend on each other?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "A4",
+      "concern_name": "User Role-Application Mapping View",
+      "layer": "Context & Application",
+      "description": "Access responsibility. Which roles can access which applications?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "A5",
+      "concern_name": "Application Domain Boundary",
+      "layer": "Context & Application",
+      "description": "Clarify service boundaries and domain ownership.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "app_domain_boundary"
+      ]
+    },
+    {
+      "concern_key": "A6",
+      "concern_name": "Application Resilience",
+      "layer": "Context & Application",
+      "description": "Define fallback, retry, and graceful degradation strategy.",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "app_resilience_pattern"
+      ]
+    },
+    {
+      "concern_key": "AGD1",
+      "concern_name": "Architecture Decision View",
+      "layer": "Architecture Governance & Decision",
+      "description": "Decision rationale. What architectural decisions were made and why?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "AGD2",
+      "concern_name": "Evolution & Change Impact View",
+      "layer": "Architecture Governance & Decision",
+      "description": "Change analysis. What is impacted by a proposed change?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "AGD3",
+      "concern_name": "Quality Attribute Trade-off View",
+      "layer": "Architecture Governance & Decision",
+      "description": "Trade-off reasoning. How are quality attributes balanced?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "AGD4",
+      "concern_name": "Cost & Value View",
+      "layer": "Architecture Governance & Decision",
+      "description": "Economic impact. What are the costs and expected value?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "AGD5",
+      "concern_name": "Team-Architecture Alignment View",
+      "layer": "Architecture Governance & Decision",
+      "description": "Organizational fit. Are teams aligned with the architecture?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "AGD6",
+      "concern_name": "Control Traceability Matrix",
+      "layer": "Architecture Governance & Decision",
+      "description": "Trace controls to policies, systems, and responsible roles.",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "governance_control_matrix"
+      ]
+    },
+    {
+      "concern_key": "AGD7",
+      "concern_name": "Architecture Decision Record",
+      "layer": "Architecture Governance & Decision",
+      "description": "Document decision rationale and approval trail.",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "governance_decision_log"
+      ]
+    },
+    {
+      "concern_key": "B1",
+      "concern_name": "Business Capability View",
+      "layer": "Business / Organization",
+      "description": "Capability structure. What business capabilities exist and which are critical?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "B2",
+      "concern_name": "Business Process View",
+      "layer": "Business / Organization",
+      "description": "End-to-end workflows. How do business processes execute across domains?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "B3",
+      "concern_name": "User / Actor View",
+      "layer": "Business / Organization",
+      "description": "Users and roles. Who interacts with the system and in what roles?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "B4",
+      "concern_name": "Organizational Ownership View",
+      "layer": "Business / Organization",
+      "description": "Accountability and governance. Who owns systems, data, and decisions?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "B5",
+      "concern_name": "Interaction & Influence View",
+      "layer": "Business / Organization",
+      "description": "Cross-domain influence. How do organizational units influence each other?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "C1",
+      "concern_name": "Container View",
+      "layer": "Container / Component / Technical Service",
+      "description": "Runtime containers. What are the main runtime units?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "C2",
+      "concern_name": "Component View",
+      "layer": "Container / Component / Technical Service",
+      "description": "Internal modularity. How are components structured within containers?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "C3",
+      "concern_name": "Technical Service View",
+      "layer": "Container / Component / Technical Service",
+      "description": "Service responsibility. What capability boundary does each service own?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "C4",
+      "concern_name": "Technical Stack View",
+      "layer": "Container / Component / Technical Service",
+      "description": "Technology choices. Which languages, frameworks, and platforms are used?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "C5",
+      "concern_name": "Communication & Protocol View",
+      "layer": "Container / Component / Technical Service",
+      "description": "Interaction mechanisms. How do components communicate?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "D1",
+      "concern_name": "Business Data Flow View",
+      "layer": "Data Architecture",
+      "description": "Business data movement. How does data support business processes?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "D10",
+      "concern_name": "Logical Data Model View",
+      "layer": "Data Architecture",
+      "description": "Logical schema. How are entities logically related?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "D11",
+      "concern_name": "Physical Data Model View",
+      "layer": "Data Architecture",
+      "description": "Physical schema. How is data physically implemented?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "D12",
+      "concern_name": "Data Governance",
+      "layer": "Data Architecture",
+      "description": "Define ownership, retention, and quality accountability.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "data_governance"
+      ]
+    },
+    {
+      "concern_key": "D13",
+      "concern_name": "Data Lineage and Flow",
+      "layer": "Data Architecture",
+      "description": "Track key data flows from source to consumption.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "data_lineage"
+      ]
+    },
+    {
+      "concern_key": "D2",
+      "concern_name": "Data Derivation & Evolution View",
+      "layer": "Data Architecture",
+      "description": "Data transformation. How is data derived and transformed?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "D3",
+      "concern_name": "Data Lineage View",
+      "layer": "Data Architecture",
+      "description": "Traceability. Where does data originate and propagate?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "D4",
+      "concern_name": "Data Asset View",
+      "layer": "Data Architecture",
+      "description": "Ownership and value. What data assets exist and who owns them?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "D5",
+      "concern_name": "Conceptual Data Entity View",
+      "layer": "Data Architecture",
+      "description": "Business entities. What core business entities exist?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "D6",
+      "concern_name": "Data Quality View",
+      "layer": "Data Architecture",
+      "description": "Quality assurance. Is data accurate, complete, and timely?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "D7",
+      "concern_name": "Data Compliance Flow View",
+      "layer": "Data Architecture",
+      "description": "Regulatory paths. Does data usage comply with regulations?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "D8",
+      "concern_name": "Data Pipeline View",
+      "layer": "Data Architecture",
+      "description": "Technical pipelines. How is data processed technically?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "D9",
+      "concern_name": "Data Sovereignty View",
+      "layer": "Data Architecture",
+      "description": "Residency constraints. Where is data stored and restricted?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "DIN1",
+      "concern_name": "Application Deployment Location View",
+      "layer": "Deployment / Infrastructure / Networking",
+      "description": "Deployment topology. Where are applications deployed?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "DIP7"
+      ]
+    },
+    {
+      "concern_key": "DIN2",
+      "concern_name": "Network Topology View",
+      "layer": "Deployment / Infrastructure / Networking",
+      "description": "Network segmentation. How is the network structured?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "DIP8"
+      ]
+    },
+    {
+      "concern_key": "DIN3",
+      "concern_name": "Infrastructure Composition View",
+      "layer": "Deployment / Infrastructure / Networking",
+      "description": "Infrastructure layout. What infrastructure components exist?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "DIN4",
+      "concern_name": "Resource & Capacity View",
+      "layer": "Deployment / Infrastructure / Networking",
+      "description": "Scaling and capacity. How are resources allocated and scaled?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "DIN5",
+      "concern_name": "Disaster Recovery",
+      "layer": "Deployment / Infrastructure / Networking",
+      "description": "Define backup, restore, and regional failover strategy.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "infra_recovery"
+      ]
+    },
+    {
+      "concern_key": "DIN6",
+      "concern_name": "Scalability and Capacity",
+      "layer": "Deployment / Infrastructure / Networking",
+      "description": "Plan horizontal and vertical scaling with bottleneck controls.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "infra_scalability"
+      ]
+    },
+    {
+      "concern_key": "IP1",
+      "concern_name": "Application Integration View",
+      "layer": "Integration & Processing",
+      "description": "Business-level integration. How do applications exchange data?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "IP2",
+      "concern_name": "Technical Integration View",
+      "layer": "Integration & Processing",
+      "description": "Technical constraints. What latency, throughput, or coupling constraints exist?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "IP3",
+      "concern_name": "System Processing View",
+      "layer": "Integration & Processing",
+      "description": "Execution semantics. How are requests processed end-to-end?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "IP4",
+      "concern_name": "Activity View",
+      "layer": "Integration & Processing",
+      "description": "Action paths. What actions and decisions occur during execution?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "IP5",
+      "concern_name": "Process Flow View",
+      "layer": "Integration & Processing",
+      "description": "Workflow execution. How do workflows orchestrate services?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "IP6",
+      "concern_name": "Sequence Interaction View",
+      "layer": "Integration & Processing",
+      "description": "Call ordering. What is the interaction sequence?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "IP7",
+      "concern_name": "Interface Contract Stability",
+      "layer": "Integration & Processing",
+      "description": "Specify APIs, versioning, and compatibility guarantees.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "integration_contract"
+      ]
+    },
+    {
+      "concern_key": "IP8",
+      "concern_name": "Dependency and Interaction Map",
+      "layer": "Integration & Processing",
+      "description": "Capture cross-system dependencies and communication paths.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "integration_dependency_map"
+      ]
+    },
+    {
+      "concern_key": "OR1",
+      "concern_name": "Operations View",
+      "layer": "Operations & Reliability",
+      "description": "Incident handling. How are incidents managed operationally?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "OR2",
+      "concern_name": "Resilience & DR View",
+      "layer": "Operations & Reliability",
+      "description": "Recovery strategy. What are RPO/RTO objectives?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "OR3",
+      "concern_name": "Reliability & SLO View",
+      "layer": "Operations & Reliability",
+      "description": "Reliability targets. What service levels are required?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "OR4",
+      "concern_name": "Monitoring & Observability View",
+      "layer": "Operations & Reliability",
+      "description": "System visibility. How is system health observed?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "OR5",
+      "concern_name": "Operational Feedback View",
+      "layer": "Operations & Reliability",
+      "description": "Learning loops. How do operations inform evolution?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "OR6",
+      "concern_name": "Observability and Alerting",
+      "layer": "Operations & Reliability",
+      "description": "Define telemetry signals, SLOs, and alert ownership.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "ops_observability"
+      ]
+    },
+    {
+      "concern_key": "OR7",
+      "concern_name": "Operability Runbook",
+      "layer": "Operations & Reliability",
+      "description": "Specify runbooks for incident, release, and rollback.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "ops_operability"
+      ]
+    },
+    {
+      "concern_key": "SCR1",
+      "concern_name": "Security Control View",
+      "layer": "Security, Compliance & Risk",
+      "description": "Control mechanisms. What controls enforce security policy?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "SCR10",
+      "concern_name": "Data Protection",
+      "layer": "Security, Compliance & Risk",
+      "description": "Describe encryption, tokenization, and sensitive data handling.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "security_data_protection"
+      ]
+    },
+    {
+      "concern_key": "SCR11",
+      "concern_name": "Identity and Access Control",
+      "layer": "Security, Compliance & Risk",
+      "description": "Map authentication, authorization, and least privilege controls.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "security_identity_access"
+      ]
+    },
+    {
+      "concern_key": "SCR2",
+      "concern_name": "Threat & Risk Modeling View",
+      "layer": "Security, Compliance & Risk",
+      "description": "Threat analysis. What threats and risks exist?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "SCR3",
+      "concern_name": "Attack Path View",
+      "layer": "Security, Compliance & Risk",
+      "description": "Adversarial traversal. How could an attacker move through the system?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "SCR4",
+      "concern_name": "Service Authentication View",
+      "layer": "Security, Compliance & Risk",
+      "description": "Service trust. How do services authenticate each other?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "SCR5",
+      "concern_name": "User Authentication View",
+      "layer": "Security, Compliance & Risk",
+      "description": "User identity. How are users authenticated?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "SCR6",
+      "concern_name": "Authorization & Access Control View",
+      "layer": "Security, Compliance & Risk",
+      "description": "Access enforcement. Who is authorized to do what?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "SCR7",
+      "concern_name": "Compliance Boundary View",
+      "layer": "Security, Compliance & Risk",
+      "description": "Regulatory scope. Which regulations apply and where?",
+      "risk_tags": [],
+      "is_active": true,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": []
+    },
+    {
+      "concern_key": "SCR8",
+      "concern_name": "Change Readiness",
+      "layer": "Security, Compliance & Risk",
+      "description": "Assess migration and release readiness risks.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "risk_change_readiness"
+      ]
+    },
+    {
+      "concern_key": "SCR9",
+      "concern_name": "External Dependency Risk",
+      "layer": "Security, Compliance & Risk",
+      "description": "Assess vendor and API dependency contingency plans.",
+      "risk_tags": [],
+      "is_active": false,
+      "severity": "medium",
+      "likelihood": "medium",
+      "classification": "recommended",
+      "aliases": [
+        "risk_dependency"
+      ]
+    }
+  ],
+  "question_concern_mappings": [
+    {
+      "stable_question_id": "1",
+      "concern_key": "AGD2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "1",
+      "concern_key": "B1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "1",
+      "concern_key": "B2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "1",
+      "concern_key": "B5",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "10",
+      "concern_key": "A3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "10",
+      "concern_key": "D1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "10",
+      "concern_key": "D3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "10",
+      "concern_key": "IP1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "10",
+      "concern_key": "IP2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "11",
+      "concern_key": "D1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "11",
+      "concern_key": "D2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "11",
+      "concern_key": "D3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "11",
+      "concern_key": "D7",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "11",
+      "concern_key": "IP1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "12",
+      "concern_key": "AGD3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "12",
+      "concern_key": "C4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "12",
+      "concern_key": "OR1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "13",
+      "concern_key": "AGD3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "13",
+      "concern_key": "C3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "13",
+      "concern_key": "C4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "13",
+      "concern_key": "OR1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "14",
+      "concern_key": "C4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "14",
+      "concern_key": "DIN3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "14",
+      "concern_key": "DIN4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "14",
+      "concern_key": "OR1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "15",
+      "concern_key": "AGD1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "15",
+      "concern_key": "C4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "15",
+      "concern_key": "OR1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "16",
+      "concern_key": "AGD3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "16",
+      "concern_key": "SCR2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "16",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "17",
+      "concern_key": "C5",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "17",
+      "concern_key": "DIN2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "17",
+      "concern_key": "IP2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "17",
+      "concern_key": "IP6",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "17",
+      "concern_key": "OR4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "18",
+      "concern_key": "IP2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "18",
+      "concern_key": "SCR1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "18",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "19",
+      "concern_key": "A4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "19",
+      "concern_key": "SCR1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "19",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "2",
+      "concern_key": "A1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "2",
+      "concern_key": "A2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "2",
+      "concern_key": "AGD1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 70,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "2",
+      "concern_key": "C1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "2",
+      "concern_key": "C2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "2",
+      "concern_key": "C3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "2",
+      "concern_key": "C4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 60,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "20",
+      "concern_key": "AGD1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "20",
+      "concern_key": "SCR6",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "20",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "21",
+      "concern_key": "D9",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "21",
+      "concern_key": "DIN1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "21",
+      "concern_key": "DIN2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "21",
+      "concern_key": "DIN3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "21",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "22",
+      "concern_key": "A3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "22",
+      "concern_key": "AGD2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "22",
+      "concern_key": "AGD5",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "22",
+      "concern_key": "C3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "22",
+      "concern_key": "IP1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "23",
+      "concern_key": "A1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "23",
+      "concern_key": "A2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "23",
+      "concern_key": "C1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "23",
+      "concern_key": "DIN1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "23",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "24",
+      "concern_key": "A1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "24",
+      "concern_key": "A2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "24",
+      "concern_key": "C1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "24",
+      "concern_key": "DIN1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "24",
+      "concern_key": "OR4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "24",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 60,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "25",
+      "concern_key": "AGD3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 60,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "25",
+      "concern_key": "D2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "25",
+      "concern_key": "D3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "25",
+      "concern_key": "D8",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "25",
+      "concern_key": "SCR2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "25",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "C3",
+      "match_operator": "equals",
+      "answer_value": "4-6",
+      "mapping_score": 5.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "C3",
+      "match_operator": "equals",
+      "answer_value": "1-3",
+      "mapping_score": 3.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "C3",
+      "match_operator": "equals",
+      "answer_value": "7+",
+      "mapping_score": 7.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "IP5",
+      "match_operator": "equals",
+      "answer_value": "7+",
+      "mapping_score": 7.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "IP5",
+      "match_operator": "equals",
+      "answer_value": "1-3",
+      "mapping_score": 3.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "26",
+      "concern_key": "IP5",
+      "match_operator": "equals",
+      "answer_value": "4-6",
+      "mapping_score": 5.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "27",
+      "concern_key": "IP1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "27",
+      "concern_key": "IP2",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 5.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "27",
+      "concern_key": "SCR3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 4.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "29",
+      "concern_key": "A1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "29",
+      "concern_key": "A2",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 5.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "29",
+      "concern_key": "C1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 5.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "3",
+      "concern_key": "A3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "3",
+      "concern_key": "AGD2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "3",
+      "concern_key": "C2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "3",
+      "concern_key": "C3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "3",
+      "concern_key": "IP6",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "32",
+      "concern_key": "DIN1",
+      "match_operator": "equals",
+      "answer_value": "4+",
+      "mapping_score": 7.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "32",
+      "concern_key": "DIN1",
+      "match_operator": "equals",
+      "answer_value": "1",
+      "mapping_score": 3.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "32",
+      "concern_key": "DIN1",
+      "match_operator": "equals",
+      "answer_value": "2-3",
+      "mapping_score": 5.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "33",
+      "concern_key": "DIN2",
+      "match_operator": "equals",
+      "answer_value": "4+",
+      "mapping_score": 7.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "33",
+      "concern_key": "DIN2",
+      "match_operator": "equals",
+      "answer_value": "2-3",
+      "mapping_score": 5.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "33",
+      "concern_key": "DIN2",
+      "match_operator": "equals",
+      "answer_value": "1",
+      "mapping_score": 3.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "34",
+      "concern_key": "D8",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "34",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 7.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "34",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "35",
+      "concern_key": "C4",
+      "match_operator": "equals",
+      "answer_value": "1-2",
+      "mapping_score": 3.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "35",
+      "concern_key": "C4",
+      "match_operator": "equals",
+      "answer_value": "3-5",
+      "mapping_score": 5.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "35",
+      "concern_key": "C4",
+      "match_operator": "equals",
+      "answer_value": "6+",
+      "mapping_score": 7.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "35",
+      "concern_key": "C5",
+      "match_operator": "equals",
+      "answer_value": "3-5",
+      "mapping_score": 5.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "35",
+      "concern_key": "C5",
+      "match_operator": "equals",
+      "answer_value": "1-2",
+      "mapping_score": 3.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "35",
+      "concern_key": "C5",
+      "match_operator": "equals",
+      "answer_value": "6+",
+      "mapping_score": 7.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "36",
+      "concern_key": "IP1",
+      "match_operator": "equals",
+      "answer_value": "3-5",
+      "mapping_score": 5.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "36",
+      "concern_key": "IP1",
+      "match_operator": "equals",
+      "answer_value": "1-2",
+      "mapping_score": 3.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "36",
+      "concern_key": "IP1",
+      "match_operator": "equals",
+      "answer_value": "6+",
+      "mapping_score": 7.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "36",
+      "concern_key": "IP3",
+      "match_operator": "equals",
+      "answer_value": "6+",
+      "mapping_score": 7.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "36",
+      "concern_key": "IP3",
+      "match_operator": "equals",
+      "answer_value": "3-5",
+      "mapping_score": 5.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "36",
+      "concern_key": "IP3",
+      "match_operator": "equals",
+      "answer_value": "1-2",
+      "mapping_score": 3.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "37",
+      "concern_key": "SCR1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "37",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 5.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "38",
+      "concern_key": "D8",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "38",
+      "concern_key": "SCR2",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 7.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "38",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "39",
+      "concern_key": "SCR3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 7.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "39",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "4",
+      "concern_key": "A3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "4",
+      "concern_key": "AGD2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "4",
+      "concern_key": "D3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "4",
+      "concern_key": "D4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "41",
+      "concern_key": "SCR2",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 7.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "41",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "42",
+      "concern_key": "SCR2",
+      "match_operator": "equals",
+      "answer_value": "personal",
+      "mapping_score": 5.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "42",
+      "concern_key": "SCR2",
+      "match_operator": "equals",
+      "answer_value": "sensitive_personal",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "43",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 5.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "44",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "44",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 7.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "45",
+      "concern_key": "DIN3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "45",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "47",
+      "concern_key": "D8",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "47",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 7.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "5",
+      "concern_key": "A1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "5",
+      "concern_key": "A3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "5",
+      "concern_key": "IP1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "5",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "5",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "5",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 60,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "50",
+      "concern_key": "DIN3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "50",
+      "concern_key": "SCR5",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "51",
+      "concern_key": "D5",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 5.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "51",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "52",
+      "concern_key": "D8",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 7.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "52",
+      "concern_key": "SCR4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 6.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "55",
+      "concern_key": "B1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "55",
+      "concern_key": "B2",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "56",
+      "concern_key": "B2",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 1.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "56",
+      "concern_key": "D2",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 1.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "57",
+      "concern_key": "AGD2",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 1.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "57",
+      "concern_key": "B3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 1.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "58",
+      "concern_key": "AGD4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 1.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "58",
+      "concern_key": "B1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 1.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "59",
+      "concern_key": "B5",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 2.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "59",
+      "concern_key": "D9",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 2.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "6",
+      "concern_key": "AGD4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "6",
+      "concern_key": "DIN4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "6",
+      "concern_key": "OR3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "60",
+      "concern_key": "A3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "60",
+      "concern_key": "C3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "61",
+      "concern_key": "C4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 1.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "61",
+      "concern_key": "OR1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 1.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "62",
+      "concern_key": "A3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 1.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "62",
+      "concern_key": "B5",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 1.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "63",
+      "concern_key": "AGD4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "63",
+      "concern_key": "OR3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "63",
+      "concern_key": "OR5",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
+      "sort_order": 90,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "64",
+      "concern_key": "A3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 2.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "64",
+      "concern_key": "IP1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 2.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "65",
+      "concern_key": "DIN4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 2.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "65",
+      "concern_key": "IP6",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 2.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "66",
+      "concern_key": "A1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 10.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "66",
+      "concern_key": "AGD1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 10.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "66",
+      "concern_key": "AGD7",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 4.0,
+      "sort_order": 90,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "66",
+      "concern_key": "C1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 10.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "67",
+      "concern_key": "AGD6",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 4.0,
+      "sort_order": 90,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "67",
+      "concern_key": "SCR1",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 2.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "67",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 2.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "68",
+      "concern_key": "DIN4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "68",
+      "concern_key": "OR3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "69",
+      "concern_key": "AGD4",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "69",
+      "concern_key": "OR3",
+      "match_operator": "equals",
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "7",
+      "concern_key": "A4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "7",
+      "concern_key": "B3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "7",
+      "concern_key": "SCR6",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "8",
+      "concern_key": "A1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "8",
+      "concern_key": "A3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "8",
+      "concern_key": "DIN2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "8",
+      "concern_key": "SCR1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "8",
+      "concern_key": "SCR2",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "8",
+      "concern_key": "SCR3",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 60,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "8",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 70,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "9",
+      "concern_key": "D4",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "9",
+      "concern_key": "D7",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "9",
+      "concern_key": "D9",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "9",
+      "concern_key": "SCR1",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "9",
+      "concern_key": "SCR7",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 8.0,
+      "sort_order": 50,
+      "is_active": true
+    }
+  ],
+  "activation_rules": [
+    {
+      "rule_key": "at-application-event_driven",
+      "description": "Architecture type (application): event_driven.",
+      "all_conditions": [
+        {
+          "in": [
+            "event_driven"
+          ],
+          "source": "architectureTypeSection.applicationArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 190,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-microservices",
+      "description": "Architecture type (application): microservices.",
+      "all_conditions": [
+        {
+          "in": [
+            "microservices"
+          ],
+          "source": "architectureTypeSection.applicationArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 180,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-mobile_or_client",
+      "description": "Architecture type (application): mobile_or_client.",
+      "all_conditions": [
+        {
+          "in": [
+            "mobile_or_client"
+          ],
+          "source": "architectureTypeSection.applicationArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 210,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-modular_monolith",
+      "description": "Architecture type (application): modular_monolith.",
+      "all_conditions": [
+        {
+          "in": [
+            "modular_monolith"
+          ],
+          "source": "architectureTypeSection.applicationArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 170,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-monolith",
+      "description": "Architecture type (application): monolith.",
+      "all_conditions": [
+        {
+          "in": [
+            "monolith"
+          ],
+          "source": "architectureTypeSection.applicationArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 160,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-web_application",
+      "description": "Architecture type (application): web_application.",
+      "all_conditions": [
+        {
+          "in": [
+            "web_application"
+          ],
+          "source": "architectureTypeSection.applicationArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 200,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-capability_based",
+      "description": "Architecture type (business): capability_based.",
+      "all_conditions": [
+        {
+          "in": [
+            "capability_based"
+          ],
+          "source": "architectureTypeSection.businessArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 110,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-customer_journey",
+      "description": "Architecture type (business): customer_journey.",
+      "all_conditions": [
+        {
+          "in": [
+            "customer_journey"
+          ],
+          "source": "architectureTypeSection.businessArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 130,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-multi_entity",
+      "description": "Architecture type (business): multi_entity.",
+      "all_conditions": [
+        {
+          "in": [
+            "multi_entity"
+          ],
+          "source": "architectureTypeSection.businessArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 140,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-platform_business",
+      "description": "Architecture type (business): platform_business.",
+      "all_conditions": [
+        {
+          "in": [
+            "platform_business"
+          ],
+          "source": "architectureTypeSection.businessArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 150,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-process_centric",
+      "description": "Architecture type (business): process_centric.",
+      "all_conditions": [
+        {
+          "in": [
+            "process_centric"
+          ],
+          "source": "architectureTypeSection.businessArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 120,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-ai_ml",
+      "description": "Architecture type (data): ai_ml.",
+      "all_conditions": [
+        {
+          "in": [
+            "ai_ml"
+          ],
+          "source": "architectureTypeSection.dataArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 320,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-data_lake",
+      "description": "Architecture type (data): data_lake.",
+      "all_conditions": [
+        {
+          "in": [
+            "data_lake"
+          ],
+          "source": "architectureTypeSection.dataArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 300,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-data_warehouse",
+      "description": "Architecture type (data): data_warehouse.",
+      "all_conditions": [
+        {
+          "in": [
+            "data_warehouse"
+          ],
+          "source": "architectureTypeSection.dataArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 290,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-llm_rag",
+      "description": "Architecture type (data): llm_rag.",
+      "all_conditions": [
+        {
+          "in": [
+            "llm_rag"
+          ],
+          "source": "architectureTypeSection.dataArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 330,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-master_data",
+      "description": "Architecture type (data): master_data.",
+      "all_conditions": [
+        {
+          "in": [
+            "master_data"
+          ],
+          "source": "architectureTypeSection.dataArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 340,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-relational_oltp",
+      "description": "Architecture type (data): relational_oltp.",
+      "all_conditions": [
+        {
+          "in": [
+            "relational_oltp"
+          ],
+          "source": "architectureTypeSection.dataArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 280,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-streaming",
+      "description": "Architecture type (data): streaming.",
+      "all_conditions": [
+        {
+          "in": [
+            "streaming"
+          ],
+          "source": "architectureTypeSection.dataArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 310,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-compliance_driven",
+      "description": "Architecture type (security): compliance_driven.",
+      "all_conditions": [
+        {
+          "in": [
+            "compliance_driven"
+          ],
+          "source": "architectureTypeSection.securityArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 390,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-cross_border",
+      "description": "Architecture type (security): cross_border.",
+      "all_conditions": [
+        {
+          "in": [
+            "cross_border"
+          ],
+          "source": "architectureTypeSection.securityArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 400,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-data_protection",
+      "description": "Architecture type (security): data_protection.",
+      "all_conditions": [
+        {
+          "in": [
+            "data_protection"
+          ],
+          "source": "architectureTypeSection.securityArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 380,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-iam_integration",
+      "description": "Architecture type (security): iam_integration.",
+      "all_conditions": [
+        {
+          "in": [
+            "iam_integration"
+          ],
+          "source": "architectureTypeSection.securityArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 360,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-perimeter_network",
+      "description": "Architecture type (security): perimeter_network.",
+      "all_conditions": [
+        {
+          "in": [
+            "perimeter_network"
+          ],
+          "source": "architectureTypeSection.securityArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 370,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-zero_trust",
+      "description": "Architecture type (security): zero_trust.",
+      "all_conditions": [
+        {
+          "in": [
+            "zero_trust"
+          ],
+          "source": "architectureTypeSection.securityArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 350,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-cloud_native",
+      "description": "Architecture type (technical): cloud_native.",
+      "all_conditions": [
+        {
+          "in": [
+            "cloud_native"
+          ],
+          "source": "architectureTypeSection.technicalArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 220,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-containerized",
+      "description": "Architecture type (technical): containerized.",
+      "all_conditions": [
+        {
+          "in": [
+            "containerized"
+          ],
+          "source": "architectureTypeSection.technicalArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 230,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-high_availability",
+      "description": "Architecture type (technical): high_availability.",
+      "all_conditions": [
+        {
+          "in": [
+            "high_availability"
+          ],
+          "source": "architectureTypeSection.technicalArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 270,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-hybrid_multicloud",
+      "description": "Architecture type (technical): hybrid_multicloud.",
+      "all_conditions": [
+        {
+          "in": [
+            "hybrid_multicloud"
+          ],
+          "source": "architectureTypeSection.technicalArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 250,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-legacy_modernization",
+      "description": "Architecture type (technical): legacy_modernization.",
+      "all_conditions": [
+        {
+          "in": [
+            "legacy_modernization"
+          ],
+          "source": "architectureTypeSection.technicalArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 260,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-on_premise",
+      "description": "Architecture type (technical): on_premise.",
+      "all_conditions": [
+        {
+          "in": [
+            "on_premise"
+          ],
+          "source": "architectureTypeSection.technicalArchitectureType"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 240,
+      "is_active": true
+    },
+    {
+      "rule_key": "cross-border-sensitive-data",
+      "description": "Cross-border flow plus privacy or important data checkpoint escalates data sovereignty and compliance concerns.",
+      "all_conditions": [
+        {
+          "equals": "Yes",
+          "source": "complexitySection.hasCrossBorderDataFlow"
+        }
+      ],
+      "any_conditions": [
+        {
+          "equals": "Y",
+          "source": "question.9.answer"
+        },
+        {
+          "equals": "Yes",
+          "source": "checkpoint2.required"
+        },
+        {
+          "equals": "Yes",
+          "source": "checkpoint3.required"
+        },
+        {
+          "in": [
+            "Yes",
+            "Not Sure"
+          ],
+          "source": "checkpoint3.crossBorderTransfer"
+        }
+      ],
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "identity-and-authorization-combination",
+      "description": "User group change combined with non-standard authentication or authorization requires identity/access concern review.",
+      "all_conditions": [
+        {
+          "equals": "Y",
+          "source": "question.7.answer"
+        },
+        {
+          "equals": "Y",
+          "source": "question.19.answer"
+        }
+      ],
+      "any_conditions": [
+        {
+          "equals": "Y",
+          "source": "question.20.answer"
+        },
+        {
+          "equals": "Y",
+          "source": "question.8.answer"
+        }
+      ],
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "large-scale-integration",
+      "description": "Large application scope with external systems activates integration, dependency, reliability, and capacity concerns.",
+      "all_conditions": [
+        {
+          "in": [
+            "21_50",
+            "51_100",
+            "GT_100"
+          ],
+          "source": "projectScaleSection.applicationsInScope"
+        },
+        {
+          "equals": "Yes",
+          "source": "projectScaleSection.hasExternalSystems"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "technology-exception-stack-complexity",
+      "description": "Technology exception combined with broad tech stack variety increases governance and operability concern priority.",
+      "all_conditions": [
+        {
+          "equals": "Y",
+          "source": "question.16.answer"
+        },
+        {
+          "in": [
+            "6_10",
+            "GT_10"
+          ],
+          "source": "complexitySection.techStackKindsCount"
+        }
+      ],
+      "any_conditions": [],
+      "sort_order": 40,
+      "is_active": true
+    }
+  ],
+  "rule_scores": [
+    {
+      "rule_key": "at-application-event_driven",
+      "concern_key": "C5",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-event_driven",
+      "concern_key": "IP5",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-event_driven",
+      "concern_key": "IP6",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-microservices",
+      "concern_key": "A3",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-microservices",
+      "concern_key": "C1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-microservices",
+      "concern_key": "C2",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-microservices",
+      "concern_key": "C5",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-mobile_or_client",
+      "concern_key": "A1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-mobile_or_client",
+      "concern_key": "A4",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-mobile_or_client",
+      "concern_key": "C5",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-modular_monolith",
+      "concern_key": "A1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-modular_monolith",
+      "concern_key": "A2",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-modular_monolith",
+      "concern_key": "C2",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-monolith",
+      "concern_key": "A2",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-monolith",
+      "concern_key": "C1",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-web_application",
+      "concern_key": "A1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-web_application",
+      "concern_key": "A2",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-application-web_application",
+      "concern_key": "A4",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-capability_based",
+      "concern_key": "B1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-capability_based",
+      "concern_key": "B5",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-customer_journey",
+      "concern_key": "A4",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-customer_journey",
+      "concern_key": "B3",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-multi_entity",
+      "concern_key": "AGD5",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-multi_entity",
+      "concern_key": "B4",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-multi_entity",
+      "concern_key": "B5",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-platform_business",
+      "concern_key": "A3",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-platform_business",
+      "concern_key": "B1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-platform_business",
+      "concern_key": "B5",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-process_centric",
+      "concern_key": "B2",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-process_centric",
+      "concern_key": "IP4",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-business-process_centric",
+      "concern_key": "IP5",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-ai_ml",
+      "concern_key": "D3",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-ai_ml",
+      "concern_key": "D6",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-ai_ml",
+      "concern_key": "OR4",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-data_lake",
+      "concern_key": "D3",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-data_lake",
+      "concern_key": "D6",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-data_lake",
+      "concern_key": "D8",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-data_warehouse",
+      "concern_key": "D1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-data_warehouse",
+      "concern_key": "D2",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-data_warehouse",
+      "concern_key": "D4",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-llm_rag",
+      "concern_key": "D6",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-llm_rag",
+      "concern_key": "D7",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-llm_rag",
+      "concern_key": "OR4",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-llm_rag",
+      "concern_key": "SCR1",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-master_data",
+      "concern_key": "D4",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-master_data",
+      "concern_key": "D5",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-master_data",
+      "concern_key": "D6",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-relational_oltp",
+      "concern_key": "D10",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-relational_oltp",
+      "concern_key": "D11",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-relational_oltp",
+      "concern_key": "D5",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-streaming",
+      "concern_key": "D8",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-streaming",
+      "concern_key": "IP6",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-data-streaming",
+      "concern_key": "OR4",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-compliance_driven",
+      "concern_key": "AGD1",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-compliance_driven",
+      "concern_key": "AGD6",
+      "mapping_score": 8.0,
+      "sort_order": 90,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-compliance_driven",
+      "concern_key": "AGD7",
+      "mapping_score": 8.0,
+      "sort_order": 90,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-compliance_driven",
+      "concern_key": "D7",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-compliance_driven",
+      "concern_key": "SCR7",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-cross_border",
+      "concern_key": "D7",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-cross_border",
+      "concern_key": "D9",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-cross_border",
+      "concern_key": "DIN1",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-cross_border",
+      "concern_key": "SCR7",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-data_protection",
+      "concern_key": "D7",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-data_protection",
+      "concern_key": "SCR1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-data_protection",
+      "concern_key": "SCR2",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-iam_integration",
+      "concern_key": "A4",
+      "mapping_score": 8.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-iam_integration",
+      "concern_key": "SCR4",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-iam_integration",
+      "concern_key": "SCR5",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-iam_integration",
+      "concern_key": "SCR6",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-perimeter_network",
+      "concern_key": "DIN2",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-perimeter_network",
+      "concern_key": "SCR1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-perimeter_network",
+      "concern_key": "SCR3",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-zero_trust",
+      "concern_key": "SCR1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-zero_trust",
+      "concern_key": "SCR4",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-security-zero_trust",
+      "concern_key": "SCR5",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-cloud_native",
+      "concern_key": "C4",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-cloud_native",
+      "concern_key": "DIN3",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-cloud_native",
+      "concern_key": "DIN4",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-containerized",
+      "concern_key": "C1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-containerized",
+      "concern_key": "DIN3",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-containerized",
+      "concern_key": "DIN4",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-high_availability",
+      "concern_key": "A6",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-high_availability",
+      "concern_key": "OR2",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-high_availability",
+      "concern_key": "OR3",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-high_availability",
+      "concern_key": "OR5",
+      "mapping_score": 8.0,
+      "sort_order": 90,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-hybrid_multicloud",
+      "concern_key": "DIN1",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-hybrid_multicloud",
+      "concern_key": "DIN2",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-hybrid_multicloud",
+      "concern_key": "DIN3",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-legacy_modernization",
+      "concern_key": "AGD2",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-legacy_modernization",
+      "concern_key": "C3",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-legacy_modernization",
+      "concern_key": "C4",
+      "mapping_score": 8.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-on_premise",
+      "concern_key": "DIN2",
+      "mapping_score": 8.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "at-technical-on_premise",
+      "concern_key": "DIN3",
+      "mapping_score": 8.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "cross-border-sensitive-data",
+      "concern_key": "D7",
+      "mapping_score": 15.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "cross-border-sensitive-data",
+      "concern_key": "D9",
+      "mapping_score": 15.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "cross-border-sensitive-data",
+      "concern_key": "SCR1",
+      "mapping_score": 15.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "cross-border-sensitive-data",
+      "concern_key": "SCR7",
+      "mapping_score": 15.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "rule_key": "identity-and-authorization-combination",
+      "concern_key": "A4",
+      "mapping_score": 12.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "identity-and-authorization-combination",
+      "concern_key": "SCR5",
+      "mapping_score": 12.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "identity-and-authorization-combination",
+      "concern_key": "SCR6",
+      "mapping_score": 12.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "identity-and-authorization-combination",
+      "concern_key": "SCR7",
+      "mapping_score": 12.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "rule_key": "large-scale-integration",
+      "concern_key": "A3",
+      "mapping_score": 10.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "large-scale-integration",
+      "concern_key": "DIN4",
+      "mapping_score": 10.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "rule_key": "large-scale-integration",
+      "concern_key": "IP1",
+      "mapping_score": 10.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "large-scale-integration",
+      "concern_key": "IP2",
+      "mapping_score": 10.0,
+      "sort_order": 30,
+      "is_active": true
+    },
+    {
+      "rule_key": "large-scale-integration",
+      "concern_key": "IP6",
+      "mapping_score": 10.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "rule_key": "large-scale-integration",
+      "concern_key": "OR3",
+      "mapping_score": 10.0,
+      "sort_order": 60,
+      "is_active": true
+    },
+    {
+      "rule_key": "large-scale-integration",
+      "concern_key": "OR4",
+      "mapping_score": 10.0,
+      "sort_order": 70,
+      "is_active": true
+    },
+    {
+      "rule_key": "technology-exception-stack-complexity",
+      "concern_key": "AGD1",
+      "mapping_score": 12.0,
+      "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "rule_key": "technology-exception-stack-complexity",
+      "concern_key": "AGD3",
+      "mapping_score": 12.0,
+      "sort_order": 50,
+      "is_active": true
+    },
+    {
+      "rule_key": "technology-exception-stack-complexity",
+      "concern_key": "C4",
+      "mapping_score": 12.0,
+      "sort_order": 10,
+      "is_active": true
+    },
+    {
+      "rule_key": "technology-exception-stack-complexity",
+      "concern_key": "OR1",
+      "mapping_score": 12.0,
+      "sort_order": 60,
+      "is_active": true
+    },
+    {
+      "rule_key": "technology-exception-stack-complexity",
+      "concern_key": "SCR2",
+      "mapping_score": 12.0,
+      "sort_order": 20,
+      "is_active": true
+    },
+    {
+      "rule_key": "technology-exception-stack-complexity",
+      "concern_key": "SCR7",
+      "mapping_score": 12.0,
+      "sort_order": 30,
+      "is_active": true
+    }
+  ],
+  "generation_notes": {
+    "aliases_merged": {
+      "app_domain_boundary": "A5",
+      "app_resilience_pattern": "A6",
+      "governance_control_matrix": "AGD6",
+      "governance_decision_log": "AGD7",
+      "data_governance": "D12",
+      "data_lineage": "D13",
+      "infra_recovery": "DIN5",
+      "infra_scalability": "DIN6",
+      "integration_contract": "IP7",
+      "integration_dependency_map": "IP8",
+      "ops_observability": "OR6",
+      "ops_operability": "OR7",
+      "risk_change_readiness": "SCR8",
+      "risk_dependency": "SCR9",
+      "security_data_protection": "SCR10",
+      "security_identity_access": "SCR11",
+      "DIP7": "DIN1",
+      "DIP8": "DIN2"
+    },
+    "unreachable_active_resolved": [
+      "AGD6",
+      "AGD7",
+      "OR5"
+    ],
+    "risk_tags_policy": "risk_tags cleared; activation is driven by question mappings and activation rules only"
+  }
+}
