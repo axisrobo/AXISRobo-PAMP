@@ -180,6 +180,9 @@ export default function ConcernMappingConfigPage() {
   const [config, setConfig] = useState<ConcernMappingConfig>(() => mergeConcernMappingConfig({}));
   const [changeNote, setChangeNote] = useState('');
   const [editingQuestionMapping, setEditingQuestionMapping] = useState<QuestionConcernMapping | null>(null);
+  const [matrixConcerns, setMatrixConcerns] = useState<string[]>([]);
+  const [matrixAnswers, setMatrixAnswers] = useState<string[]>([]);
+  const [matrixScores, setMatrixScores] = useState<Record<string, Record<string, number | null>>>({});
   const [editingRule, setEditingRule] = useState<ConcernActivationRule | null>(null);
   const [questionMappingModalOpen, setQuestionMappingModalOpen] = useState(false);
   const [ruleModalOpen, setRuleModalOpen] = useState(false);
@@ -259,6 +262,25 @@ export default function ConcernMappingConfigPage() {
     return [];
   }, [questionConfig, selectedQuestion]);
 
+  useEffect(() => {
+    if (!questionMappingModalOpen) {
+      return;
+    }
+    const optionAnswers = selectedQuestionAnswerOptions.map((item) => item.value);
+    if (optionAnswers.length === 0) {
+      return;
+    }
+    setMatrixAnswers((previous) => {
+      const merged = [...optionAnswers];
+      previous.forEach((answer) => {
+        if (!merged.includes(answer)) {
+          merged.push(answer);
+        }
+      });
+      return merged;
+    });
+  }, [questionMappingModalOpen, selectedQuestionAnswerOptions]);
+
   const questionOptions = useMemo(() => [...questionConfig.questionBank]
     .sort((left, right) => left.id - right.id)
     .map((item) => {
@@ -304,6 +326,31 @@ export default function ConcernMappingConfigPage() {
   const openQuestionMappingEditor = (item?: QuestionConcernMapping) => {
     setEditingQuestionMapping(item || null);
     questionMappingForm.setFieldsValue(toQuestionFormValues(item));
+    if (item) {
+      const related = config.questionConcernMappings.filter((m) => m.questionId === item.questionId);
+      const concerns: string[] = [];
+      const answers: string[] = [];
+      const scores: Record<string, Record<string, number | null>> = {};
+      related.forEach((m) => {
+        if (!answers.includes(m.answer)) {
+          answers.push(m.answer);
+        }
+        scores[m.answer] = scores[m.answer] || {};
+        m.concernScores.forEach((s) => {
+          if (!concerns.includes(s.concernKey)) {
+            concerns.push(s.concernKey);
+          }
+          scores[m.answer][s.concernKey] = s.score;
+        });
+      });
+      setMatrixConcerns(concerns);
+      setMatrixAnswers(answers);
+      setMatrixScores(scores);
+    } else {
+      setMatrixConcerns([]);
+      setMatrixAnswers([]);
+      setMatrixScores({});
+    }
     setQuestionMappingModalOpen(true);
   };
 
@@ -315,26 +362,40 @@ export default function ConcernMappingConfigPage() {
 
   const saveQuestionMapping = async () => {
     const values = await questionMappingForm.validateFields();
-    const normalized: QuestionConcernMapping = {
-      questionId: Number(values.questionId),
-      answer: values.answer || 'Y',
-      concernScores: cleanConcernScores(values.concernScores),
-      hints: values.hints?.filter(Boolean),
-    };
-    if (normalized.concernScores.length === 0) {
-      messageApi.warning('Add at least one concern score.');
+    const questionId = Number(values.questionId);
+    if (matrixConcerns.length === 0) {
+      messageApi.warning('Add at least one concern.');
       return;
     }
-    setConfig((previous) => {
-      const sameKey = (item: QuestionConcernMapping) => item.questionId === normalized.questionId && item.answer === normalized.answer;
-      const exists = previous.questionConcernMappings.some(sameKey);
-      return {
-        ...previous,
-        questionConcernMappings: exists
-          ? previous.questionConcernMappings.map((item) => sameKey(item) ? normalized : item)
-          : [...previous.questionConcernMappings, normalized].sort((a, b) => a.questionId - b.questionId),
-      };
+    const mappings: QuestionConcernMapping[] = [];
+    matrixAnswers.forEach((answer) => {
+      const rowScores = matrixScores[answer] || {};
+      const concernScores = matrixConcerns
+        .filter((ck) => {
+          const value = rowScores[ck];
+          return value !== undefined && value !== null && !Number.isNaN(value);
+        })
+        .map((ck) => ({ concernKey: ck, score: Number(rowScores[ck]) }));
+      if (concernScores.length) {
+        mappings.push({
+          questionId,
+          answer,
+          concernScores: cleanConcernScores(concernScores),
+          hints: values.hints?.filter(Boolean),
+        });
+      }
     });
+    if (mappings.length === 0) {
+      messageApi.warning('Set at least one concern score.');
+      return;
+    }
+    setConfig((previous) => ({
+      ...previous,
+      questionConcernMappings: [
+        ...previous.questionConcernMappings.filter((m) => m.questionId !== questionId),
+        ...mappings,
+      ].sort((a, b) => (a.questionId - b.questionId) || a.answer.localeCompare(b.answer)),
+    }));
     setQuestionMappingModalOpen(false);
   };
 
@@ -522,42 +583,92 @@ export default function ConcernMappingConfigPage() {
           <Form.Item name="questionId" label="Question" rules={[{ required: true }]}>
             <Select disabled={!!editingQuestionMapping} options={questionOptions} showSearch optionFilterProp="label" />
           </Form.Item>
-          {selectedQuestionAnswerOptions.length > 0 ? (
-            <Form.Item name="answer" label="Answer" rules={[{ required: true }]}>
-              <Select disabled={!!editingQuestionMapping} options={selectedQuestionAnswerOptions} />
-            </Form.Item>
-          ) : (
-            <Form.Item
-              name="answer"
-              label="Answer"
-              rules={[{ required: true }]}
-              extra="This question uses free text input. Mapping matches the exact saved answer value."
-            >
-              <Input disabled={!!editingQuestionMapping} placeholder="Enter the exact answer value to match" />
-            </Form.Item>
-          )}
+
+          <Typography.Text strong>Concern &times; Answer scores</Typography.Text>
+          <div style={{ marginTop: 8, marginBottom: 12 }}>
+            <Space wrap style={{ marginBottom: 8 }}>
+              <Select
+                style={{ width: 320 }}
+                placeholder="Add a concern"
+                value={undefined}
+                showSearch
+                optionFilterProp="label"
+                options={concernOptions.filter((option) => !matrixConcerns.includes(String(option.value)))}
+                onChange={(value) => {
+                  const key = String(value);
+                  setMatrixConcerns((previous) => (previous.includes(key) ? previous : [...previous, key]));
+                }}
+              />
+              <Input
+                style={{ width: 240 }}
+                placeholder="Add an answer value (Enter)"
+                onPressEnter={(event) => {
+                  const input = event.target as HTMLInputElement;
+                  const value = input.value.trim();
+                  if (!value || matrixAnswers.includes(value)) {
+                    return;
+                  }
+                  setMatrixAnswers((previous) => [...previous, value]);
+                  input.value = '';
+                }}
+              />
+            </Space>
+            {matrixConcerns.length === 0 ? (
+              <div className="text-sm text-slate-500">Add at least one concern to configure scores.</div>
+            ) : (
+              <div style={{ overflowX: 'auto' }}>
+                <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign: 'left', padding: 6 }}>Concern</th>
+                      {matrixAnswers.map((answer) => (
+                        <th key={answer} style={{ padding: 6 }} title={answer}>{answer}</th>
+                      ))}
+                      <th />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {matrixConcerns.map((concernKey) => (
+                      <tr key={concernKey}>
+                        <td style={{ padding: 6, whiteSpace: 'nowrap' }}>
+                          {concernKey}
+                          {concernByKey.get(concernKey) ? ` - ${concernByKey.get(concernKey)?.concernName}` : ''}
+                        </td>
+                        {matrixAnswers.map((answer) => (
+                          <td key={answer} style={{ padding: 6 }}>
+                            <InputNumber
+                              min={0}
+                              max={100}
+                              style={{ width: 72 }}
+                              value={matrixScores[answer]?.[concernKey] ?? null}
+                              onChange={(value) => {
+                                setMatrixScores((previous) => ({
+                                  ...previous,
+                                  [answer]: { ...(previous[answer] || {}), [concernKey]: (value as number | null) },
+                                }));
+                              }}
+                            />
+                          </td>
+                        ))}
+                        <td style={{ padding: 6 }}>
+                          <Button
+                            danger
+                            size="small"
+                            icon={<Trash2 className="h-3 w-3" />}
+                            onClick={() => setMatrixConcerns((previous) => previous.filter((item) => item !== concernKey))}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
           <Form.Item name="hints" label="Hints">
             <Select mode="tags" tokenSeparators={[',']} placeholder="Business capability, Security boundary" />
           </Form.Item>
-          <Typography.Text strong>Concern Scores</Typography.Text>
-          <Form.List name="concernScores">
-            {(fields, { add, remove }) => (
-              <Space orientation="vertical" size={8} style={{ width: '100%', marginTop: 8 }}>
-                {fields.map(({ key, name, ...restField }) => (
-                  <Space key={key} align="baseline" style={{ width: '100%' }}>
-                    <Form.Item {...restField} name={[name, 'concernKey']} rules={[{ required: true }]} style={{ width: 420 }}>
-                      <Select options={concernOptions} showSearch optionFilterProp="label" placeholder="Concern" />
-                    </Form.Item>
-                    <Form.Item {...restField} name={[name, 'score']} rules={[{ required: true }]} style={{ width: 140 }}>
-                      <InputNumber min={0} max={100} placeholder="Score" style={{ width: '100%' }} />
-                    </Form.Item>
-                    <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(name)} />
-                  </Space>
-                ))}
-                <Button icon={<Plus className="h-4 w-4" />} onClick={() => add({ concernKey: undefined, score: 8 })}>Add Concern Score</Button>
-              </Space>
-            )}
-          </Form.List>
         </Form>
       </Modal>
 
