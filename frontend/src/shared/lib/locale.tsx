@@ -276,7 +276,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocale] = useState<Locale>('en');
 
   useEffect(() => {
-    const saved = localStorage.getItem('eam-locale') as Locale;
+    const saved = localStorage.getItem('pamp-locale') as Locale;
     if (saved === 'en' || saved === 'zh') {
       setLocale(saved);
     }
@@ -285,7 +285,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const toggleLocale = useCallback(() => {
     setLocale((prev) => {
       const next = prev === 'en' ? 'zh' : 'en';
-      localStorage.setItem('eam-locale', next);
+      localStorage.setItem('pamp-locale', next);
       return next;
     });
   }, []);

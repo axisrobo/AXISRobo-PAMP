@@ -1,14 +1,14 @@
 # OpenSpec Change Proposal: CMDB Application Synchronization
 
 ## 1. Objective
-Implement an automated daily synchronization process to fetch application configuration items (CIs) from the external CMDB API and persist them into the `eam.cmdb_application` table. This ensures the AxisArch system has up-to-date information regarding application ownership, status, and classification.
+Implement an automated daily synchronization process to fetch application configuration items (CIs) from the external CMDB API and persist them into the `pamp.cmdb_application` table. This ensures the AxisArch system has up-to-date information regarding application ownership, status, and classification.
 
 ## 2. Target Schema
 The data will be synchronized into the following PostgreSQL table:
 
 ```sql
--- eam.cmdb_application definition
-CREATE TABLE eam.cmdb_application (
+-- pamp.cmdb_application definition
+CREATE TABLE pamp.cmdb_application (
     _id varchar NULL,
     short_description varchar NULL,
     u_service_area varchar NULL,
@@ -74,7 +74,7 @@ CREATE TABLE eam.cmdb_application (
    - Clean strings and handle nulls.
    - Convert `appClassification` array to a comma-separated string.
 4. **Loading (UPSERT)**:
-   - Use `INSERT INTO eam.cmdb_application (...) VALUES (...) ON CONFLICT (app_id) DO UPDATE SET ...`.
+   - Use `INSERT INTO pamp.cmdb_application (...) VALUES (...) ON CONFLICT (app_id) DO UPDATE SET ...`.
    - Update `update_at` timestamp.
 
 ### 4.2 Schedule
@@ -88,9 +88,9 @@ CREATE TABLE eam.cmdb_application (
 
 ## 5. Security
 - CMDB API Token must be stored securely in the environment configuration or secret manager.
-- Database access limited to the sync service account with `INSERT/UPDATE` permissions on `eam.cmdb_application`.
+- Database access limited to the sync service account with `INSERT/UPDATE` permissions on `pamp.cmdb_application`.
 
 ## 6. Success Criteria
 - Daily automated execution without manual intervention.
-- `eam.cmdb_application` reflects the current state of CMDB within 24 hours.
+- `pamp.cmdb_application` reflects the current state of CMDB within 24 hours.
 - No duplicate records for the same `patch_level`.

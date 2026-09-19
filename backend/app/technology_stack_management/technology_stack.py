@@ -214,7 +214,7 @@ async def list_categories(db: AsyncSession = Depends(get_db)):
     try:
         result = await db.execute(
             text(
-                "SELECT DISTINCT category, sub_category FROM eam.tech_stack_master_data "
+                "SELECT DISTINCT category, sub_category FROM pamp.tech_stack_master_data "
                 "ORDER BY category, sub_category"
             )
         )
@@ -252,7 +252,7 @@ async def list_master_options(
         where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
         result = await db.execute(
             text(
-                "SELECT component, component_package FROM eam.tech_stack_master_data "
+                "SELECT component, component_package FROM pamp.tech_stack_master_data "
                 f"{where_clause} ORDER BY component, component_package"
             ),
             params,
@@ -309,8 +309,8 @@ async def list_lifecycle(
         sort_field = LIFECYCLE_SORT_FIELDS.get(pagination.sort_field or "", "tsa.app_id")
         sort_order = "DESC" if (pagination.sort_order or "").lower() == "desc" else "ASC"
         base_query = (
-            " FROM eam.tech_stack_app tsa "
-            "LEFT JOIN eam.cmdb_application ca ON ca.app_id = tsa.app_id "
+            " FROM pamp.tech_stack_app tsa "
+            "LEFT JOIN pamp.cmdb_application ca ON ca.app_id = tsa.app_id "
             f"WHERE {where_clause}"
         )
         total_result = await db.execute(text(f"SELECT COUNT(*) {base_query}"), params)
@@ -348,12 +348,12 @@ async def list_resource_pool(
             conditions.append("name ILIKE :name")
             params["name"] = f"%{name}%"
         where_clause = " AND ".join(conditions)
-        total_result = await db.execute(text(f"SELECT COUNT(*) FROM eam.resource_pool WHERE {where_clause}"), params)
+        total_result = await db.execute(text(f"SELECT COUNT(*) FROM pamp.resource_pool WHERE {where_clause}"), params)
         params["limit"] = pageSize
         params["offset"] = (page - 1) * pageSize
         data_result = await db.execute(
             text(
-                f"SELECT itcode, name, worker_type, manager_itcode FROM eam.resource_pool "
+                f"SELECT itcode, name, worker_type, manager_itcode FROM pamp.resource_pool "
                 f"WHERE {where_clause} ORDER BY name ASC LIMIT :limit OFFSET :offset"
             ),
             params,
@@ -390,12 +390,12 @@ async def list_cmdb_lookup(
             conditions.append("(name ILIKE :app_name OR app_full_name ILIKE :app_name)")
             params["app_name"] = f"%{appName}%"
         where_clause = " AND ".join(conditions)
-        total_result = await db.execute(text(f"SELECT COUNT(*) FROM eam.cmdb_application WHERE {where_clause}"), params)
+        total_result = await db.execute(text(f"SELECT COUNT(*) FROM pamp.cmdb_application WHERE {where_clause}"), params)
         params["limit"] = pageSize
         params["offset"] = (page - 1) * pageSize
         data_result = await db.execute(
             text(
-                f"SELECT * FROM eam.cmdb_application WHERE {where_clause} "
+                f"SELECT * FROM pamp.cmdb_application WHERE {where_clause} "
                 "ORDER BY app_id ASC LIMIT :limit OFFSET :offset"
             ),
             params,
@@ -415,7 +415,7 @@ async def get_technology_stack(record_id: str, db: AsyncSession = Depends(get_db
     try:
         result = await db.execute(
             text(
-                "SELECT * FROM eam.tech_stack_master_data "
+                "SELECT * FROM pamp.tech_stack_master_data "
                 "WHERE CAST(id AS text) = :record_id OR component = :record_id OR component_package = :record_id LIMIT 1"
             ),
             {"record_id": record_id},
@@ -436,7 +436,7 @@ async def create_technology_stack(body: dict, db: AsyncSession = Depends(get_db)
         result = await db.execute(
             text(
                 """
-                INSERT INTO eam.tech_stack_master_data (
+                INSERT INTO pamp.tech_stack_master_data (
                     id, category, sub_category, source_type, source, component,
                     component_package, version, ea_advice, security_advice, status,
                     standard, major_version, minor_version, patch_version, remark,
@@ -481,7 +481,7 @@ async def update_technology_stack(record_id: str, body: dict, db: AsyncSession =
     try:
         existing = await db.execute(
             text(
-                "SELECT * FROM eam.tech_stack_master_data "
+                "SELECT * FROM pamp.tech_stack_master_data "
                 "WHERE CAST(id AS text) = :record_id OR component = :record_id OR component_package = :record_id LIMIT 1"
             ),
             {"record_id": record_id},
@@ -491,7 +491,7 @@ async def update_technology_stack(record_id: str, body: dict, db: AsyncSession =
         result = await db.execute(
             text(
                 """
-                UPDATE eam.tech_stack_master_data
+                UPDATE pamp.tech_stack_master_data
                 SET category = COALESCE(:category, category),
                     sub_category = COALESCE(:sub_category, sub_category),
                     source_type = COALESCE(:source_type, source_type),
@@ -542,7 +542,7 @@ async def delete_technology_stack(record_id: str, db: AsyncSession = Depends(get
     try:
         existing = await db.execute(
             text(
-                "SELECT id FROM eam.tech_stack_master_data "
+                "SELECT id FROM pamp.tech_stack_master_data "
                 "WHERE CAST(id AS text) = :record_id OR component = :record_id OR component_package = :record_id LIMIT 1"
             ),
             {"record_id": record_id},
@@ -551,7 +551,7 @@ async def delete_technology_stack(record_id: str, db: AsyncSession = Depends(get
             raise HTTPException(status_code=404, detail="Technology stack item not found")
         result = await db.execute(
             text(
-                "DELETE FROM eam.tech_stack_master_data "
+                "DELETE FROM pamp.tech_stack_master_data "
                 "WHERE CAST(id AS text) = :record_id OR component = :record_id OR component_package = :record_id"
             ),
             {"record_id": record_id},
@@ -573,7 +573,7 @@ async def create_tech_stack_app(body: dict, db: AsyncSession = Depends(get_db), 
         result = await db.execute(
             text(
                 """
-                INSERT INTO eam.tech_stack_app (id, app_id, status, create_by, create_at, update_by, update_at)
+                INSERT INTO pamp.tech_stack_app (id, app_id, status, create_by, create_at, update_by, update_at)
                 VALUES (gen_random_uuid(), :app_id, :status, :operator, NOW(), :operator, NOW())
                 RETURNING *
                 """
@@ -595,8 +595,8 @@ async def get_tech_stack_app(app_id: str, db: AsyncSession = Depends(get_db)):
             text(
                 "SELECT tsa.id, tsa.app_id, tsa.status, ca.name, ca.app_ownership, ca.app_classification, "
                 "ca.u_service_area, ca.owned_by, ca.app_it_owner "
-                "FROM eam.tech_stack_app tsa "
-                "LEFT JOIN eam.cmdb_application ca ON ca.app_id = tsa.app_id "
+                "FROM pamp.tech_stack_app tsa "
+                "LEFT JOIN pamp.cmdb_application ca ON ca.app_id = tsa.app_id "
                 "WHERE tsa.app_id = :app_id LIMIT 1"
             ),
             {"app_id": app_id},
@@ -615,7 +615,7 @@ async def get_tech_stack_app(app_id: str, db: AsyncSession = Depends(get_db)):
 async def delete_tech_stack_app(app_id: str, db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user)):
     try:
         await check_app_ownership(user, app_id, db)
-        result = await db.execute(text("DELETE FROM eam.tech_stack_app WHERE app_id = :app_id"), {"app_id": app_id})
+        result = await db.execute(text("DELETE FROM pamp.tech_stack_app WHERE app_id = :app_id"), {"app_id": app_id})
         if not _deleted(result):
             raise HTTPException(status_code=404, detail="Technology stack application not found")
         await db.commit()
@@ -650,12 +650,12 @@ async def list_catalog(
         if useStatus:
             conditions.append(multi_value_condition("use_status", "use_status", useStatus, params))
         where_clause = " AND ".join(conditions)
-        total_result = await db.execute(text(f"SELECT COUNT(*) FROM eam.tech_key_stack_item WHERE {where_clause}"), params)
+        total_result = await db.execute(text(f"SELECT COUNT(*) FROM pamp.tech_key_stack_item WHERE {where_clause}"), params)
         params["limit"] = pagination.page_size
         params["offset"] = pagination.offset
         data_result = await db.execute(
             text(
-                f"SELECT * FROM eam.tech_key_stack_item WHERE {where_clause} "
+                f"SELECT * FROM pamp.tech_key_stack_item WHERE {where_clause} "
                 "ORDER BY component, component_package, major_version, minor_version LIMIT :limit OFFSET :offset"
             ),
             params,
@@ -673,7 +673,7 @@ async def create_catalog(app_id: str, body: dict, db: AsyncSession = Depends(get
         result = await db.execute(
             text(
                 """
-                INSERT INTO eam.tech_key_stack_item (
+                INSERT INTO pamp.tech_key_stack_item (
                     id, app_id, category, sub_category, component, component_package,
                     major_version, minor_version, patch_version, use_status,
                     ea_advice, security_advice, status_comments, remark,
@@ -719,7 +719,7 @@ async def update_catalog(app_id: str, item_id: str, body: dict, db: AsyncSession
         await check_app_ownership(user, app_id, db)
         existing = await db.execute(
             text(
-                "SELECT * FROM eam.tech_key_stack_item "
+                "SELECT * FROM pamp.tech_key_stack_item "
                 "WHERE app_id = :app_id AND (stack_id = :item_id OR CAST(id AS text) = :item_id) LIMIT 1"
             ),
             {"app_id": app_id, "item_id": item_id},
@@ -729,7 +729,7 @@ async def update_catalog(app_id: str, item_id: str, body: dict, db: AsyncSession
         result = await db.execute(
             text(
                 """
-                UPDATE eam.tech_key_stack_item
+                UPDATE pamp.tech_key_stack_item
                 SET category = COALESCE(:category, category),
                     sub_category = COALESCE(:sub_category, sub_category),
                     component = COALESCE(:component, component),
@@ -776,7 +776,7 @@ async def delete_catalog(app_id: str, item_id: str, db: AsyncSession = Depends(g
         await check_app_ownership(user, app_id, db)
         result = await db.execute(
             text(
-                "DELETE FROM eam.tech_key_stack_item "
+                "DELETE FROM pamp.tech_key_stack_item "
                 "WHERE app_id = :app_id AND (stack_id = :item_id OR CAST(id AS text) = :item_id)"
             ),
             {"app_id": app_id, "item_id": item_id},
@@ -798,8 +798,8 @@ async def list_team_members(app_id: str, db: AsyncSession = Depends(get_db)):
         result = await db.execute(
             text(
                 "SELECT am.id, am.app_id, am.itcode, rp.name, rp.manager_itcode "
-                "FROM eam.application_member am "
-                "LEFT JOIN eam.resource_pool rp ON rp.itcode = am.itcode "
+                "FROM pamp.application_member am "
+                "LEFT JOIN pamp.resource_pool rp ON rp.itcode = am.itcode "
                 "WHERE am.app_id = :app_id ORDER BY am.create_at DESC"
             ),
             {"app_id": app_id},
@@ -820,7 +820,7 @@ async def add_team_members(app_id: str, body: dict, db: AsyncSession = Depends(g
         for itcode in itcodes:
             result = await db.execute(
                 text(
-                    "INSERT INTO eam.application_member (id, app_id, itcode, create_at) "
+                    "INSERT INTO pamp.application_member (id, app_id, itcode, create_at) "
                     "VALUES (gen_random_uuid(), :app_id, :itcode, NOW()) RETURNING *"
                 ),
                 {"app_id": app_id, "itcode": itcode},
@@ -843,7 +843,7 @@ async def delete_team_member(app_id: str, member_id: str, db: AsyncSession = Dep
         await check_app_ownership(user, app_id, db)
         result = await db.execute(
             text(
-                "DELETE FROM eam.application_member "
+                "DELETE FROM pamp.application_member "
                 "WHERE app_id = :app_id AND (CAST(id AS text) = :member_id OR itcode = :member_id)"
             ),
             {"app_id": app_id, "member_id": member_id},
@@ -863,12 +863,12 @@ async def delete_team_member(app_id: str, member_id: str, db: AsyncSession = Dep
 async def list_operate_log(app_id: str, pagination: PaginationParams = Depends(), db: AsyncSession = Depends(get_db)):
     try:
         total_result = await db.execute(
-            text("SELECT COUNT(*) FROM eam.tech_stack_operate_log WHERE app_id = :app_id"),
+            text("SELECT COUNT(*) FROM pamp.tech_stack_operate_log WHERE app_id = :app_id"),
             {"app_id": app_id},
         )
         data_result = await db.execute(
             text(
-                "SELECT * FROM eam.tech_stack_operate_log WHERE app_id = :app_id "
+                "SELECT * FROM pamp.tech_stack_operate_log WHERE app_id = :app_id "
                 "ORDER BY create_at DESC LIMIT :limit OFFSET :offset"
             ),
             {"app_id": app_id, "limit": pagination.page_size, "offset": pagination.offset},
@@ -897,7 +897,7 @@ async def run_checking(app_id: str, db: AsyncSession = Depends(get_db), user: Au
         await check_app_ownership(user, app_id, db)
         await db.execute(
             text(
-                "INSERT INTO eam.tech_key_stack_auto_checking_log "
+                "INSERT INTO pamp.tech_key_stack_auto_checking_log "
                 "(id, update_time, last_update_time, old_content, new_content, app_id, create_by) "
                 "VALUES (gen_random_uuid(), NOW(), NOW(), '{}'::jsonb, '{}'::jsonb, :app_id, :operator)"
             ),

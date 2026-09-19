@@ -63,7 +63,7 @@ async def search_resources(
             result = await db.execute(
                 text("""
                     SELECT itcode, name, email
-                    FROM eam.resource_pool
+                    FROM pamp.resource_pool
                     WHERE itcode ILIKE :q
                        OR name   ILIKE :q
                        OR email  ILIKE :q
@@ -76,7 +76,7 @@ async def search_resources(
             result = await db.execute(
                 text("""
                     SELECT itcode, name, email
-                    FROM eam.resource_pool
+                    FROM pamp.resource_pool
                     ORDER BY name ASC
                     LIMIT :limit
                 """),
@@ -142,12 +142,12 @@ async def list_resources(
         sort_order = "DESC" if pagination.sort_order and pagination.sort_order.lower() == "desc" else "ASC"
 
         data_query = text(
-            f"SELECT * FROM eam.resource_pool WHERE {where_clause} "
+            f"SELECT * FROM pamp.resource_pool WHERE {where_clause} "
             f"ORDER BY {db_sort_field} {sort_order} "
             f"LIMIT :limit OFFSET :offset"
         )
         count_query = text(
-            f"SELECT COUNT(*) FROM eam.resource_pool WHERE {where_clause}"
+            f"SELECT COUNT(*) FROM pamp.resource_pool WHERE {where_clause}"
         )
 
         params["limit"] = pagination.page_size

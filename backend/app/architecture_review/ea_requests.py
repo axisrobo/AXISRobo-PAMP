@@ -21,7 +21,7 @@ from app.utils.email_service import send_email
 from app.infrastructure.database.repositories.review_repo import PostgresReviewRequestRepository
 from app.application.review.services import ReviewService
 
-logger = logging.getLogger("eam.routers.ea_requests")
+logger = logging.getLogger("pamp.routers.ea_requests")
 
 router = APIRouter()
 
@@ -157,10 +157,10 @@ async def _generate_request_id() -> str:
     async with AsyncSessionLocal() as seq_session:
         result = await seq_session.execute(
             text(
-                "INSERT INTO eam.fiscal_year_sequences (sequence_name, fiscal_year, current_value) "
+                "INSERT INTO pamp.fiscal_year_sequences (sequence_name, fiscal_year, current_value) "
                 "VALUES (:seq_name, :fy, 1)"
                 "ON CONFLICT (sequence_name, fiscal_year) "
-                "DO UPDATE SET current_value = eam.fiscal_year_sequences.current_value + 1 "
+                "DO UPDATE SET current_value = pamp.fiscal_year_sequences.current_value + 1 "
                 "RETURNING current_value"
             ),
             {"seq_name": seq_name, "fy": fy},
@@ -263,7 +263,7 @@ async def list_requests(
             params["p_pmName"] = f"%{pmName}%"
         if reviewerName:
             conditions.append(
-                "(EXISTS (SELECT 1 FROM eam.eam_bigea_team_members _rv "
+                "(EXISTS (SELECT 1 FROM pamp.pamp_bigea_team_members _rv "
                 "WHERE _rv.itcode = ANY(r.assign_reviewer) "
                 "AND (_rv.name ILIKE :p_reviewerName OR _rv.itcode ILIKE :p_reviewerName)) "
                 "OR EXISTS (SELECT 1 FROM unnest(r.assign_reviewer) AS _itc "
@@ -272,7 +272,7 @@ async def list_requests(
             params["p_reviewerName"] = f"%{reviewerName}%"
         if workerType:
             extra_joins.append(
-                "JOIN eam.eam_bigea_team_members _wt2 ON _wt2.itcode = ANY(r.assign_reviewer)"
+                "JOIN pamp.pamp_bigea_team_members _wt2 ON _wt2.itcode = ANY(r.assign_reviewer)"
             )
             conditions.append(multi_value_condition("_wt2.worker_type", "p_workerType", workerType, params))
         if dateFrom:
@@ -287,14 +287,14 @@ async def list_requests(
             params["p_dateTo"] = date_to_exclusive
         if firstPass == "true":
             conditions.append(
-                "NOT EXISTS (SELECT 1 FROM eam.eam_request_process_log l "
+                "NOT EXISTS (SELECT 1 FROM pamp.pamp_request_process_log l "
                 "WHERE l.request_id = r.request_id AND l.action = 'Returned by EA')"
             )
             conditions.append(
-                "NOT EXISTS (SELECT 1 FROM eam.eam_meetings m WHERE m.request_id = r.request_id)"
+                "NOT EXISTS (SELECT 1 FROM pamp.pamp_meetings m WHERE m.request_id = r.request_id)"
             )
             conditions.append(
-                "NOT EXISTS (SELECT 1 FROM eam.eam_actions act WHERE act.request_id = r.request_id)"
+                "NOT EXISTS (SELECT 1 FROM pamp.pamp_actions act WHERE act.request_id = r.request_id)"
             )
         if leadTimeMin is not None or leadTimeMax is not None:
             conditions.append("r.status = 'Completed'")
@@ -311,10 +311,10 @@ async def list_requests(
                 params["p_leadTimeMax"] = leadTimeMax
         if bizType or scoreMin is not None or scoreMax is not None:
             extra_joins.append(
-                "INNER JOIN eam.eam_request_attachment att ON att.request_id = r.request_id"
+                "INNER JOIN pamp.pamp_request_attachment att ON att.request_id = r.request_id"
             )
             extra_joins.append(
-                "INNER JOIN eam.eam_arch_ai_check aic ON aic.attachment_uuid = att.id"
+                "INNER JOIN pamp.pamp_arch_ai_check aic ON aic.attachment_uuid = att.id"
             )
             if bizType:
                 conditions.append("att.biz_type = :p_bizType")
@@ -337,8 +337,8 @@ async def list_requests(
 
         joins_sql = "\n      ".join(extra_joins)
         base_query = f"""
-            FROM eam.eam_request r
-            LEFT JOIN eam.eam_project p ON r.project_id = p.project_id OR r.project_id = p.id::text
+            FROM pamp.pamp_request r
+            LEFT JOIN pamp.pamp_project p ON r.project_id = p.project_id OR r.project_id = p.id::text
             {joins_sql}
             {where_clause}
         """
@@ -419,11 +419,11 @@ async def dashboard(
             valid_wts = [v for v in wt_vals if v in ("EA Office", "Domain Architect")]
             if len(valid_wts) == 1:
                 wt_filter = (
-                    f" AND EXISTS (SELECT 1 FROM eam.eam_bigea_team_members _wt "
+                    f" AND EXISTS (SELECT 1 FROM pamp.pamp_bigea_team_members _wt "
                     f"WHERE _wt.itcode = ANY(assign_reviewer) AND _wt.worker_type = '{valid_wts[0]}')"
                 )
                 r_wt_filter = (
-                    f" AND EXISTS (SELECT 1 FROM eam.eam_bigea_team_members _wt "
+                    f" AND EXISTS (SELECT 1 FROM pamp.pamp_bigea_team_members _wt "
                     f"WHERE _wt.itcode = ANY(r.assign_reviewer) AND _wt.worker_type = '{valid_wts[0]}')"
                 )
                 t_wt_filter = f" AND t.worker_type = '{valid_wts[0]}'"
@@ -450,7 +450,7 @@ async def dashboard(
         # 1. Count by status
         status_counts = await _q(
             f"SELECT status, COUNT(*)::int as count "
-            f"FROM eam.eam_request WHERE {date_where}{org_filter}{wt_filter} "
+            f"FROM pamp.pamp_request WHERE {date_where}{org_filter}{wt_filter} "
             f"GROUP BY status ORDER BY count DESC",
             dp,
         )
@@ -458,7 +458,7 @@ async def dashboard(
         # 2. Count by review_result for Completed requests
         completed_result_counts = await _q(
             f"SELECT COALESCE(review_result, 'Unknown') as result, COUNT(*)::int as count "
-            f"FROM eam.eam_request WHERE {date_where}{org_filter}{wt_filter} AND status = 'Completed' "
+            f"FROM pamp.pamp_request WHERE {date_where}{org_filter}{wt_filter} AND status = 'Completed' "
             f"GROUP BY review_result ORDER BY count DESC",
             dp,
         )
@@ -466,7 +466,7 @@ async def dashboard(
         # 3. Count by organization
         org_counts = await _q(
             f"SELECT COALESCE(organization, 'Unknown') as organization, COUNT(*)::int as count "
-            f"FROM eam.eam_request WHERE {date_where}{org_filter}{wt_filter} "
+            f"FROM pamp.pamp_request WHERE {date_where}{org_filter}{wt_filter} "
             f"GROUP BY organization ORDER BY count DESC",
             dp,
         )
@@ -476,7 +476,7 @@ async def dashboard(
             f"SELECT TO_CHAR(create_at, 'YYYY-MM') as month, "
             f"COUNT(*)::int as submitted, "
             f"COUNT(*) FILTER (WHERE review_result IN ('Approved','Approved with Actions'))::int as approved "
-            f"FROM eam.eam_request WHERE {date_where}{org_filter}{wt_filter} "
+            f"FROM pamp.pamp_request WHERE {date_where}{org_filter}{wt_filter} "
             f"GROUP BY TO_CHAR(create_at, 'YYYY-MM') ORDER BY month",
             dp,
         )
@@ -488,7 +488,7 @@ async def dashboard(
             f"ROUND(AVG(EXTRACT(EPOCH FROM (update_at - create_at)) / 86400)::numeric, 1) as avg_days, "
             f"ROUND((PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY EXTRACT(EPOCH FROM (update_at - create_at)) / 86400))::numeric, 1) as median_days, "
             f"ROUND(MAX(EXTRACT(EPOCH FROM (update_at - create_at)) / 86400)::numeric, 1) as max_days "
-            f"FROM eam.eam_request WHERE {date_where}{org_filter}{wt_filter} AND status = 'Completed' AND update_at IS NOT NULL "
+            f"FROM pamp.pamp_request WHERE {date_where}{org_filter}{wt_filter} AND status = 'Completed' AND update_at IS NOT NULL "
             f"GROUP BY TO_CHAR(create_at, 'YYYY-MM') ORDER BY month",
             dp,
         )
@@ -497,7 +497,7 @@ async def dashboard(
         monthly_by_org = await _q(
             f"SELECT TO_CHAR(create_at, 'YYYY-MM') as month, "
             f"COALESCE(organization, 'Unknown') as organization, COUNT(*)::int as count "
-            f"FROM eam.eam_request WHERE {date_where}{org_filter}{wt_filter} "
+            f"FROM pamp.pamp_request WHERE {date_where}{org_filter}{wt_filter} "
             f"GROUP BY TO_CHAR(create_at, 'YYYY-MM'), organization ORDER BY month, count DESC",
             dp,
         )
@@ -515,8 +515,8 @@ async def dashboard(
             f"SELECT r.request_id, r.status, r.review_result, r.organization, "
             f"r.requester, r.create_at, r.update_at, "
             f"p.name AS project_name, r.review_scope "
-            f"FROM eam.eam_request r "
-            f"LEFT JOIN eam.eam_project p ON r.project_id = p.project_id OR r.project_id = p.id::text "
+            f"FROM pamp.pamp_request r "
+            f"LEFT JOIN pamp.pamp_project p ON r.project_id = p.project_id OR r.project_id = p.id::text "
             f"WHERE {' AND '.join(recent_conds)}{r_org_filter}{r_wt_filter} "
             f"ORDER BY r.update_at DESC NULLS LAST LIMIT 10",
             recent_params,
@@ -545,10 +545,10 @@ async def dashboard(
             f"COUNT(DISTINCT t.itcode)::int AS architect_count, "
             f"COUNT(DISTINCT m.id)::int AS meeting_count, "
             f"COUNT(DISTINCT ac.id)::int AS action_count "
-            f"FROM eam.eam_request r "
-            f"JOIN eam.eam_bigea_team_members t ON t.itcode = ANY(r.assign_reviewer) "
-            f"LEFT JOIN eam.eam_meetings m ON m.project_id = r.project_id "
-            f"LEFT JOIN eam.eam_actions ac ON ac.project_id = r.project_id "
+            f"FROM pamp.pamp_request r "
+            f"JOIN pamp.pamp_bigea_team_members t ON t.itcode = ANY(r.assign_reviewer) "
+            f"LEFT JOIN pamp.pamp_meetings m ON m.project_id = r.project_id "
+            f"LEFT JOIN pamp.pamp_actions ac ON ac.project_id = r.project_id "
             f"WHERE {r_date_where}{r_org_filter}{t_wt_filter} "
             f"AND t.worker_type IN ('EA Office', 'Domain Architect') "
             f"GROUP BY org_group, t.worker_type ORDER BY org_group, t.worker_type",
@@ -561,10 +561,10 @@ async def dashboard(
             f"COUNT(DISTINCT r.id)::int AS count, "
             f"COUNT(DISTINCT m.id)::int AS meeting_count, "
             f"COUNT(DISTINCT ac.id)::int AS action_count "
-            f"FROM eam.eam_request r "
-            f"JOIN eam.eam_bigea_team_members t ON t.itcode = ANY(r.assign_reviewer) "
-            f"LEFT JOIN eam.eam_meetings m ON m.project_id = r.project_id "
-            f"LEFT JOIN eam.eam_actions ac ON ac.project_id = r.project_id "
+            f"FROM pamp.pamp_request r "
+            f"JOIN pamp.pamp_bigea_team_members t ON t.itcode = ANY(r.assign_reviewer) "
+            f"LEFT JOIN pamp.pamp_meetings m ON m.project_id = r.project_id "
+            f"LEFT JOIN pamp.pamp_actions ac ON ac.project_id = r.project_id "
             f"WHERE {r_date_where}{r_org_filter}{t_wt_filter} "
             f"GROUP BY t.name ORDER BY count DESC LIMIT 10",
             dp,
@@ -576,11 +576,11 @@ async def dashboard(
         action_org_join = ""
         if org or workerType:
             meeting_org_join = (
-                f"JOIN eam.eam_request r ON r.project_id = mt.project_id "
+                f"JOIN pamp.pamp_request r ON r.project_id = mt.project_id "
                 f"AND r.status <> 'Deleted'{r_org_filter}{r_wt_filter}"
             )
             action_org_join = (
-                f"JOIN eam.eam_request r2 ON r2.project_id = ac.project_id "
+                f"JOIN pamp.pamp_request r2 ON r2.project_id = ac.project_id "
                 f"AND r2.status <> 'Deleted'"
                 f"{r_org_filter.replace('r.', 'r2.')}{r_wt_filter.replace('r.', 'r2.')}"
             )
@@ -601,9 +601,9 @@ async def dashboard(
             f"           COUNT(*)::int AS meetings, "
             f"           MIN(pc.cnt)::int AS min_meetings, "
             f"           MAX(pc.cnt)::int AS max_meetings "
-            f"    FROM eam.eam_meetings mt "
+            f"    FROM pamp.pamp_meetings mt "
             f"    JOIN (SELECT project_id, TO_CHAR(create_at, 'YYYY-MM') AS month, COUNT(*)::int AS cnt "
-            f"         FROM eam.eam_meetings WHERE create_at IS NOT NULL "
+            f"         FROM pamp.pamp_meetings WHERE create_at IS NOT NULL "
             f"         GROUP BY project_id, TO_CHAR(create_at, 'YYYY-MM')) pc "
             f"      ON pc.project_id = mt.project_id AND pc.month = TO_CHAR(mt.create_at, 'YYYY-MM') "
             f"    {meeting_org_join} "
@@ -615,9 +615,9 @@ async def dashboard(
             f"           COUNT(*)::int AS actions, "
             f"           MIN(pc2.cnt)::int AS min_actions, "
             f"           MAX(pc2.cnt)::int AS max_actions "
-            f"    FROM eam.eam_actions ac "
+            f"    FROM pamp.pamp_actions ac "
             f"    JOIN (SELECT project_id, TO_CHAR(create_at, 'YYYY-MM') AS month, COUNT(*)::int AS cnt "
-            f"         FROM eam.eam_actions WHERE create_at IS NOT NULL "
+            f"         FROM pamp.pamp_actions WHERE create_at IS NOT NULL "
             f"         GROUP BY project_id, TO_CHAR(create_at, 'YYYY-MM')) pc2 "
             f"      ON pc2.project_id = ac.project_id AND pc2.month = TO_CHAR(ac.create_at, 'YYYY-MM') "
             f"    {action_org_join} "
@@ -634,8 +634,8 @@ async def dashboard(
             f"t.worker_type, "
             f"COUNT(DISTINCT r.id)::int AS count, "
             f"COUNT(DISTINCT t.itcode)::int AS architect_count "
-            f"FROM eam.eam_request r "
-            f"JOIN eam.eam_bigea_team_members t ON t.itcode = ANY(r.assign_reviewer) "
+            f"FROM pamp.pamp_request r "
+            f"JOIN pamp.pamp_bigea_team_members t ON t.itcode = ANY(r.assign_reviewer) "
             f"WHERE {r_date_where}{r_org_filter}{t_wt_filter} "
             f"AND t.worker_type IN ('EA Office', 'Domain Architect') "
             f"GROUP BY TO_CHAR(r.create_at, 'YYYY-MM'), org_group, t.worker_type "
@@ -651,9 +651,9 @@ async def dashboard(
             f"ROUND(AVG((c.result->'overall_evaluation'->>'score')::numeric), 1) AS avg_score, "
             f"ROUND((PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY (c.result->'overall_evaluation'->>'score')::numeric))::numeric, 1) AS median_score, "
             f"COUNT(*)::int AS total "
-            f"FROM eam.eam_arch_ai_check c "
-            f"JOIN eam.eam_request_attachment a ON a.id = c.attachment_uuid "
-            f"JOIN eam.eam_request r ON r.request_id = a.request_id "
+            f"FROM pamp.pamp_arch_ai_check c "
+            f"JOIN pamp.pamp_request_attachment a ON a.id = c.attachment_uuid "
+            f"JOIN pamp.pamp_request r ON r.request_id = a.request_id "
             f"WHERE {r_date_where}{r_org_filter}{r_wt_filter} "
             f"AND c.result->'overall_evaluation'->>'score' IS NOT NULL "
             f"GROUP BY a.biz_type ORDER BY a.biz_type",
@@ -668,9 +668,9 @@ async def dashboard(
             f"ROUND((PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY (c.result->'overall_evaluation'->>'score')::numeric))::numeric, 1) AS median_score, "
             f"MAX((c.result->'overall_evaluation'->>'score')::numeric) AS max_score, "
             f"COUNT(*)::int AS total "
-            f"FROM eam.eam_arch_ai_check c "
-            f"JOIN eam.eam_request_attachment a ON a.id = c.attachment_uuid "
-            f"JOIN eam.eam_request r ON r.request_id = a.request_id "
+            f"FROM pamp.pamp_arch_ai_check c "
+            f"JOIN pamp.pamp_request_attachment a ON a.id = c.attachment_uuid "
+            f"JOIN pamp.pamp_request r ON r.request_id = a.request_id "
             f"WHERE {r_date_where}{r_org_filter}{r_wt_filter} "
             f"AND c.result->'overall_evaluation'->>'score' IS NOT NULL "
             f"GROUP BY TO_CHAR(r.create_at, 'YYYY-MM'), a.biz_type ORDER BY month, a.biz_type",
@@ -683,31 +683,31 @@ async def dashboard(
             f"COUNT(*)::int AS total_completed, "
             f"COUNT(*) FILTER ( "
             f"  WHERE NOT EXISTS ( "
-            f"    SELECT 1 FROM eam.eam_request_process_log l "
+            f"    SELECT 1 FROM pamp.pamp_request_process_log l "
             f"    WHERE l.request_id = r.request_id AND l.action = 'Returned by EA' "
             f"  ) AND NOT EXISTS ( "
-            f"    SELECT 1 FROM eam.eam_meetings m WHERE m.request_id = r.request_id "
+            f"    SELECT 1 FROM pamp.pamp_meetings m WHERE m.request_id = r.request_id "
             f"  ) AND NOT EXISTS ( "
-            f"    SELECT 1 FROM eam.eam_actions act WHERE act.request_id = r.request_id "
+            f"    SELECT 1 FROM pamp.pamp_actions act WHERE act.request_id = r.request_id "
             f"  ) "
             f")::int AS first_pass_count, "
             f"COUNT(*) FILTER ( "
             f"  WHERE EXISTS ( "
-            f"    SELECT 1 FROM eam.eam_request_process_log l "
+            f"    SELECT 1 FROM pamp.pamp_request_process_log l "
             f"    WHERE l.request_id = r.request_id AND l.action = 'Returned by EA' "
             f"  ) "
             f")::int AS return_count, "
             f"COUNT(*) FILTER ( "
             f"  WHERE EXISTS ( "
-            f"    SELECT 1 FROM eam.eam_meetings m WHERE m.request_id = r.request_id "
+            f"    SELECT 1 FROM pamp.pamp_meetings m WHERE m.request_id = r.request_id "
             f"  ) "
             f")::int AS meeting_count, "
             f"COUNT(*) FILTER ( "
             f"  WHERE EXISTS ( "
-            f"    SELECT 1 FROM eam.eam_actions act WHERE act.request_id = r.request_id "
+            f"    SELECT 1 FROM pamp.pamp_actions act WHERE act.request_id = r.request_id "
             f"  ) "
             f")::int AS action_count "
-            f"FROM eam.eam_request r "
+            f"FROM pamp.pamp_request r "
             f"WHERE r.status = 'Completed' AND {date_where}{org_filter}{wt_filter}",
             dp,
         )
@@ -719,9 +719,9 @@ async def dashboard(
         score_distribution = await _q(
             f"SELECT a.biz_type, "
             f"ROUND((c.result->'overall_evaluation'->>'score')::numeric, 2) AS score "
-            f"FROM eam.eam_arch_ai_check c "
-            f"JOIN eam.eam_request_attachment a ON a.id = c.attachment_uuid "
-            f"JOIN eam.eam_request r ON r.request_id = a.request_id "
+            f"FROM pamp.pamp_arch_ai_check c "
+            f"JOIN pamp.pamp_request_attachment a ON a.id = c.attachment_uuid "
+            f"JOIN pamp.pamp_request r ON r.request_id = a.request_id "
             f"WHERE {r_date_where}{r_org_filter}{r_wt_filter} "
             f"AND c.result->'overall_evaluation'->>'score' IS NOT NULL "
             f"ORDER BY a.biz_type, score",
@@ -734,15 +734,15 @@ async def dashboard(
             f"COUNT(*)::int AS total, "
             f"COUNT(*) FILTER ( "
             f"  WHERE NOT EXISTS ( "
-            f"    SELECT 1 FROM eam.eam_request_process_log l "
+            f"    SELECT 1 FROM pamp.pamp_request_process_log l "
             f"    WHERE l.request_id = r.request_id AND l.action = 'Returned by EA' "
             f"  ) AND NOT EXISTS ( "
-            f"    SELECT 1 FROM eam.eam_meetings m WHERE m.request_id = r.request_id "
+            f"    SELECT 1 FROM pamp.pamp_meetings m WHERE m.request_id = r.request_id "
             f"  ) AND NOT EXISTS ( "
-            f"    SELECT 1 FROM eam.eam_actions act WHERE act.request_id = r.request_id "
+            f"    SELECT 1 FROM pamp.pamp_actions act WHERE act.request_id = r.request_id "
             f"  ) "
             f")::int AS first_pass "
-            f"FROM eam.eam_request r "
+            f"FROM pamp.pamp_request r "
             f"WHERE r.status = 'Completed' AND {date_where}{org_filter}{wt_filter} "
             f"GROUP BY TO_CHAR(r.create_at, 'YYYY-MM') ORDER BY month",
             dp,
@@ -759,8 +759,8 @@ async def dashboard(
             f"           PARTITION BY TO_CHAR(r.create_at, 'YYYY-MM') "
             f"           ORDER BY COUNT(DISTINCT r.id) DESC "
             f"         ) AS rank "
-            f"  FROM eam.eam_request r "
-            f"  JOIN eam.eam_bigea_team_members t ON t.itcode = ANY(r.assign_reviewer) "
+            f"  FROM pamp.pamp_request r "
+            f"  JOIN pamp.pamp_bigea_team_members t ON t.itcode = ANY(r.assign_reviewer) "
             f"  WHERE {r_date_where}{r_org_filter}{t_wt_filter} "
             f"  GROUP BY TO_CHAR(r.create_at, 'YYYY-MM'), t.name "
             f") ranked WHERE rank <= 10 ORDER BY month, rank",
@@ -771,12 +771,12 @@ async def dashboard(
         monthly_rr_time = await _q(
             f"WITH events AS ( "
             f"  SELECT r.request_id, 'Created' AS action, r.create_at AS event_at "
-            f"  FROM eam.eam_request r "
+            f"  FROM pamp.pamp_request r "
             f"  WHERE r.status = 'Completed' AND {date_where}{org_filter}{wt_filter} "
             f"  UNION ALL "
             f"  SELECT l.request_id, l.action, l.create_at "
-            f"  FROM eam.eam_request_process_log l "
-            f"  JOIN eam.eam_request r ON r.request_id = l.request_id "
+            f"  FROM pamp.pamp_request_process_log l "
+            f"  JOIN pamp.pamp_request r ON r.request_id = l.request_id "
             f"  WHERE r.status = 'Completed' AND {r_date_where}{r_org_filter}{r_wt_filter} "
             f"), "
             f"timeline AS ( "
@@ -805,7 +805,7 @@ async def dashboard(
             f"  SELECT a.request_id, rp.phase_start, rp.phase_end, "
             f"    GREATEST(a.open_date, rp.phase_start) AS clip_start, "
             f"    LEAST(COALESCE(a.close_date, rp.phase_end), rp.phase_end) AS clip_end "
-            f"  FROM eam.eam_actions a "
+            f"  FROM pamp.pamp_actions a "
             f"  JOIN reviewer_phases rp ON a.request_id = rp.request_id "
             f"  WHERE a.open_date IS NOT NULL "
             f"    AND a.open_date < rp.phase_end "
@@ -841,12 +841,12 @@ async def dashboard(
         rr_split_rows = await _q(
             f"WITH events AS ( "
             f"  SELECT r.request_id, 'Created' AS action, r.create_at AS event_at "
-            f"  FROM eam.eam_request r "
+            f"  FROM pamp.pamp_request r "
             f"  WHERE r.status = 'Completed' AND {date_where}{org_filter}{wt_filter} "
             f"  UNION ALL "
             f"  SELECT l.request_id, l.action, l.create_at "
-            f"  FROM eam.eam_request_process_log l "
-            f"  JOIN eam.eam_request r ON r.request_id = l.request_id "
+            f"  FROM pamp.pamp_request_process_log l "
+            f"  JOIN pamp.pamp_request r ON r.request_id = l.request_id "
             f"  WHERE r.status = 'Completed' AND {r_date_where}{r_org_filter}{r_wt_filter} "
             f"), "
             f"timeline AS ( "
@@ -875,7 +875,7 @@ async def dashboard(
             f"  SELECT a.request_id, rp.phase_start, rp.phase_end, "
             f"    GREATEST(a.open_date, rp.phase_start) AS clip_start, "
             f"    LEAST(COALESCE(a.close_date, rp.phase_end), rp.phase_end) AS clip_end "
-            f"  FROM eam.eam_actions a "
+            f"  FROM pamp.pamp_actions a "
             f"  JOIN reviewer_phases rp ON a.request_id = rp.request_id "
             f"  WHERE a.open_date IS NOT NULL "
             f"    AND a.open_date < rp.phase_end "
@@ -948,14 +948,14 @@ async def filter_options(db: AsyncSession = Depends(get_db)):
         proj_result = await db.execute(text(
             "SELECT DISTINCT r.project_id, "
             "  p.name AS project_name, "
-            "FROM eam.eam_request r "
-            "LEFT JOIN eam.eam_project p ON r.project_id = p.project_id OR r.project_id = p.id::text "
+            "FROM pamp.pamp_request r "
+            "LEFT JOIN pamp.pamp_project p ON r.project_id = p.project_id OR r.project_id = p.id::text "
             "WHERE r.project_id IS NOT NULL AND r.project_id <> '' "
             "ORDER BY r.project_id"
         ))
         org_result = await db.execute(text(
             "SELECT DISTINCT organization "
-            "FROM eam.eam_request "
+            "FROM pamp.pamp_request "
             "WHERE organization IS NOT NULL AND organization <> '' "
             "ORDER BY organization"
         ))
@@ -990,9 +990,9 @@ async def get_request(id: str, db: AsyncSession = Depends(get_db)):
                 "  COALESCE(p.it_lead_itcode, '') AS it_lead_itcode, "
                 "  '' AS project_source, "
                 "  tm_req.name AS requester_display_name "
-                "FROM eam.eam_request r "
-                "LEFT JOIN eam.eam_project p ON r.project_id = p.project_id OR r.project_id = p.id::text "
-                "LEFT JOIN eam.eam_bigea_team_members tm_req ON tm_req.itcode = r.requester "
+                "FROM pamp.pamp_request r "
+                "LEFT JOIN pamp.pamp_project p ON r.project_id = p.project_id OR r.project_id = p.id::text "
+                "LEFT JOIN pamp.pamp_bigea_team_members tm_req ON tm_req.itcode = r.requester "
                 "WHERE r.request_id = :rid OR r.id::text = :rid LIMIT 1"
             ),
             {"rid": id},
@@ -1027,7 +1027,7 @@ async def get_request(id: str, db: AsyncSession = Depends(get_db)):
         if reviewer_itcodes:
             rv_result = await db.execute(
                 text(
-                    "SELECT itcode, name FROM eam.eam_bigea_team_members "
+                    "SELECT itcode, name FROM pamp.pamp_bigea_team_members "
                     "WHERE itcode = ANY(:itcodes)"
                 ),
                 {"itcodes": list(reviewer_itcodes)},
@@ -1047,8 +1047,8 @@ async def get_request(id: str, db: AsyncSession = Depends(get_db)):
                 "a.id, a.attachment_name, a.biz_type, a.app_arch_type, a.original_name, "
                 "a.create_at, a.create_by, "
                 "c.id as ai_check_id, c.result as ai_result, c.create_at as ai_check_at "
-                "FROM eam.eam_request_attachment a "
-                "LEFT JOIN eam.eam_arch_ai_check c ON c.attachment_uuid = a.id "
+                "FROM pamp.pamp_request_attachment a "
+                "LEFT JOIN pamp.pamp_arch_ai_check c ON c.attachment_uuid = a.id "
                 "WHERE a.request_id = :rid "
                 "ORDER BY a.id, c.create_at DESC NULLS LAST"
             ),
@@ -1141,7 +1141,7 @@ async def create_request(
 
         await db.execute(
             text(
-                "INSERT INTO eam.eam_request "
+                "INSERT INTO pamp.pamp_request "
                 "(request_id, project_id, review_scope, ws_phase_name, requester, "
                 "status, link, assign_reviewer, organization, request_desc, "
                 "create_by, create_at, update_at) "
@@ -1166,7 +1166,7 @@ async def create_request(
         # Log the process
         await db.execute(
             text(
-                "INSERT INTO eam.eam_request_process_log "
+                "INSERT INTO pamp.pamp_request_process_log "
                 "(request_id, action, comment, operator, create_at) "
                 "VALUES (:request_id, 'Created', 'Request created', :operator, NOW())"
             ),
@@ -1193,8 +1193,8 @@ async def create_request(
                 "  COALESCE(p.dt_lead_itcode, '') AS dt_lead_itcode, "
                 "  COALESCE(p.it_lead, '') AS it_lead, "
                 "  COALESCE(p.it_lead_itcode, '') AS it_lead_itcode "
-                "FROM eam.eam_request r "
-                "LEFT JOIN eam.eam_project p ON r.project_id = p.project_id OR r.project_id = p.id::text "
+                "FROM pamp.pamp_request r "
+                "LEFT JOIN pamp.pamp_project p ON r.project_id = p.project_id OR r.project_id = p.id::text "
                 "WHERE r.request_id = :rid LIMIT 1"
             ),
             {"rid": request_id},
@@ -1224,7 +1224,7 @@ async def update_request(
     try:
         # Find existing
         existing_result = await db.execute(
-            text("SELECT * FROM eam.eam_request WHERE request_id = :rid LIMIT 1"),
+            text("SELECT * FROM pamp.pamp_request WHERE request_id = :rid LIMIT 1"),
             {"rid": id},
         )
         existing = existing_result.fetchone()
@@ -1305,7 +1305,7 @@ async def update_request(
                 text(
                     "SELECT evaluation, artifact_selection, "
                     "questionnaire_confirmed_at, concern_requirement_confirmed_at, artifact_requirement_confirmed_at "
-                    "FROM eam.avdm_project_assessment "
+                    "FROM pamp.avdm_project_assessment "
                     "WHERE project_id = :pid LIMIT 1"
                 ),
                 {"pid": target_project_id},
@@ -1446,7 +1446,7 @@ async def update_request(
             # Ensure a "Created" log exists (may be missing for legacy data)
             created_check = await db.execute(
                 text(
-                    "SELECT 1 FROM eam.eam_request_process_log "
+                    "SELECT 1 FROM pamp.pamp_request_process_log "
                     "WHERE request_id = :rid AND action = 'Created' LIMIT 1"
                 ),
                 {"rid": id},
@@ -1454,7 +1454,7 @@ async def update_request(
             if not created_check.fetchone():
                 await db.execute(
                     text(
-                        "INSERT INTO eam.eam_request_process_log "
+                        "INSERT INTO pamp.pamp_request_process_log "
                         "(request_id, action, comment, operator, create_at) "
                         "VALUES (:request_id, 'Created', 'Request created', :operator, :created_at)"
                     ),
@@ -1481,7 +1481,7 @@ async def update_request(
 
             await db.execute(
                 text(
-                    "INSERT INTO eam.eam_request_process_log "
+                    "INSERT INTO pamp.pamp_request_process_log "
                     "(request_id, action, comment, operator, create_at) "
                     "VALUES (:request_id, :action, :comment, :operator, NOW())"
                 ),
@@ -1493,7 +1493,7 @@ async def update_request(
                 },
             )
 
-        update_sql = f"UPDATE eam.eam_request SET {', '.join(set_clauses)} WHERE request_id = :rid"
+        update_sql = f"UPDATE pamp.pamp_request SET {', '.join(set_clauses)} WHERE request_id = :rid"
         await db.execute(text(update_sql), params)
         await db.commit()
 
@@ -1509,9 +1509,9 @@ async def update_request(
                 "  COALESCE(p.it_lead, '') AS it_lead, "
                 "  COALESCE(p.it_lead_itcode, '') AS it_lead_itcode, "
                 "  rp.name AS requester_name "
-                "FROM eam.eam_request r "
-                "LEFT JOIN eam.eam_project p ON r.project_id = p.project_id OR r.project_id = p.id::text "
-                "LEFT JOIN eam.resource_pool rp ON rp.itcode = r.requester "
+                "FROM pamp.pamp_request r "
+                "LEFT JOIN pamp.pamp_project p ON r.project_id = p.project_id OR r.project_id = p.id::text "
+                "LEFT JOIN pamp.resource_pool rp ON rp.itcode = r.requester "
                 "WHERE r.request_id = :rid LIMIT 1"
             ),
             {"rid": id},
@@ -1854,7 +1854,7 @@ async def delete_request(
 
         await db.execute(
             text(
-                "UPDATE eam.eam_request SET status = 'Deleted', update_at = NOW(), "
+                "UPDATE pamp.pamp_request SET status = 'Deleted', update_at = NOW(), "
                 "status_changed_by = :uid, status_changed_at = NOW() "
                 "WHERE request_id = :rid"
             ),

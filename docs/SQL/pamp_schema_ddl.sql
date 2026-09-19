@@ -2,8 +2,28 @@
 -- Generated: 2026-06-24
 -- Tables: 101
 
--- Table: eam.ai_project_assessment
-CREATE TABLE IF NOT EXISTS eam.ai_project_assessment (
+-- Sequences referenced by table defaults. Created before the tables so that
+-- `nextval('<name>'::regclass)` resolves during CREATE TABLE.
+SET search_path TO pamp, public;
+
+CREATE SEQUENCE IF NOT EXISTS application_data_entity_simple_id_seq;
+CREATE SEQUENCE IF NOT EXISTS bcpf_master_data_id_seq;
+CREATE SEQUENCE IF NOT EXISTS certification_simple_id_seq;
+CREATE SEQUENCE IF NOT EXISTS dataflow_simple_id_seq;
+CREATE SEQUENCE IF NOT EXISTS pamp_actions_action_no_seq;
+CREATE SEQUENCE IF NOT EXISTS pamp_ea_calendar_schedule_no_seq;
+CREATE SEQUENCE IF NOT EXISTS pamp_meeting_minutes_id_seq;
+CREATE SEQUENCE IF NOT EXISTS pamp_meetings_meeting_no_seq;
+CREATE SEQUENCE IF NOT EXISTS pamp_scope_of_change_scope_no_seq;
+CREATE SEQUENCE IF NOT EXISTS schema_migrations_id_seq;
+CREATE SEQUENCE IF NOT EXISTS tech_key_stack_item_seq;
+CREATE SEQUENCE IF NOT EXISTS tech_stack_category_id_seq;
+CREATE SEQUENCE IF NOT EXISTS tech_stack_component_seq;
+CREATE SEQUENCE IF NOT EXISTS tech_stack_item_seq;
+CREATE SEQUENCE IF NOT EXISTS tech_stack_template_template_no_seq;
+
+-- Table: pamp.ai_project_assessment
+CREATE TABLE IF NOT EXISTS pamp.ai_project_assessment (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_name VARCHAR(255) NOT NULL,
     project_id_ref VARCHAR(255),
@@ -14,8 +34,8 @@ CREATE TABLE IF NOT EXISTS eam.ai_project_assessment (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.ai_review_checklist
-CREATE TABLE IF NOT EXISTS eam.ai_review_checklist (
+-- Table: pamp.ai_review_checklist
+CREATE TABLE IF NOT EXISTS pamp.ai_review_checklist (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     assessment_id UUID NOT NULL,
     section_key VARCHAR(255) NOT NULL,
@@ -30,8 +50,8 @@ CREATE TABLE IF NOT EXISTS eam.ai_review_checklist (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.ai_self_assessment
-CREATE TABLE IF NOT EXISTS eam.ai_self_assessment (
+-- Table: pamp.ai_self_assessment
+CREATE TABLE IF NOT EXISTS pamp.ai_self_assessment (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     assessment_id UUID NOT NULL,
     scenario_class VARCHAR(255) NOT NULL DEFAULT 'enterprise'::character varying,
@@ -44,8 +64,8 @@ CREATE TABLE IF NOT EXISTS eam.ai_self_assessment (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.ai_model_registry
-CREATE TABLE IF NOT EXISTS eam.ai_model_registry (
+-- Table: pamp.ai_model_registry
+CREATE TABLE IF NOT EXISTS pamp.ai_model_registry (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     model_key VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
@@ -60,10 +80,10 @@ CREATE TABLE IF NOT EXISTS eam.ai_model_registry (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.ai_model_version
-CREATE TABLE IF NOT EXISTS eam.ai_model_version (
+-- Table: pamp.ai_model_version
+CREATE TABLE IF NOT EXISTS pamp.ai_model_version (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    model_id UUID NOT NULL REFERENCES eam.ai_model_registry(id) ON DELETE CASCADE,
+    model_id UUID NOT NULL REFERENCES pamp.ai_model_registry(id) ON DELETE CASCADE,
     version VARCHAR(255) NOT NULL,
     source VARCHAR(255) DEFAULT ''::character varying,
     source_uri TEXT DEFAULT ''::text,
@@ -80,8 +100,8 @@ CREATE TABLE IF NOT EXISTS eam.ai_model_version (
     UNIQUE (model_id, version)
 );
 
--- Table: eam.ai_agent_registry
-CREATE TABLE IF NOT EXISTS eam.ai_agent_registry (
+-- Table: pamp.ai_agent_registry
+CREATE TABLE IF NOT EXISTS pamp.ai_agent_registry (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     agent_key VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
@@ -95,7 +115,7 @@ CREATE TABLE IF NOT EXISTS eam.ai_agent_registry (
     trust_level VARCHAR(255) NOT NULL DEFAULT 'limited'::character varying,
     hitl_required BOOLEAN NOT NULL DEFAULT false,
     capabilities JSONB NOT NULL DEFAULT '[]'::jsonb,
-    model_id_ref UUID REFERENCES eam.ai_model_registry(id) ON DELETE SET NULL,
+    model_id_ref UUID REFERENCES pamp.ai_model_registry(id) ON DELETE SET NULL,
     status VARCHAR(255) NOT NULL DEFAULT 'draft'::character varying,
     created_by VARCHAR(255) NOT NULL,
     updated_by VARCHAR(255) NOT NULL DEFAULT ''::character varying,
@@ -103,8 +123,8 @@ CREATE TABLE IF NOT EXISTS eam.ai_agent_registry (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.mcp_server_registry
-CREATE TABLE IF NOT EXISTS eam.mcp_server_registry (
+-- Table: pamp.mcp_server_registry
+CREATE TABLE IF NOT EXISTS pamp.mcp_server_registry (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     server_key VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
@@ -124,10 +144,10 @@ CREATE TABLE IF NOT EXISTS eam.mcp_server_registry (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.mcp_tool
-CREATE TABLE IF NOT EXISTS eam.mcp_tool (
+-- Table: pamp.mcp_tool
+CREATE TABLE IF NOT EXISTS pamp.mcp_tool (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    server_id UUID NOT NULL REFERENCES eam.mcp_server_registry(id) ON DELETE CASCADE,
+    server_id UUID NOT NULL REFERENCES pamp.mcp_server_registry(id) ON DELETE CASCADE,
     tool_name VARCHAR(255) NOT NULL,
     description TEXT DEFAULT ''::text,
     description_hash VARCHAR(255) DEFAULT ''::character varying,
@@ -143,8 +163,8 @@ CREATE TABLE IF NOT EXISTS eam.mcp_tool (
     UNIQUE (server_id, tool_name)
 );
 
--- Table: eam.application_data
-CREATE TABLE IF NOT EXISTS eam.application_data (
+-- Table: pamp.application_data
+CREATE TABLE IF NOT EXISTS pamp.application_data (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     app_id VARCHAR(255) NOT NULL,
     data_residency_geo VARCHAR(255),
@@ -157,8 +177,8 @@ CREATE TABLE IF NOT EXISTS eam.application_data (
     update_at TIMESTAMP
 );
 
--- Table: eam.application_data_comment
-CREATE TABLE IF NOT EXISTS eam.application_data_comment (
+-- Table: pamp.application_data_comment
+CREATE TABLE IF NOT EXISTS pamp.application_data_comment (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     object_type VARCHAR(255) NOT NULL,
     object_id UUID NOT NULL,
@@ -167,8 +187,8 @@ CREATE TABLE IF NOT EXISTS eam.application_data_comment (
     create_at TIMESTAMP DEFAULT now()
 );
 
--- Table: eam.application_data_entity
-CREATE TABLE IF NOT EXISTS eam.application_data_entity (
+-- Table: pamp.application_data_entity
+CREATE TABLE IF NOT EXISTS pamp.application_data_entity (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     simple_id VARCHAR(255) DEFAULT ('DE'::text || to_char(nextval('application_data_entity_simple_id_seq'::regclass), 'FM000000'::text)),
     name VARCHAR(255),
@@ -181,8 +201,8 @@ CREATE TABLE IF NOT EXISTS eam.application_data_entity (
     app_id UUID NOT NULL
 );
 
--- Table: eam.application_data_entity_classification
-CREATE TABLE IF NOT EXISTS eam.application_data_entity_classification (
+-- Table: pamp.application_data_entity_classification
+CREATE TABLE IF NOT EXISTS pamp.application_data_entity_classification (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     entity_id UUID,
     method VARCHAR(255),
@@ -192,8 +212,8 @@ CREATE TABLE IF NOT EXISTS eam.application_data_entity_classification (
     level4 UUID
 );
 
--- Table: eam.application_data_flow
-CREATE TABLE IF NOT EXISTS eam.application_data_flow (
+-- Table: pamp.application_data_flow
+CREATE TABLE IF NOT EXISTS pamp.application_data_flow (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     business_scenarios_l1 VARCHAR(255),
     source_data_entity_id UUID,
@@ -207,24 +227,24 @@ CREATE TABLE IF NOT EXISTS eam.application_data_flow (
     update_at TIMESTAMP
 );
 
--- Table: eam.application_legal_entity
-CREATE TABLE IF NOT EXISTS eam.application_legal_entity (
+-- Table: pamp.application_legal_entity
+CREATE TABLE IF NOT EXISTS pamp.application_legal_entity (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     app_id UUID NOT NULL,
     company_code VARCHAR(255),
     create_at TIMESTAMP DEFAULT now()
 );
 
--- Table: eam.application_member
-CREATE TABLE IF NOT EXISTS eam.application_member (
+-- Table: pamp.application_member
+CREATE TABLE IF NOT EXISTS pamp.application_member (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     app_id VARCHAR(255),
     itcode VARCHAR(255),
     create_at TIMESTAMP
 );
 
--- Table: eam.avdm_artifact
-CREATE TABLE IF NOT EXISTS eam.avdm_artifact (
+-- Table: pamp.avdm_artifact
+CREATE TABLE IF NOT EXISTS pamp.avdm_artifact (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     artifact_key VARCHAR(255) NOT NULL,
     artifact_category_id UUID NOT NULL,
@@ -240,8 +260,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_artifact (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_artifact_category
-CREATE TABLE IF NOT EXISTS eam.avdm_artifact_category (
+-- Table: pamp.avdm_artifact_category
+CREATE TABLE IF NOT EXISTS pamp.avdm_artifact_category (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     category_key VARCHAR(255) NOT NULL,
     category_name VARCHAR(255) NOT NULL,
@@ -254,8 +274,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_artifact_category (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_concern_activation_rule
-CREATE TABLE IF NOT EXISTS eam.avdm_concern_activation_rule (
+-- Table: pamp.avdm_concern_activation_rule
+CREATE TABLE IF NOT EXISTS pamp.avdm_concern_activation_rule (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     rule_key VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -269,8 +289,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_concern_activation_rule (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_concern_activation_rule_score
-CREATE TABLE IF NOT EXISTS eam.avdm_concern_activation_rule_score (
+-- Table: pamp.avdm_concern_activation_rule_score
+CREATE TABLE IF NOT EXISTS pamp.avdm_concern_activation_rule_score (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     rule_id UUID NOT NULL,
     concern_id UUID NOT NULL,
@@ -286,8 +306,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_concern_activation_rule_score (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_master_data_revision
-CREATE TABLE IF NOT EXISTS eam.avdm_master_data_revision (
+-- Table: pamp.avdm_master_data_revision
+CREATE TABLE IF NOT EXISTS pamp.avdm_master_data_revision (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     domain_key VARCHAR(255) NOT NULL,
     version INTEGER NOT NULL DEFAULT 1,
@@ -298,8 +318,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_master_data_revision (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_pact_concern
-CREATE TABLE IF NOT EXISTS eam.avdm_pact_concern (
+-- Table: pamp.avdm_pact_concern
+CREATE TABLE IF NOT EXISTS pamp.avdm_pact_concern (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     concern_key VARCHAR(255) NOT NULL,
     concern_name VARCHAR(255) NOT NULL,
@@ -318,8 +338,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_pact_concern (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_project_assessment
-CREATE TABLE IF NOT EXISTS eam.avdm_project_assessment (
+-- Table: pamp.avdm_project_assessment
+CREATE TABLE IF NOT EXISTS pamp.avdm_project_assessment (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_id VARCHAR(255) NOT NULL,
     project_type VARCHAR(255),
@@ -345,8 +365,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_project_assessment (
     artifact_submitted_at TIMESTAMP
 );
 
--- Table: eam.avdm_project_type_artifact_mapping
-CREATE TABLE IF NOT EXISTS eam.avdm_project_type_artifact_mapping (
+-- Table: pamp.avdm_project_type_artifact_mapping
+CREATE TABLE IF NOT EXISTS pamp.avdm_project_type_artifact_mapping (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_type_profile_id UUID NOT NULL,
     artifact_id UUID NOT NULL,
@@ -359,8 +379,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_project_type_artifact_mapping (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_project_type_profile
-CREATE TABLE IF NOT EXISTS eam.avdm_project_type_profile (
+-- Table: pamp.avdm_project_type_profile
+CREATE TABLE IF NOT EXISTS pamp.avdm_project_type_profile (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_type_key VARCHAR(255) NOT NULL,
     project_type_label VARCHAR(255) NOT NULL,
@@ -375,8 +395,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_project_type_profile (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_question
-CREATE TABLE IF NOT EXISTS eam.avdm_question (
+-- Table: pamp.avdm_question
+CREATE TABLE IF NOT EXISTS pamp.avdm_question (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     stable_question_id INTEGER NOT NULL,
     question_key VARCHAR(255),
@@ -397,8 +417,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_question (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_question_answer_concern_mapping
-CREATE TABLE IF NOT EXISTS eam.avdm_question_answer_concern_mapping (
+-- Table: pamp.avdm_question_answer_concern_mapping
+CREATE TABLE IF NOT EXISTS pamp.avdm_question_answer_concern_mapping (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     question_id UUID NOT NULL,
     option_item_id UUID,
@@ -417,8 +437,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_question_answer_concern_mapping (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_question_answer_type
-CREATE TABLE IF NOT EXISTS eam.avdm_question_answer_type (
+-- Table: pamp.avdm_question_answer_type
+CREATE TABLE IF NOT EXISTS pamp.avdm_question_answer_type (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     answer_type_key VARCHAR(255) NOT NULL,
     answer_type_name VARCHAR(255) NOT NULL,
@@ -434,8 +454,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_question_answer_type (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_question_category
-CREATE TABLE IF NOT EXISTS eam.avdm_question_category (
+-- Table: pamp.avdm_question_category
+CREATE TABLE IF NOT EXISTS pamp.avdm_question_category (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     group_id UUID NOT NULL,
     category_key VARCHAR(255) NOT NULL,
@@ -449,8 +469,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_question_category (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_question_group
-CREATE TABLE IF NOT EXISTS eam.avdm_question_group (
+-- Table: pamp.avdm_question_group
+CREATE TABLE IF NOT EXISTS pamp.avdm_question_group (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     group_key VARCHAR(255) NOT NULL,
     group_name VARCHAR(255) NOT NULL,
@@ -463,8 +483,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_question_group (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_question_option_item
-CREATE TABLE IF NOT EXISTS eam.avdm_question_option_item (
+-- Table: pamp.avdm_question_option_item
+CREATE TABLE IF NOT EXISTS pamp.avdm_question_option_item (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     option_set_id UUID NOT NULL,
     option_value VARCHAR(255) NOT NULL,
@@ -479,8 +499,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_question_option_item (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_question_option_set
-CREATE TABLE IF NOT EXISTS eam.avdm_question_option_set (
+-- Table: pamp.avdm_question_option_set
+CREATE TABLE IF NOT EXISTS pamp.avdm_question_option_set (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     option_set_key VARCHAR(255) NOT NULL,
     option_set_name VARCHAR(255) NOT NULL,
@@ -494,8 +514,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_question_option_set (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_questionnaire_config
-CREATE TABLE IF NOT EXISTS eam.avdm_questionnaire_config (
+-- Table: pamp.avdm_questionnaire_config
+CREATE TABLE IF NOT EXISTS pamp.avdm_questionnaire_config (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     config_key VARCHAR(255) NOT NULL,
     config_json JSONB NOT NULL DEFAULT '{}'::jsonb,
@@ -507,8 +527,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_questionnaire_config (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_static_document
-CREATE TABLE IF NOT EXISTS eam.avdm_static_document (
+-- Table: pamp.avdm_static_document
+CREATE TABLE IF NOT EXISTS pamp.avdm_static_document (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     document_key VARCHAR(255) NOT NULL,
     document_json JSONB NOT NULL DEFAULT '{}'::jsonb,
@@ -520,10 +540,10 @@ CREATE TABLE IF NOT EXISTS eam.avdm_static_document (
 
 -- Required by the ON CONFLICT (document_key) upsert used for configuration.
 CREATE UNIQUE INDEX IF NOT EXISTS avdm_static_document_document_key_key
-    ON eam.avdm_static_document (document_key);
+    ON pamp.avdm_static_document (document_key);
 
--- Table: eam.avdm_viewpoint
-CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint (
+-- Table: pamp.avdm_viewpoint
+CREATE TABLE IF NOT EXISTS pamp.avdm_viewpoint (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     viewpoint_number INTEGER NOT NULL,
     layer_name VARCHAR(255) NOT NULL,
@@ -543,8 +563,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_viewpoint_artifact_mapping
-CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint_artifact_mapping (
+-- Table: pamp.avdm_viewpoint_artifact_mapping
+CREATE TABLE IF NOT EXISTS pamp.avdm_viewpoint_artifact_mapping (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     viewpoint_id UUID NOT NULL,
     artifact_id UUID NOT NULL,
@@ -557,8 +577,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint_artifact_mapping (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.avdm_viewpoint_concern_mapping
-CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint_concern_mapping (
+-- Table: pamp.avdm_viewpoint_concern_mapping
+CREATE TABLE IF NOT EXISTS pamp.avdm_viewpoint_concern_mapping (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     viewpoint_id UUID NOT NULL,
     concern_id UUID NOT NULL,
@@ -570,8 +590,8 @@ CREATE TABLE IF NOT EXISTS eam.avdm_viewpoint_concern_mapping (
     update_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.bcpf_master_data
-CREATE TABLE IF NOT EXISTS eam.bcpf_master_data (
+-- Table: pamp.bcpf_master_data
+CREATE TABLE IF NOT EXISTS pamp.bcpf_master_data (
     id BIGINT NOT NULL DEFAULT nextval('bcpf_master_data_id_seq'::regclass),
     data_version VARCHAR(255) NOT NULL,
     bc_id VARCHAR(255) NOT NULL,
@@ -594,8 +614,8 @@ CREATE TABLE IF NOT EXISTS eam.bcpf_master_data (
     lv3_capability_group VARCHAR(255) DEFAULT ''::character varying
 );
 
--- Table: eam.biz_cap_map
-CREATE TABLE IF NOT EXISTS eam.biz_cap_map (
+-- Table: pamp.biz_cap_map
+CREATE TABLE IF NOT EXISTS pamp.biz_cap_map (
     id VARCHAR(255) NOT NULL DEFAULT gen_random_uuid(),
     app_id VARCHAR(255) NOT NULL,
     bcpf_master_id BIGINT NOT NULL,
@@ -607,14 +627,14 @@ CREATE TABLE IF NOT EXISTS eam.biz_cap_map (
     bc_id VARCHAR(255)
 );
 
--- Table: eam.business_object_sequences
-CREATE TABLE IF NOT EXISTS eam.business_object_sequences (
+-- Table: pamp.business_object_sequences
+CREATE TABLE IF NOT EXISTS pamp.business_object_sequences (
     sequence_name VARCHAR(255) NOT NULL,
     current_value BIGINT NOT NULL
 );
 
--- Table: eam.certification
-CREATE TABLE IF NOT EXISTS eam.certification (
+-- Table: pamp.certification
+CREATE TABLE IF NOT EXISTS pamp.certification (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     simple_id VARCHAR(255) DEFAULT ('CN'::text || to_char(nextval('certification_simple_id_seq'::regclass), 'FM000000'::text)),
     itcode VARCHAR(255) NOT NULL,
@@ -631,8 +651,8 @@ CREATE TABLE IF NOT EXISTS eam.certification (
     duration NUMERIC NOT NULL
 );
 
--- Table: eam.cmdb_application
-CREATE TABLE IF NOT EXISTS eam.cmdb_application (
+-- Table: pamp.cmdb_application
+CREATE TABLE IF NOT EXISTS pamp.cmdb_application (
     _id VARCHAR(255),
     short_description VARCHAR(255),
     u_service_area VARCHAR(255),
@@ -657,8 +677,8 @@ CREATE TABLE IF NOT EXISTS eam.cmdb_application (
     app_dt_owner VARCHAR(255)
 );
 
--- Table: eam.company
-CREATE TABLE IF NOT EXISTS eam.company (
+-- Table: pamp.company
+CREATE TABLE IF NOT EXISTS pamp.company (
     id VARCHAR(255) NOT NULL DEFAULT gen_random_uuid(),
     company_code VARCHAR(255) NOT NULL,
     company_name VARCHAR(255),
@@ -673,16 +693,16 @@ CREATE TABLE IF NOT EXISTS eam.company (
     profit_s4 VARCHAR(255)
 );
 
--- Table: eam.data_center
-CREATE TABLE IF NOT EXISTS eam.data_center (
+-- Table: pamp.data_center
+CREATE TABLE IF NOT EXISTS pamp.data_center (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name VARCHAR(255),
     create_by VARCHAR(255),
     create_at TIMESTAMP
 );
 
--- Table: eam.data_classification
-CREATE TABLE IF NOT EXISTS eam.data_classification (
+-- Table: pamp.data_classification
+CREATE TABLE IF NOT EXISTS pamp.data_classification (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     method VARCHAR(255),
     code VARCHAR(255),
@@ -695,8 +715,8 @@ CREATE TABLE IF NOT EXISTS eam.data_classification (
     level NUMERIC
 );
 
--- Table: eam.df_timer_details
-CREATE TABLE IF NOT EXISTS eam.df_timer_details (
+-- Table: pamp.df_timer_details
+CREATE TABLE IF NOT EXISTS pamp.df_timer_details (
     id VARCHAR(255) NOT NULL,
     timer_job_id VARCHAR(255) NOT NULL,
     process_id VARCHAR(255) NOT NULL,
@@ -708,8 +728,8 @@ CREATE TABLE IF NOT EXISTS eam.df_timer_details (
     is_running INTEGER NOT NULL DEFAULT 0
 );
 
--- Table: eam.dict_option
-CREATE TABLE IF NOT EXISTS eam.dict_option (
+-- Table: pamp.dict_option
+CREATE TABLE IF NOT EXISTS pamp.dict_option (
     category_id INTEGER NOT NULL,
     option_id INTEGER NOT NULL,
     option VARCHAR(255),
@@ -723,12 +743,12 @@ CREATE TABLE IF NOT EXISTS eam.dict_option (
     updated_at TIMESTAMP DEFAULT now()
 );
 
--- Table: eam.eam_actions
-CREATE TABLE IF NOT EXISTS eam.eam_actions (
+-- Table: pamp.pamp_actions
+CREATE TABLE IF NOT EXISTS pamp.pamp_actions (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_id VARCHAR(255) NOT NULL,
     meeting_id UUID,
-    action_no BIGINT NOT NULL DEFAULT nextval('eam_actions_action_no_seq'::regclass),
+    action_no BIGINT NOT NULL DEFAULT nextval('pamp_actions_action_no_seq'::regclass),
     action_title VARCHAR(255) NOT NULL,
     priority VARCHAR(255) NOT NULL,
     due_date TIMESTAMP,
@@ -753,21 +773,21 @@ CREATE TABLE IF NOT EXISTS eam.eam_actions (
     request_id VARCHAR(255)
 );
 
--- Table: eam.eam_actions_email_log
-CREATE TABLE IF NOT EXISTS eam.eam_actions_email_log (
+-- Table: pamp.pamp_actions_email_log
+CREATE TABLE IF NOT EXISTS pamp.pamp_actions_email_log (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_id VARCHAR(255) NOT NULL,
     meeting_id UUID,
     action_id UUID NOT NULL,
     log_time TIMESTAMP NOT NULL,
-    from VARCHAR(255) NOT NULL,
+    "from" VARCHAR(255) NOT NULL,
     recipients TEXT[] NOT NULL,
     subject VARCHAR(255) NOT NULL,
     status VARCHAR(255) NOT NULL
 );
 
--- Table: eam.eam_arch_ai_check
-CREATE TABLE IF NOT EXISTS eam.eam_arch_ai_check (
+-- Table: pamp.pamp_arch_ai_check
+CREATE TABLE IF NOT EXISTS pamp.pamp_arch_ai_check (
     total_cost NUMERIC,
     check_cost NUMERIC,
     request JSONB,
@@ -778,8 +798,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_arch_ai_check (
     attachment_uuid UUID
 );
 
--- Table: eam.eam_arch_ai_check_0122
-CREATE TABLE IF NOT EXISTS eam.eam_arch_ai_check_0122 (
+-- Table: pamp.pamp_arch_ai_check_0122
+CREATE TABLE IF NOT EXISTS pamp.pamp_arch_ai_check_0122 (
     request_id VARCHAR(255),
     arch_diagram VARCHAR(255),
     biz_type VARCHAR(255),
@@ -793,8 +813,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_arch_ai_check_0122 (
     attachment_uuid UUID
 );
 
--- Table: eam.eam_arch_ai_check_app
-CREATE TABLE IF NOT EXISTS eam.eam_arch_ai_check_app (
+-- Table: pamp.pamp_arch_ai_check_app
+CREATE TABLE IF NOT EXISTS pamp.pamp_arch_ai_check_app (
     ai_check_id VARCHAR(255) NOT NULL,
     app_id VARCHAR(255),
     id_is_standard BOOLEAN,
@@ -814,8 +834,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_arch_ai_check_app (
     type VARCHAR(255) DEFAULT 'aicheck'::character varying
 );
 
--- Table: eam.eam_arch_ai_check_interaction
-CREATE TABLE IF NOT EXISTS eam.eam_arch_ai_check_interaction (
+-- Table: pamp.pamp_arch_ai_check_interaction
+CREATE TABLE IF NOT EXISTS pamp.pamp_arch_ai_check_interaction (
     ai_check_id VARCHAR(255) NOT NULL,
     source_app_id VARCHAR(255),
     target_app_id VARCHAR(255),
@@ -837,8 +857,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_arch_ai_check_interaction (
     type VARCHAR(255) DEFAULT 'aicheck'::character varying
 );
 
--- Table: eam.eam_audit_log
-CREATE TABLE IF NOT EXISTS eam.eam_audit_log (
+-- Table: pamp.pamp_audit_log
+CREATE TABLE IF NOT EXISTS pamp.pamp_audit_log (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     object_type VARCHAR(255) NOT NULL,
     object_id UUID NOT NULL,
@@ -859,8 +879,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_audit_log (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.eam_bigea_team_members
-CREATE TABLE IF NOT EXISTS eam.eam_bigea_team_members (
+-- Table: pamp.pamp_bigea_team_members
+CREATE TABLE IF NOT EXISTS pamp.pamp_bigea_team_members (
     worker VARCHAR(255),
     itcode VARCHAR(255) NOT NULL,
     worker_type VARCHAR(255),
@@ -898,11 +918,11 @@ CREATE TABLE IF NOT EXISTS eam.eam_bigea_team_members (
     ea_admin_status BOOLEAN DEFAULT false
 );
 
--- Table: eam.eam_ea_calendar
-CREATE TABLE IF NOT EXISTS eam.eam_ea_calendar (
+-- Table: pamp.pamp_ea_calendar
+CREATE TABLE IF NOT EXISTS pamp.pamp_ea_calendar (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_id VARCHAR(255),
-    schedule_no BIGINT NOT NULL DEFAULT nextval('eam_ea_calendar_schedule_no_seq'::regclass),
+    schedule_no BIGINT NOT NULL DEFAULT nextval('pamp_ea_calendar_schedule_no_seq'::regclass),
     schedule_title VARCHAR(255),
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP NOT NULL,
@@ -916,8 +936,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_ea_calendar (
     for_meeting VARCHAR(255)
 );
 
--- Table: eam.eam_email_log
-CREATE TABLE IF NOT EXISTS eam.eam_email_log (
+-- Table: pamp.pamp_email_log
+CREATE TABLE IF NOT EXISTS pamp.pamp_email_log (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     module_code VARCHAR(255) NOT NULL,
     entity_type VARCHAR(255) NOT NULL,
@@ -939,8 +959,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_email_log (
     updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Table: eam.eam_email_recipient
-CREATE TABLE IF NOT EXISTS eam.eam_email_recipient (
+-- Table: pamp.pamp_email_recipient
+CREATE TABLE IF NOT EXISTS pamp.pamp_email_recipient (
     id VARCHAR(255) NOT NULL DEFAULT gen_random_uuid(),
     email_action VARCHAR(255),
     cc_pm BOOLEAN,
@@ -954,25 +974,25 @@ CREATE TABLE IF NOT EXISTS eam.eam_email_recipient (
     cc_assignee BOOLEAN
 );
 
--- Table: eam.eam_file_storage
-CREATE TABLE IF NOT EXISTS eam.eam_file_storage (
+-- Table: pamp.pamp_file_storage
+CREATE TABLE IF NOT EXISTS pamp.pamp_file_storage (
     key TEXT NOT NULL,
     data BYTEA NOT NULL,
     content_type VARCHAR(255) DEFAULT 'application/octet-stream'::character varying,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.eam_meeting_deck
-CREATE TABLE IF NOT EXISTS eam.eam_meeting_deck (
+-- Table: pamp.pamp_meeting_deck
+CREATE TABLE IF NOT EXISTS pamp.pamp_meeting_deck (
     id VARCHAR(255) NOT NULL DEFAULT gen_random_uuid(),
     meeting_id VARCHAR(255),
     deck_name VARCHAR(255),
     deck_url VARCHAR(255)
 );
 
--- Table: eam.eam_meeting_minutes
-CREATE TABLE IF NOT EXISTS eam.eam_meeting_minutes (
-    id BIGINT NOT NULL DEFAULT nextval('eam_meeting_minutes_id_seq'::regclass),
+-- Table: pamp.pamp_meeting_minutes
+CREATE TABLE IF NOT EXISTS pamp.pamp_meeting_minutes (
+    id BIGINT NOT NULL DEFAULT nextval('pamp_meeting_minutes_id_seq'::regclass),
     project_id VARCHAR(255) NOT NULL,
     project_name VARCHAR(255) NOT NULL,
     project_leader VARCHAR(255) NOT NULL,
@@ -987,10 +1007,10 @@ CREATE TABLE IF NOT EXISTS eam.eam_meeting_minutes (
     review_recording TEXT[] NOT NULL
 );
 
--- Table: eam.eam_meetings
-CREATE TABLE IF NOT EXISTS eam.eam_meetings (
+-- Table: pamp.pamp_meetings
+CREATE TABLE IF NOT EXISTS pamp.pamp_meetings (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    meeting_no BIGINT NOT NULL DEFAULT nextval('eam_meetings_meeting_no_seq'::regclass),
+    meeting_no BIGINT NOT NULL DEFAULT nextval('pamp_meetings_meeting_no_seq'::regclass),
     project_id VARCHAR(255) NOT NULL,
     project_objectives TEXT,
     meeting_title VARCHAR(255) NOT NULL,
@@ -1017,20 +1037,20 @@ CREATE TABLE IF NOT EXISTS eam.eam_meetings (
     request_id VARCHAR(255)
 );
 
--- Table: eam.eam_meetings_email_log
-CREATE TABLE IF NOT EXISTS eam.eam_meetings_email_log (
+-- Table: pamp.pamp_meetings_email_log
+CREATE TABLE IF NOT EXISTS pamp.pamp_meetings_email_log (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_id VARCHAR(255) NOT NULL,
     meeting_id UUID NOT NULL,
     log_time TIMESTAMP NOT NULL,
-    from VARCHAR(255) NOT NULL,
+    "from" VARCHAR(255) NOT NULL,
     recipients TEXT[] NOT NULL,
     subject VARCHAR(255) NOT NULL,
     status VARCHAR(255) NOT NULL
 );
 
--- Table: eam.eam_project
-CREATE TABLE IF NOT EXISTS eam.eam_project (
+-- Table: pamp.pamp_project
+CREATE TABLE IF NOT EXISTS pamp.pamp_project (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT DEFAULT ''::text,
@@ -1055,8 +1075,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_project (
     category VARCHAR(255) DEFAULT 'regular'::character varying
 );
 
--- Table: eam.eam_project_app
-CREATE TABLE IF NOT EXISTS eam.eam_project_app (
+-- Table: pamp.pamp_project_app
+CREATE TABLE IF NOT EXISTS pamp.pamp_project_app (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     app_id VARCHAR(255) NOT NULL,
     app_name VARCHAR(255) DEFAULT ''::character varying,
@@ -1066,8 +1086,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_project_app (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.eam_project_summary
-CREATE TABLE IF NOT EXISTS eam.eam_project_summary (
+-- Table: pamp.pamp_project_summary
+CREATE TABLE IF NOT EXISTS pamp.pamp_project_summary (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_id VARCHAR(255) NOT NULL,
     business_owner1 VARCHAR(255),
@@ -1088,8 +1108,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_project_summary (
     domain_ea_reviewer VARCHAR(255)
 );
 
--- Table: eam.eam_request
-CREATE TABLE IF NOT EXISTS eam.eam_request (
+-- Table: pamp.pamp_request
+CREATE TABLE IF NOT EXISTS pamp.pamp_request (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     request_id VARCHAR(255) NOT NULL,
     project_id VARCHAR(255) NOT NULL,
@@ -1112,8 +1132,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_request (
     request_desc VARCHAR(255)
 );
 
--- Table: eam.eam_request_attachment
-CREATE TABLE IF NOT EXISTS eam.eam_request_attachment (
+-- Table: pamp.pamp_request_attachment
+CREATE TABLE IF NOT EXISTS pamp.pamp_request_attachment (
     request_id VARCHAR(255) NOT NULL,
     attachment_name VARCHAR(255),
     create_at TIMESTAMP,
@@ -1124,8 +1144,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_request_attachment (
     original_name VARCHAR(255)
 );
 
--- Table: eam.eam_request_process_log
-CREATE TABLE IF NOT EXISTS eam.eam_request_process_log (
+-- Table: pamp.pamp_request_process_log
+CREATE TABLE IF NOT EXISTS pamp.pamp_request_process_log (
     request_id VARCHAR(255),
     action VARCHAR(255),
     comment VARCHAR(255),
@@ -1134,8 +1154,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_request_process_log (
     id VARCHAR(255) NOT NULL DEFAULT gen_random_uuid()
 );
 
--- Table: eam.eam_review_log
-CREATE TABLE IF NOT EXISTS eam.eam_review_log (
+-- Table: pamp.pamp_review_log
+CREATE TABLE IF NOT EXISTS pamp.pamp_review_log (
     id VARCHAR(255) NOT NULL DEFAULT gen_random_uuid(),
     comment VARCHAR(255),
     create_at TIMESTAMP DEFAULT now(),
@@ -1144,8 +1164,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_review_log (
     project_id VARCHAR(255)
 );
 
--- Table: eam.eam_scope_check_list
-CREATE TABLE IF NOT EXISTS eam.eam_scope_check_list (
+-- Table: pamp.pamp_scope_check_list
+CREATE TABLE IF NOT EXISTS pamp.pamp_scope_check_list (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     checklist_no SMALLINT NOT NULL,
     project_id VARCHAR(255) NOT NULL,
@@ -1158,8 +1178,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_scope_check_list (
     sub_category VARCHAR(255)
 );
 
--- Table: eam.eam_scope_check_list_template
-CREATE TABLE IF NOT EXISTS eam.eam_scope_check_list_template (
+-- Table: pamp.pamp_scope_check_list_template
+CREATE TABLE IF NOT EXISTS pamp.pamp_scope_check_list_template (
     checklist_no SMALLINT NOT NULL,
     category VARCHAR(255) NOT NULL,
     questions VARCHAR(255),
@@ -1174,19 +1194,19 @@ CREATE TABLE IF NOT EXISTS eam.eam_scope_check_list_template (
     selection_option TEXT[]
 );
 
--- Table: eam.eam_scope_of_change
-CREATE TABLE IF NOT EXISTS eam.eam_scope_of_change (
+-- Table: pamp.pamp_scope_of_change
+CREATE TABLE IF NOT EXISTS pamp.pamp_scope_of_change (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_id VARCHAR(255) NOT NULL,
-    scope_no BIGINT NOT NULL DEFAULT nextval('eam_scope_of_change_scope_no_seq'::regclass),
+    scope_no BIGINT NOT NULL DEFAULT nextval('pamp_scope_of_change_scope_no_seq'::regclass),
     title VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
     create_using_template VARCHAR(255) NOT NULL,
     sample VARCHAR(255) NOT NULL
 );
 
--- Table: eam.eam_scope_of_change_pages
-CREATE TABLE IF NOT EXISTS eam.eam_scope_of_change_pages (
+-- Table: pamp.pamp_scope_of_change_pages
+CREATE TABLE IF NOT EXISTS pamp.pamp_scope_of_change_pages (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     scope_of_change_id UUID NOT NULL,
     name VARCHAR(255),
@@ -1194,8 +1214,8 @@ CREATE TABLE IF NOT EXISTS eam.eam_scope_of_change_pages (
     diagram TEXT
 );
 
--- Table: eam.eam_scope_of_change_template
-CREATE TABLE IF NOT EXISTS eam.eam_scope_of_change_template (
+-- Table: pamp.pamp_scope_of_change_template
+CREATE TABLE IF NOT EXISTS pamp.pamp_scope_of_change_template (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     scope_no BIGINT NOT NULL,
     title VARCHAR(255) NOT NULL,
@@ -1204,16 +1224,16 @@ CREATE TABLE IF NOT EXISTS eam.eam_scope_of_change_template (
     sample VARCHAR(255) NOT NULL
 );
 
--- Table: eam.eam_team_member
-CREATE TABLE IF NOT EXISTS eam.eam_team_member (
+-- Table: pamp.pamp_team_member
+CREATE TABLE IF NOT EXISTS pamp.pamp_team_member (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     project_id UUID NOT NULL,
     user_itcode VARCHAR(255) NOT NULL,
     role VARCHAR(255) DEFAULT 'member'::character varying
 );
 
--- Table: eam.email_notification_log
-CREATE TABLE IF NOT EXISTS eam.email_notification_log (
+-- Table: pamp.email_notification_log
+CREATE TABLE IF NOT EXISTS pamp.email_notification_log (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     object_type VARCHAR(255) NOT NULL,
     object_id VARCHAR(255),
@@ -1228,15 +1248,15 @@ CREATE TABLE IF NOT EXISTS eam.email_notification_log (
     remark VARCHAR(255) NOT NULL
 );
 
--- Table: eam.fiscal_year_sequences
-CREATE TABLE IF NOT EXISTS eam.fiscal_year_sequences (
+-- Table: pamp.fiscal_year_sequences
+CREATE TABLE IF NOT EXISTS pamp.fiscal_year_sequences (
     sequence_name VARCHAR(255) NOT NULL,
     fiscal_year VARCHAR(255),
     current_value BIGINT NOT NULL
 );
 
--- Table: eam.help_file
-CREATE TABLE IF NOT EXISTS eam.help_file (
+-- Table: pamp.help_file
+CREATE TABLE IF NOT EXISTS pamp.help_file (
     id VARCHAR(255) NOT NULL DEFAULT gen_random_uuid(),
     usage VARCHAR(255) NOT NULL,
     file_name VARCHAR(255),
@@ -1247,8 +1267,8 @@ CREATE TABLE IF NOT EXISTS eam.help_file (
     update_at TIMESTAMP
 );
 
--- Table: eam.local_users
-CREATE TABLE IF NOT EXISTS eam.local_users (
+-- Table: pamp.local_users
+CREATE TABLE IF NOT EXISTS pamp.local_users (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -1260,8 +1280,8 @@ CREATE TABLE IF NOT EXISTS eam.local_users (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.process_role
-CREATE TABLE IF NOT EXISTS eam.process_role (
+-- Table: pamp.process_role
+CREATE TABLE IF NOT EXISTS pamp.process_role (
     node_name VARCHAR(255),
     pre_status VARCHAR(255),
     role VARCHAR(255),
@@ -1272,8 +1292,8 @@ CREATE TABLE IF NOT EXISTS eam.process_role (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY
 );
 
--- Table: eam.project_app
-CREATE TABLE IF NOT EXISTS eam.project_app (
+-- Table: pamp.project_app
+CREATE TABLE IF NOT EXISTS pamp.project_app (
     id VARCHAR(255) NOT NULL DEFAULT gen_random_uuid(),
     project_id VARCHAR(255),
     app_id VARCHAR(255) NOT NULL,
@@ -1290,16 +1310,16 @@ CREATE TABLE IF NOT EXISTS eam.project_app (
     update_at TIMESTAMP
 );
 
--- Table: eam.project_ea_status_log
-CREATE TABLE IF NOT EXISTS eam.project_ea_status_log (
+-- Table: pamp.project_ea_status_log
+CREATE TABLE IF NOT EXISTS pamp.project_ea_status_log (
     project_id VARCHAR(255),
     ea_status VARCHAR(255),
     status_change_date DATE,
     create_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.project_task
-CREATE TABLE IF NOT EXISTS eam.project_task (
+-- Table: pamp.project_task
+CREATE TABLE IF NOT EXISTS pamp.project_task (
     id VARCHAR(255) NOT NULL DEFAULT gen_random_uuid(),
     project_id VARCHAR(255) NOT NULL,
     project_name VARCHAR(255),
@@ -1316,8 +1336,8 @@ CREATE TABLE IF NOT EXISTS eam.project_task (
     description VARCHAR(255)
 );
 
--- Table: eam.project_team_members
-CREATE TABLE IF NOT EXISTS eam.project_team_members (
+-- Table: pamp.project_team_members
+CREATE TABLE IF NOT EXISTS pamp.project_team_members (
     id VARCHAR(255) NOT NULL DEFAULT gen_random_uuid(),
     project_id VARCHAR(255),
     itcode VARCHAR(255) NOT NULL,
@@ -1330,16 +1350,16 @@ CREATE TABLE IF NOT EXISTS eam.project_team_members (
     update_at TIMESTAMP
 );
 
--- Table: eam.project_user_bookmark
-CREATE TABLE IF NOT EXISTS eam.project_user_bookmark (
+-- Table: pamp.project_user_bookmark
+CREATE TABLE IF NOT EXISTS pamp.project_user_bookmark (
     project_id VARCHAR(255) NOT NULL,
     user_itcode VARCHAR(255),
     favourite VARCHAR(255),
-    default VARCHAR(255)
+    "default" VARCHAR(255)
 );
 
--- Table: eam.resource_pool
-CREATE TABLE IF NOT EXISTS eam.resource_pool (
+-- Table: pamp.resource_pool
+CREATE TABLE IF NOT EXISTS pamp.resource_pool (
     worker VARCHAR(255),
     itcode VARCHAR(255) NOT NULL,
     worker_type VARCHAR(255),
@@ -1376,8 +1396,8 @@ CREATE TABLE IF NOT EXISTS eam.resource_pool (
     email_option BOOLEAN
 );
 
--- Table: eam.resource_pool_extend
-CREATE TABLE IF NOT EXISTS eam.resource_pool_extend (
+-- Table: pamp.resource_pool_extend
+CREATE TABLE IF NOT EXISTS pamp.resource_pool_extend (
     worker VARCHAR(255),
     itcode VARCHAR(255) NOT NULL,
     worker_type VARCHAR(255),
@@ -1414,31 +1434,31 @@ CREATE TABLE IF NOT EXISTS eam.resource_pool_extend (
     email_option BOOLEAN
 );
 
--- Table: eam.schema_migrations
-CREATE TABLE IF NOT EXISTS eam.schema_migrations (
+-- Table: pamp.schema_migrations
+CREATE TABLE IF NOT EXISTS pamp.schema_migrations (
     id INTEGER NOT NULL DEFAULT nextval('schema_migrations_id_seq'::regclass),
     filename VARCHAR(255) NOT NULL,
     hash VARCHAR(255) NOT NULL,
     applied_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Table: eam.smart_agent
-CREATE TABLE IF NOT EXISTS eam.smart_agent (
+-- Table: pamp.smart_agent
+CREATE TABLE IF NOT EXISTS pamp.smart_agent (
     itcode VARCHAR(255)
 );
 
--- Table: eam.sys_log
-CREATE TABLE IF NOT EXISTS eam.sys_log (
+-- Table: pamp.sys_log
+CREATE TABLE IF NOT EXISTS pamp.sys_log (
     id VARCHAR(255) NOT NULL DEFAULT gen_random_uuid(),
     log_content JSON,
     create_at TIMESTAMP,
-    user VARCHAR(255),
+    "user" VARCHAR(255),
     action VARCHAR(255),
     object VARCHAR(255)
 );
 
--- Table: eam.tech_key_stack_auto_checking_log
-CREATE TABLE IF NOT EXISTS eam.tech_key_stack_auto_checking_log (
+-- Table: pamp.tech_key_stack_auto_checking_log
+CREATE TABLE IF NOT EXISTS pamp.tech_key_stack_auto_checking_log (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     update_time TIMESTAMP NOT NULL,
     last_update_time TIMESTAMP NOT NULL,
@@ -1448,8 +1468,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_key_stack_auto_checking_log (
     create_by VARCHAR(255) NOT NULL
 );
 
--- Table: eam.tech_key_stack_item
-CREATE TABLE IF NOT EXISTS eam.tech_key_stack_item (
+-- Table: pamp.tech_key_stack_item
+CREATE TABLE IF NOT EXISTS pamp.tech_key_stack_item (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     stack_id VARCHAR(255) NOT NULL DEFAULT lpad((nextval('tech_key_stack_item_seq'::regclass))::text, 7, '0'::text),
     app_id VARCHAR(255) NOT NULL,
@@ -1480,8 +1500,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_key_stack_item (
     security_advice VARCHAR(255)
 );
 
--- Table: eam.tech_stack_app
-CREATE TABLE IF NOT EXISTS eam.tech_stack_app (
+-- Table: pamp.tech_stack_app
+CREATE TABLE IF NOT EXISTS pamp.tech_stack_app (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     app_id VARCHAR(255) NOT NULL,
     status VARCHAR(255),
@@ -1491,8 +1511,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_stack_app (
     update_at TIMESTAMP
 );
 
--- Table: eam.tech_stack_category
-CREATE TABLE IF NOT EXISTS eam.tech_stack_category (
+-- Table: pamp.tech_stack_category
+CREATE TABLE IF NOT EXISTS pamp.tech_stack_category (
     id INTEGER NOT NULL DEFAULT nextval('tech_stack_category_id_seq'::regclass),
     category_code VARCHAR(255) NOT NULL,
     category_name VARCHAR(255) NOT NULL,
@@ -1504,8 +1524,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_stack_category (
     updated_by VARCHAR(255) NOT NULL DEFAULT ''::character varying
 );
 
--- Table: eam.tech_stack_component
-CREATE TABLE IF NOT EXISTS eam.tech_stack_component (
+-- Table: pamp.tech_stack_component
+CREATE TABLE IF NOT EXISTS pamp.tech_stack_component (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     stack_id VARCHAR(255) DEFAULT lpad((nextval('tech_stack_component_seq'::regclass))::text, 6, '0'::text),
     dependency_id UUID NOT NULL,
@@ -1526,8 +1546,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_stack_component (
     update_at TIMESTAMP
 );
 
--- Table: eam.tech_stack_dependency
-CREATE TABLE IF NOT EXISTS eam.tech_stack_dependency (
+-- Table: pamp.tech_stack_dependency
+CREATE TABLE IF NOT EXISTS pamp.tech_stack_dependency (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     app_id VARCHAR(255) NOT NULL,
     devops_link VARCHAR(255) NOT NULL,
@@ -1542,8 +1562,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_stack_dependency (
     update_at TIMESTAMP
 );
 
--- Table: eam.tech_stack_dependency_file
-CREATE TABLE IF NOT EXISTS eam.tech_stack_dependency_file (
+-- Table: pamp.tech_stack_dependency_file
+CREATE TABLE IF NOT EXISTS pamp.tech_stack_dependency_file (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     app_id VARCHAR(255) NOT NULL,
     dependency_id UUID NOT NULL,
@@ -1555,8 +1575,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_stack_dependency_file (
     create_at TIMESTAMP
 );
 
--- Table: eam.tech_stack_item
-CREATE TABLE IF NOT EXISTS eam.tech_stack_item (
+-- Table: pamp.tech_stack_item
+CREATE TABLE IF NOT EXISTS pamp.tech_stack_item (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     stack_id VARCHAR(255) DEFAULT lpad((nextval('tech_stack_item_seq'::regclass))::text, 6, '0'::text),
     app_id VARCHAR(255) NOT NULL,
@@ -1581,8 +1601,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_stack_item (
     specifier VARCHAR(255)
 );
 
--- Table: eam.tech_stack_lifecyle
-CREATE TABLE IF NOT EXISTS eam.tech_stack_lifecyle (
+-- Table: pamp.tech_stack_lifecyle
+CREATE TABLE IF NOT EXISTS pamp.tech_stack_lifecyle (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     app_id VARCHAR(255) NOT NULL,
     status VARCHAR(255),
@@ -1592,8 +1612,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_stack_lifecyle (
     update_at TIMESTAMP
 );
 
--- Table: eam.tech_stack_master_data
-CREATE TABLE IF NOT EXISTS eam.tech_stack_master_data (
+-- Table: pamp.tech_stack_master_data
+CREATE TABLE IF NOT EXISTS pamp.tech_stack_master_data (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     master_no INTEGER NOT NULL,
     category VARCHAR(255) NOT NULL,
@@ -1626,8 +1646,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_stack_master_data (
     source VARCHAR(255)
 );
 
--- Table: eam.tech_stack_operate_log
-CREATE TABLE IF NOT EXISTS eam.tech_stack_operate_log (
+-- Table: pamp.tech_stack_operate_log
+CREATE TABLE IF NOT EXISTS pamp.tech_stack_operate_log (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     app_id VARCHAR(255),
     stack_id VARCHAR(255),
@@ -1638,8 +1658,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_stack_operate_log (
     create_at TIMESTAMP DEFAULT now()
 );
 
--- Table: eam.tech_stack_standard
-CREATE TABLE IF NOT EXISTS eam.tech_stack_standard (
+-- Table: pamp.tech_stack_standard
+CREATE TABLE IF NOT EXISTS pamp.tech_stack_standard (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     tech_layer VARCHAR(255) NOT NULL,
     category VARCHAR(255) NOT NULL,
@@ -1655,8 +1675,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_stack_standard (
     update_at TIMESTAMP
 );
 
--- Table: eam.tech_stack_template
-CREATE TABLE IF NOT EXISTS eam.tech_stack_template (
+-- Table: pamp.tech_stack_template
+CREATE TABLE IF NOT EXISTS pamp.tech_stack_template (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     template_no INTEGER NOT NULL DEFAULT nextval('tech_stack_template_template_no_seq'::regclass),
     standard_uuid UUID,
@@ -1667,8 +1687,8 @@ CREATE TABLE IF NOT EXISTS eam.tech_stack_template (
     update_at TIMESTAMP
 );
 
--- Table: eam.user_profile
-CREATE TABLE IF NOT EXISTS eam.user_profile (
+-- Table: pamp.user_profile
+CREATE TABLE IF NOT EXISTS pamp.user_profile (
     itcode VARCHAR(255) NOT NULL,
     name VARCHAR(255),
     email VARCHAR(255),
@@ -1684,8 +1704,8 @@ CREATE TABLE IF NOT EXISTS eam.user_profile (
     create_time TIMESTAMP DEFAULT now()
 );
 
--- Table: eam.v_user_role_scope
-CREATE TABLE IF NOT EXISTS eam.v_user_role_scope (
+-- Table: pamp.v_user_role_scope
+CREATE TABLE IF NOT EXISTS pamp.v_user_role_scope (
     itcode TEXT,
     role TEXT
 );

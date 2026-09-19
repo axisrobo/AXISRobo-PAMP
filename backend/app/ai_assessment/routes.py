@@ -196,13 +196,13 @@ def _unmet_keys(items: list[dict]) -> list[str]:
 
 async def _load_verdict(db: AsyncSession, assessment_id: str) -> dict:
     sa = await db.execute(
-        text("SELECT matrix_position FROM eam.ai_self_assessment WHERE assessment_id = CAST(:id AS uuid)"),
+        text("SELECT matrix_position FROM pamp.ai_self_assessment WHERE assessment_id = CAST(:id AS uuid)"),
         {"id": assessment_id},
     )
     sa_row = sa.mappings().first()
     matrix = sa_row["matrix_position"] if sa_row else None
     cl = await db.execute(
-        text("SELECT section_key, item_key, is_checked, is_critical FROM eam.ai_review_checklist "
+        text("SELECT section_key, item_key, is_checked, is_critical FROM pamp.ai_review_checklist "
              "WHERE assessment_id = CAST(:id AS uuid)"),
         {"id": assessment_id},
     )
@@ -236,12 +236,12 @@ async def list_assessments(
     pageSize: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
 ):
-    count_r = await db.execute(text("SELECT COUNT(*) FROM eam.ai_project_assessment"))
+    count_r = await db.execute(text("SELECT COUNT(*) FROM pamp.ai_project_assessment"))
     total = count_r.scalar()
     offset = (page - 1) * pageSize
     rows = await db.execute(
         text("SELECT id, project_name, project_id_ref, status, created_by, updated_by, created_at, updated_at "
-             "FROM eam.ai_project_assessment ORDER BY created_at DESC LIMIT :limit OFFSET :offset"),
+             "FROM pamp.ai_project_assessment ORDER BY created_at DESC LIMIT :limit OFFSET :offset"),
         {"limit": pageSize, "offset": offset},
     )
     items = [{
@@ -273,7 +273,7 @@ async def create_assessment(
 ):
     aid = str(uuid.uuid4())
     await db.execute(text(
-        "INSERT INTO eam.ai_project_assessment (id, project_name, project_id_ref, status, created_by, updated_by) "
+        "INSERT INTO pamp.ai_project_assessment (id, project_name, project_id_ref, status, created_by, updated_by) "
         "VALUES (CAST(:id AS uuid), :name, :ref, 'draft', :cb, :cb)"
     ), {"id": aid, "name": body.projectName, "ref": body.projectIdRef or "", "cb": user.id})
     await db.commit()
@@ -282,18 +282,18 @@ async def create_assessment(
 
 @router.get("/{assessment_id}", dependencies=[Depends(require_permission("avdm", "read"))])
 async def get_assessment(assessment_id: str, db: AsyncSession = Depends(get_db)):
-    r = await db.execute(text("SELECT * FROM eam.ai_project_assessment WHERE id = CAST(:id AS uuid)"), {"id": assessment_id})
+    r = await db.execute(text("SELECT * FROM pamp.ai_project_assessment WHERE id = CAST(:id AS uuid)"), {"id": assessment_id})
     row = r.mappings().first()
     if not row:
         raise HTTPException(status_code=404, detail="Assessment not found")
 
-    sa = await db.execute(text("SELECT * FROM eam.ai_self_assessment WHERE assessment_id = CAST(:id AS uuid)"),
+    sa = await db.execute(text("SELECT * FROM pamp.ai_self_assessment WHERE assessment_id = CAST(:id AS uuid)"),
                           {"id": assessment_id})
     sa_row = sa.mappings().first()
 
     cl = await db.execute(text(
         "SELECT section_key, section_label, item_key, item_label, is_checked, is_critical, notes, sort_order "
-        "FROM eam.ai_review_checklist WHERE assessment_id = CAST(:id AS uuid) ORDER BY section_key, sort_order"
+        "FROM pamp.ai_review_checklist WHERE assessment_id = CAST(:id AS uuid) ORDER BY section_key, sort_order"
     ), {"id": assessment_id})
     checklist_items = [{
         "sectionKey": r["section_key"],
@@ -335,17 +335,17 @@ async def get_assessment(assessment_id: str, db: AsyncSession = Depends(get_db))
 
 @router.get("/{assessment_id}/report", dependencies=[Depends(require_permission("avdm", "read"))])
 async def get_assessment_report(assessment_id: str, db: AsyncSession = Depends(get_db)):
-    r = await db.execute(text("SELECT * FROM eam.ai_project_assessment WHERE id = CAST(:id AS uuid)"), {"id": assessment_id})
+    r = await db.execute(text("SELECT * FROM pamp.ai_project_assessment WHERE id = CAST(:id AS uuid)"), {"id": assessment_id})
     row = r.mappings().first()
     if not row:
         raise HTTPException(status_code=404, detail="Assessment not found")
 
-    sa = await db.execute(text("SELECT * FROM eam.ai_self_assessment WHERE assessment_id = CAST(:id AS uuid)"), {"id": assessment_id})
+    sa = await db.execute(text("SELECT * FROM pamp.ai_self_assessment WHERE assessment_id = CAST(:id AS uuid)"), {"id": assessment_id})
     sa_row = sa.mappings().first()
 
     cl = await db.execute(text(
         "SELECT section_key, section_label, item_key, item_label, is_checked, is_critical, notes "
-        "FROM eam.ai_review_checklist WHERE assessment_id = CAST(:id AS uuid) ORDER BY section_key, sort_order"
+        "FROM pamp.ai_review_checklist WHERE assessment_id = CAST(:id AS uuid) ORDER BY section_key, sort_order"
     ), {"id": assessment_id})
     checklist = [{
         "sectionKey": c["section_key"], "sectionLabel": c["section_label"],
@@ -441,13 +441,13 @@ async def save_self_assessment(
     assessment_id: str, body: SelfAssessmentRequest,
     db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user),
 ):
-    r = await db.execute(text("SELECT 1 FROM eam.ai_project_assessment WHERE id = CAST(:id AS uuid)"), {"id": assessment_id})
+    r = await db.execute(text("SELECT 1 FROM pamp.ai_project_assessment WHERE id = CAST(:id AS uuid)"), {"id": assessment_id})
     if not r.fetchone():
         raise HTTPException(status_code=404, detail="Assessment not found")
 
     matrix = _compute_matrix_position(body.adoptionTier, body.governanceMaturity)
     await db.execute(text(
-        "INSERT INTO eam.ai_self_assessment (assessment_id, scenario_class, counterparty_type, adoption_tier, governance_maturity, matrix_position, description) "
+        "INSERT INTO pamp.ai_self_assessment (assessment_id, scenario_class, counterparty_type, adoption_tier, governance_maturity, matrix_position, description) "
         "VALUES (CAST(:aid AS uuid), :sc, :cp, :at, :gm, :mp, :desc) "
         "ON CONFLICT (assessment_id) DO UPDATE SET scenario_class=EXCLUDED.scenario_class, counterparty_type=EXCLUDED.counterparty_type, "
         "adoption_tier=EXCLUDED.adoption_tier, governance_maturity=EXCLUDED.governance_maturity, matrix_position=EXCLUDED.matrix_position, description=EXCLUDED.description, updated_at=NOW()"
@@ -458,7 +458,7 @@ async def save_self_assessment(
 
     verdict = await _load_verdict(db, assessment_id)
     status = _VERDICT_STATUS[verdict["verdict"]]
-    await db.execute(text("UPDATE eam.ai_project_assessment SET status = :st, updated_by = :ub, updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": assessment_id, "ub": user.id, "st": status})
+    await db.execute(text("UPDATE pamp.ai_project_assessment SET status = :st, updated_by = :ub, updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": assessment_id, "ub": user.id, "st": status})
     await db.commit()
 
     return {"matrixPosition": matrix, "verdict": verdict, "status": status}
@@ -471,19 +471,19 @@ async def update_checklist(
 ):
     for item in body.items:
         await db.execute(text(
-            "UPDATE eam.ai_review_checklist SET is_checked = :chk, notes = :notes, updated_at = NOW() "
+            "UPDATE pamp.ai_review_checklist SET is_checked = :chk, notes = :notes, updated_at = NOW() "
             "WHERE assessment_id = CAST(:aid AS uuid) AND section_key = :sk AND item_key = :ik"
         ), {"aid": assessment_id, "sk": item["sectionKey"], "ik": item["itemKey"], "chk": item.get("isChecked", False), "notes": item.get("notes", "") or ""})
     verdict = await _load_verdict(db, assessment_id)
     status = _VERDICT_STATUS[verdict["verdict"]]
-    await db.execute(text("UPDATE eam.ai_project_assessment SET status = :st, updated_by = :ub, updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": assessment_id, "ub": user.id, "st": status})
+    await db.execute(text("UPDATE pamp.ai_project_assessment SET status = :st, updated_by = :ub, updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": assessment_id, "ub": user.id, "st": status})
     await db.commit()
     return {"message": "ok", "status": status, "verdict": verdict}
 
 
 @router.delete("/{assessment_id}", dependencies=[Depends(require_role(Role.EA_ADMIN))])
 async def delete_assessment(assessment_id: str, db: AsyncSession = Depends(get_db)):
-    await db.execute(text("DELETE FROM eam.ai_project_assessment WHERE id = CAST(:id AS uuid)"), {"id": assessment_id})
+    await db.execute(text("DELETE FROM pamp.ai_project_assessment WHERE id = CAST(:id AS uuid)"), {"id": assessment_id})
     await db.commit()
     return {"message": "deleted"}
 
@@ -518,26 +518,26 @@ async def _reconcile_checklist(db: AsyncSession, assessment_id: str, counterpart
     applicable_keys = {(sk, ik) for (sk, _, ik, _, _, _) in applicable}
 
     existing = await db.execute(text(
-        "SELECT section_key, item_key FROM eam.ai_review_checklist WHERE assessment_id = CAST(:aid AS uuid)"
+        "SELECT section_key, item_key FROM pamp.ai_review_checklist WHERE assessment_id = CAST(:aid AS uuid)"
     ), {"aid": assessment_id})
     existing_keys = {(r["section_key"], r["item_key"]) for r in existing.mappings().all()}
 
     for sk, sl, ik, il, critical, so in applicable:
         if (sk, ik) in existing_keys:
             await db.execute(text(
-                "UPDATE eam.ai_review_checklist SET sort_order = :so WHERE assessment_id = CAST(:aid AS uuid) "
+                "UPDATE pamp.ai_review_checklist SET sort_order = :so WHERE assessment_id = CAST(:aid AS uuid) "
                 "AND section_key = :sk AND item_key = :ik"
             ), {"aid": assessment_id, "sk": sk, "ik": ik, "so": so})
             continue
         await db.execute(text(
-            "INSERT INTO eam.ai_review_checklist (assessment_id, section_key, section_label, item_key, item_label, is_critical, sort_order) "
+            "INSERT INTO pamp.ai_review_checklist (assessment_id, section_key, section_label, item_key, item_label, is_critical, sort_order) "
             "VALUES (CAST(:aid AS uuid), :sk, :sl, :ik, :il, :cr, :so) "
             "ON CONFLICT (assessment_id, section_key, item_key) DO NOTHING"
         ), {"aid": assessment_id, "sk": sk, "sl": sl, "ik": ik, "il": il, "cr": critical, "so": so})
 
     for sk, ik in existing_keys - applicable_keys:
         await db.execute(text(
-            "DELETE FROM eam.ai_review_checklist WHERE assessment_id = CAST(:aid AS uuid) AND section_key = :sk AND item_key = :ik"
+            "DELETE FROM pamp.ai_review_checklist WHERE assessment_id = CAST(:aid AS uuid) AND section_key = :sk AND item_key = :ik"
         ), {"aid": assessment_id, "sk": sk, "ik": ik})
 
 

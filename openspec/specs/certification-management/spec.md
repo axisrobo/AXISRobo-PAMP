@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Certification data model
-The system SHALL store certifications in `eam.certification` with the following fields:
+The system SHALL store certifications in `pamp.certification` with the following fields:
 
 | DB Column | API Field | Type | Description |
 |-----------|-----------|------|-------------|
@@ -154,8 +154,8 @@ The xlsx SHALL have styled headers (blue fill, white bold text, borders) with co
 `POST /api/certifications/send-expiration-notification` (requires `EA_ADMIN` role) SHALL send a digest email listing certifications that are expired or expiring within 30 days.
 
 The endpoint SHALL:
-1. Query `eam.certification` where `expiration_date <= CURRENT_DATE + 30 days`
-2. Fetch EA team recipients from `eam.dict_option` where `category_id = '2400'`
+1. Query `pamp.certification` where `expiration_date <= CURRENT_DATE + 30 days`
+2. Fetch EA team recipients from `pamp.dict_option` where `category_id = '2400'`
 3. Send email via shared `send_email()` service with:
    - **Subject**: `AxisArch – Certification Expiration Reminder [<YYYY-MM-DD>]`
    - **Template code**: `Certifications`

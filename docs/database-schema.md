@@ -1,6 +1,6 @@
 # Database Schema Documentation
 
-**Schema**: `eam`
+**Schema**: `pamp`
 **Total Tables**: 100
 **Total Foreign Key Relationships**: 23
 
@@ -8,7 +8,7 @@
 
 ---
 
-## `eam.avdm_pact_concern`
+## `pamp.avdm_pact_concern`
 
 PACT concern master catalog (68 architecture concerns). Defines concern keys, names, layers, risk tags.
 
@@ -33,13 +33,13 @@ PACT concern master catalog (68 architecture concerns). Defines concern keys, na
 
 ### Relationships
 
-- `eam.avdm_concern_activation_rule_score.concern_id` <- `eam.avdm_pact_concern`
-- `eam.avdm_question_answer_concern_mapping.concern_id` <- `eam.avdm_pact_concern`
-- `eam.avdm_viewpoint_concern_mapping.concern_id` <- `eam.avdm_pact_concern`
+- `pamp.avdm_concern_activation_rule_score.concern_id` <- `pamp.avdm_pact_concern`
+- `pamp.avdm_question_answer_concern_mapping.concern_id` <- `pamp.avdm_pact_concern`
+- `pamp.avdm_viewpoint_concern_mapping.concern_id` <- `pamp.avdm_pact_concern`
 
 ---
 
-## `eam.avdm_question_group`
+## `pamp.avdm_question_group`
 
 Question groups (e.g., Scale Overall, Complexity Overall, Change Trigger, Architecture Type).
 
@@ -58,11 +58,11 @@ Question groups (e.g., Scale Overall, Complexity Overall, Change Trigger, Archit
 
 ### Relationships
 
-- `eam.avdm_question_category.group_id` <- `eam.avdm_question_group`
+- `pamp.avdm_question_category.group_id` <- `pamp.avdm_question_group`
 
 ---
 
-## `eam.avdm_question_category`
+## `pamp.avdm_question_category`
 
 Question categories within groups (e.g., Project Scale, Technical Complexity, Business Change).
 
@@ -82,12 +82,12 @@ Question categories within groups (e.g., Project Scale, Technical Complexity, Bu
 
 ### Relationships
 
-- `eam.avdm_question_category.group_id` -> `eam.avdm_question_group.id`
-- `eam.avdm_question.category_id` <- `eam.avdm_question_category`
+- `pamp.avdm_question_category.group_id` -> `pamp.avdm_question_group.id`
+- `pamp.avdm_question.category_id` <- `pamp.avdm_question_category`
 
 ---
 
-## `eam.avdm_question_answer_type`
+## `pamp.avdm_question_answer_type`
 
 Answer type definitions (radio, select, multiselect, text, textarea) with widget and storage kinds.
 
@@ -109,11 +109,11 @@ Answer type definitions (radio, select, multiselect, text, textarea) with widget
 
 ### Relationships
 
-- `eam.avdm_question.answer_type_id` <- `eam.avdm_question_answer_type`
+- `pamp.avdm_question.answer_type_id` <- `pamp.avdm_question_answer_type`
 
 ---
 
-## `eam.avdm_question_option_set`
+## `pamp.avdm_question_option_set`
 
 Shared option sets (e.g., Yes/No, Application Count Ranges, Project Types).
 
@@ -133,12 +133,12 @@ Shared option sets (e.g., Yes/No, Application Count Ranges, Project Types).
 
 ### Relationships
 
-- `eam.avdm_question.option_set_id` <- `eam.avdm_question_option_set`
-- `eam.avdm_question_option_item.option_set_id` <- `eam.avdm_question_option_set`
+- `pamp.avdm_question.option_set_id` <- `pamp.avdm_question_option_set`
+- `pamp.avdm_question_option_item.option_set_id` <- `pamp.avdm_question_option_set`
 
 ---
 
-## `eam.avdm_question_option_item`
+## `pamp.avdm_question_option_item`
 
 Individual option items within option sets (e.g., 'Yes', '5 or fewer', 'Web App').
 
@@ -159,12 +159,12 @@ Individual option items within option sets (e.g., 'Yes', '5 or fewer', 'Web App'
 
 ### Relationships
 
-- `eam.avdm_question_option_item.option_set_id` -> `eam.avdm_question_option_set.id`
-- `eam.avdm_question_answer_concern_mapping.option_item_id` <- `eam.avdm_question_option_item`
+- `pamp.avdm_question_option_item.option_set_id` -> `pamp.avdm_question_option_set.id`
+- `pamp.avdm_question_answer_concern_mapping.option_item_id` <- `pamp.avdm_question_option_item`
 
 ---
 
-## `eam.avdm_question`
+## `pamp.avdm_question`
 
 Question bank items with stable IDs, text, design intent, and answer type references.
 
@@ -191,14 +191,14 @@ Question bank items with stable IDs, text, design intent, and answer type refere
 
 ### Relationships
 
-- `eam.avdm_question.category_id` -> `eam.avdm_question_category.id`
-- `eam.avdm_question.answer_type_id` -> `eam.avdm_question_answer_type.id`
-- `eam.avdm_question.option_set_id` -> `eam.avdm_question_option_set.id`
-- `eam.avdm_question_answer_concern_mapping.question_id` <- `eam.avdm_question`
+- `pamp.avdm_question.category_id` -> `pamp.avdm_question_category.id`
+- `pamp.avdm_question.answer_type_id` -> `pamp.avdm_question_answer_type.id`
+- `pamp.avdm_question.option_set_id` -> `pamp.avdm_question_option_set.id`
+- `pamp.avdm_question_answer_concern_mapping.question_id` <- `pamp.avdm_question`
 
 ---
 
-## `eam.avdm_question_answer_concern_mapping`
+## `pamp.avdm_question_answer_concern_mapping`
 
 Maps question answers (or option selections) to PACT concerns with scores, severity, likelihood.
 
@@ -223,13 +223,13 @@ Maps question answers (or option selections) to PACT concerns with scores, sever
 
 ### Relationships
 
-- `eam.avdm_question_answer_concern_mapping.question_id` -> `eam.avdm_question.id`
-- `eam.avdm_question_answer_concern_mapping.option_item_id` -> `eam.avdm_question_option_item.id`
-- `eam.avdm_question_answer_concern_mapping.concern_id` -> `eam.avdm_pact_concern.id`
+- `pamp.avdm_question_answer_concern_mapping.question_id` -> `pamp.avdm_question.id`
+- `pamp.avdm_question_answer_concern_mapping.option_item_id` -> `pamp.avdm_question_option_item.id`
+- `pamp.avdm_question_answer_concern_mapping.concern_id` -> `pamp.avdm_pact_concern.id`
 
 ---
 
-## `eam.avdm_artifact_category`
+## `pamp.avdm_artifact_category`
 
 Artifact categories (Architecture Diagram, Business Architecture, Data Architecture, etc.).
 
@@ -248,11 +248,11 @@ Artifact categories (Architecture Diagram, Business Architecture, Data Architect
 
 ### Relationships
 
-- `eam.avdm_artifact.artifact_category_id` <- `eam.avdm_artifact_category`
+- `pamp.avdm_artifact.artifact_category_id` <- `pamp.avdm_artifact_category`
 
 ---
 
-## `eam.avdm_artifact`
+## `pamp.avdm_artifact`
 
 Named artifacts (tech diagram, app collaboration, biz diagram, data model, etc.) with purpose and typical contents.
 
@@ -274,13 +274,13 @@ Named artifacts (tech diagram, app collaboration, biz diagram, data model, etc.)
 
 ### Relationships
 
-- `eam.avdm_artifact.artifact_category_id` -> `eam.avdm_artifact_category.id`
-- `eam.avdm_project_type_artifact_mapping.artifact_id` <- `eam.avdm_artifact`
-- `eam.avdm_viewpoint_artifact_mapping.artifact_id` <- `eam.avdm_artifact`
+- `pamp.avdm_artifact.artifact_category_id` -> `pamp.avdm_artifact_category.id`
+- `pamp.avdm_project_type_artifact_mapping.artifact_id` <- `pamp.avdm_artifact`
+- `pamp.avdm_viewpoint_artifact_mapping.artifact_id` <- `pamp.avdm_artifact`
 
 ---
 
-## `eam.avdm_viewpoint`
+## `pamp.avdm_viewpoint`
 
 Architecture viewpoint definitions with L/P classification, S/B classification, purpose, examples, audience.
 
@@ -306,12 +306,12 @@ Architecture viewpoint definitions with L/P classification, S/B classification, 
 
 ### Relationships
 
-- `eam.avdm_viewpoint_artifact_mapping.viewpoint_id` <- `eam.avdm_viewpoint` (ON DELETE CASCADE)
-- `eam.avdm_viewpoint_concern_mapping.viewpoint_id` <- `eam.avdm_viewpoint` (ON DELETE CASCADE)
+- `pamp.avdm_viewpoint_artifact_mapping.viewpoint_id` <- `pamp.avdm_viewpoint` (ON DELETE CASCADE)
+- `pamp.avdm_viewpoint_concern_mapping.viewpoint_id` <- `pamp.avdm_viewpoint` (ON DELETE CASCADE)
 
 ---
 
-## `eam.avdm_viewpoint_concern_mapping`
+## `pamp.avdm_viewpoint_concern_mapping`
 
 Maps viewpoints to their associated PACT concerns.
 
@@ -329,12 +329,12 @@ Maps viewpoints to their associated PACT concerns.
 
 ### Relationships
 
-- `eam.avdm_viewpoint_concern_mapping.viewpoint_id` -> `eam.avdm_viewpoint.id` (ON DELETE CASCADE)
-- `eam.avdm_viewpoint_concern_mapping.concern_id` -> `eam.avdm_pact_concern.id`
+- `pamp.avdm_viewpoint_concern_mapping.viewpoint_id` -> `pamp.avdm_viewpoint.id` (ON DELETE CASCADE)
+- `pamp.avdm_viewpoint_concern_mapping.concern_id` -> `pamp.avdm_pact_concern.id`
 
 ---
 
-## `eam.avdm_viewpoint_artifact_mapping`
+## `pamp.avdm_viewpoint_artifact_mapping`
 
 Maps viewpoints to recommended artifacts with Mandatory/Optional status.
 
@@ -353,12 +353,12 @@ Maps viewpoints to recommended artifacts with Mandatory/Optional status.
 
 ### Relationships
 
-- `eam.avdm_viewpoint_artifact_mapping.viewpoint_id` -> `eam.avdm_viewpoint.id` (ON DELETE CASCADE)
-- `eam.avdm_viewpoint_artifact_mapping.artifact_id` -> `eam.avdm_artifact.id`
+- `pamp.avdm_viewpoint_artifact_mapping.viewpoint_id` -> `pamp.avdm_viewpoint.id` (ON DELETE CASCADE)
+- `pamp.avdm_viewpoint_artifact_mapping.artifact_id` -> `pamp.avdm_artifact.id`
 
 ---
 
-## `eam.avdm_project_type_profile`
+## `pamp.avdm_project_type_profile`
 
 Project type profiles (e.g., Web App, Data Project, AI/ML) with typical patterns and risks.
 
@@ -379,11 +379,11 @@ Project type profiles (e.g., Web App, Data Project, AI/ML) with typical patterns
 
 ### Relationships
 
-- `eam.avdm_project_type_artifact_mapping.project_type_profile_id` <- `eam.avdm_project_type_profile` (ON DELETE CASCADE)
+- `pamp.avdm_project_type_artifact_mapping.project_type_profile_id` <- `pamp.avdm_project_type_profile` (ON DELETE CASCADE)
 
 ---
 
-## `eam.avdm_project_type_artifact_mapping`
+## `pamp.avdm_project_type_artifact_mapping`
 
 Maps project type profiles to default artifact recommendations.
 
@@ -402,12 +402,12 @@ Maps project type profiles to default artifact recommendations.
 
 ### Relationships
 
-- `eam.avdm_project_type_artifact_mapping.project_type_profile_id` -> `eam.avdm_project_type_profile.id` (ON DELETE CASCADE)
-- `eam.avdm_project_type_artifact_mapping.artifact_id` -> `eam.avdm_artifact.id`
+- `pamp.avdm_project_type_artifact_mapping.project_type_profile_id` -> `pamp.avdm_project_type_profile.id` (ON DELETE CASCADE)
+- `pamp.avdm_project_type_artifact_mapping.artifact_id` -> `pamp.avdm_artifact.id`
 
 ---
 
-## `eam.avdm_concern_activation_rule`
+## `pamp.avdm_concern_activation_rule`
 
 Conditional rules for activating concerns based on question answer combinations.
 
@@ -427,11 +427,11 @@ Conditional rules for activating concerns based on question answer combinations.
 
 ### Relationships
 
-- `eam.avdm_concern_activation_rule_score.rule_id` <- `eam.avdm_concern_activation_rule` (ON DELETE CASCADE)
+- `pamp.avdm_concern_activation_rule_score.rule_id` <- `pamp.avdm_concern_activation_rule` (ON DELETE CASCADE)
 
 ---
 
-## `eam.avdm_concern_activation_rule_score`
+## `pamp.avdm_concern_activation_rule_score`
 
 Scoring entries per rule+concern combination.
 
@@ -453,12 +453,12 @@ Scoring entries per rule+concern combination.
 
 ### Relationships
 
-- `eam.avdm_concern_activation_rule_score.rule_id` -> `eam.avdm_concern_activation_rule.id` (ON DELETE CASCADE)
-- `eam.avdm_concern_activation_rule_score.concern_id` -> `eam.avdm_pact_concern.id`
+- `pamp.avdm_concern_activation_rule_score.rule_id` -> `pamp.avdm_concern_activation_rule.id` (ON DELETE CASCADE)
+- `pamp.avdm_concern_activation_rule_score.concern_id` -> `pamp.avdm_pact_concern.id`
 
 ---
 
-## `eam.avdm_questionnaire_config`
+## `pamp.avdm_questionnaire_config`
 
 JSONB-based questionnaire configuration store (config key, versioned).
 
@@ -476,7 +476,7 @@ JSONB-based questionnaire configuration store (config key, versioned).
 
 ---
 
-## `eam.avdm_master_data_revision`
+## `pamp.avdm_master_data_revision`
 
 Revision tracking for AVDM master data domains (questionnaire, concern_mapping, artifact_catalog, etc.).
 
@@ -493,7 +493,7 @@ Revision tracking for AVDM master data domains (questionnaire, concern_mapping, 
 
 ---
 
-## `eam.avdm_static_document`
+## `pamp.avdm_static_document`
 
 JSONB-based static document store (viewpoint_artifact_mapping, project_type_profiles, questionnaire_sections).
 
@@ -509,7 +509,7 @@ JSONB-based static document store (viewpoint_artifact_mapping, project_type_prof
 
 ---
 
-## `eam.avdm_project_assessment`
+## `pamp.avdm_project_assessment`
 
 Project-level AVDM assessment records with questionnaire, risk items, evaluation, concerns, and artifact selections.
 
@@ -541,7 +541,7 @@ Project-level AVDM assessment records with questionnaire, risk items, evaluation
 
 ---
 
-## `eam.eam_request`
+## `pamp.pamp_request`
 
 Architecture review requests - the core entity for the EA review workflow.
 
@@ -570,7 +570,7 @@ Architecture review requests - the core entity for the EA review workflow.
 
 ---
 
-## `eam.eam_request_process_log`
+## `pamp.pamp_request_process_log`
 
 Process log tracking state transitions and workflow steps per request.
 
@@ -585,7 +585,7 @@ Process log tracking state transitions and workflow steps per request.
 
 ---
 
-## `eam.eam_request_attachment`
+## `pamp.pamp_request_attachment`
 
 Attachments/documents uploaded for architecture review requests.
 
@@ -602,7 +602,7 @@ Attachments/documents uploaded for architecture review requests.
 
 ---
 
-## `eam.eam_meetings`
+## `pamp.pamp_meetings`
 
 Review meeting records linked to projects/requests.
 
@@ -637,7 +637,7 @@ Review meeting records linked to projects/requests.
 
 ---
 
-## `eam.eam_actions`
+## `pamp.pamp_actions`
 
 Action items from review meetings linked to requests.
 
@@ -672,7 +672,7 @@ Action items from review meetings linked to requests.
 
 ---
 
-## `eam.eam_bigea_team_members`
+## `pamp.pamp_bigea_team_members`
 
 EA team member directory (itcode, name, org hierarchy).
 
@@ -716,7 +716,7 @@ EA team member directory (itcode, name, org hierarchy).
 
 ---
 
-## `eam.eam_arch_ai_check`
+## `pamp.pamp_arch_ai_check`
 
 AI review check results against architecture diagrams.
 
@@ -733,7 +733,7 @@ AI review check results against architecture diagrams.
 
 ---
 
-## `eam.eam_arch_ai_check_interaction`
+## `pamp.pamp_arch_ai_check_interaction`
 
 AI analysis of interactions between applications in a check.
 
@@ -761,7 +761,7 @@ AI analysis of interactions between applications in a check.
 
 ---
 
-## `eam.eam_arch_ai_check_app`
+## `pamp.pamp_arch_ai_check_app`
 
 Applications referenced in AI architecture checks.
 
@@ -787,7 +787,7 @@ Applications referenced in AI architecture checks.
 
 ---
 
-## `eam.tech_key_stack_item`
+## `pamp.tech_key_stack_item`
 
 Technology stack items with version, compliance status, and security advice.
 
@@ -824,7 +824,7 @@ Technology stack items with version, compliance status, and security advice.
 
 ---
 
-## `eam.tech_stack_master_data`
+## `pamp.tech_stack_master_data`
 
 Master data for technology stack definitions (approved lists, categories).
 
@@ -863,7 +863,7 @@ Master data for technology stack definitions (approved lists, categories).
 
 ---
 
-## `eam.tech_stack_operate_log`
+## `pamp.tech_stack_operate_log`
 
 Audit log for field-level changes to tech stack items.
 
@@ -880,7 +880,7 @@ Audit log for field-level changes to tech stack items.
 
 ---
 
-## `eam.biz_cap_map`
+## `pamp.biz_cap_map`
 
 Business capability mapping to applications/data versions.
 
@@ -898,7 +898,7 @@ Business capability mapping to applications/data versions.
 
 ---
 
-## `eam.eam_project`
+## `pamp.pamp_project`
 
 Projects tracked in the project management module.
 
@@ -914,28 +914,28 @@ Projects tracked in the project management module.
 
 ### Relationships
 
-- `eam.eam_team_member.project_id` <- `eam.eam_project` (ON DELETE CASCADE)
+- `pamp.pamp_team_member.project_id` <- `pamp.pamp_project` (ON DELETE CASCADE)
 
 ---
 
-## `eam.eam_team_member`
+## `pamp.pamp_team_member`
 
 Team members assigned to projects.
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
 | `id` | `uuid` | NOT NULL | PK |
-| `project_id` | `uuid` | NOT NULL | FK -> `eam_project.id`, ON DELETE CASCADE |
+| `project_id` | `uuid` | NOT NULL | FK -> `pamp_project.id`, ON DELETE CASCADE |
 | `user_itcode` | `character varying(255)` | NOT NULL | - |
 | `role` | `character varying(50)` | NULL | - |
 
 ### Relationships
 
-- `eam.eam_team_member.project_id` -> `eam.eam_project.id` (ON DELETE CASCADE)
+- `pamp.pamp_team_member.project_id` -> `pamp.pamp_project.id` (ON DELETE CASCADE)
 
 ---
 
-## `eam.eam_project_app`
+## `pamp.pamp_project_app`
 
 Applications associated with projects.
 
@@ -951,7 +951,7 @@ Applications associated with projects.
 
 ---
 
-## `eam.resource_pool`
+## `pamp.resource_pool`
 
 Resource directory (itcode, name, email, org hierarchy) for autocomplete.
 
@@ -994,7 +994,7 @@ Resource directory (itcode, name, email, org hierarchy) for autocomplete.
 
 ---
 
-## `eam.eam_audit_log`
+## `pamp.pamp_audit_log`
 
 RBAC audit log recording all access decisions (allow/deny) with user, resource, action.
 
@@ -1021,7 +1021,7 @@ RBAC audit log recording all access decisions (allow/deny) with user, resource, 
 
 ---
 
-## `eam.eam_file_storage`
+## `pamp.pamp_file_storage`
 
 Binary file storage (S3 alternative) keyed by path.
 
@@ -1034,7 +1034,7 @@ Binary file storage (S3 alternative) keyed by path.
 
 ---
 
-## `eam.local_users`
+## `pamp.local_users`
 
 Local authentication users (username, password hash, role). Used when AUTH_MODE=local.
 
@@ -1052,7 +1052,7 @@ Local authentication users (username, password hash, role). Used when AUTH_MODE=
 
 ---
 
-## `eam.schema_migrations`
+## `pamp.schema_migrations`
 
 Migration tracking table recording applied migration filenames and hashes.
 
@@ -1065,7 +1065,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.ai_project_assessment`
+## `pamp.ai_project_assessment`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1080,12 +1080,12 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ### Relationships
 
-- `eam.ai_review_checklist.assessment_id` <- `eam.ai_project_assessment` (ON DELETE CASCADE)
-- `eam.ai_self_assessment.assessment_id` <- `eam.ai_project_assessment` (ON DELETE CASCADE)
+- `pamp.ai_review_checklist.assessment_id` <- `pamp.ai_project_assessment` (ON DELETE CASCADE)
+- `pamp.ai_self_assessment.assessment_id` <- `pamp.ai_project_assessment` (ON DELETE CASCADE)
 
 ---
 
-## `eam.ai_review_checklist`
+## `pamp.ai_review_checklist`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1104,11 +1104,11 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ### Relationships
 
-- `eam.ai_review_checklist.assessment_id` -> `eam.ai_project_assessment.id` (ON DELETE CASCADE)
+- `pamp.ai_review_checklist.assessment_id` -> `pamp.ai_project_assessment.id` (ON DELETE CASCADE)
 
 ---
 
-## `eam.ai_self_assessment`
+## `pamp.ai_self_assessment`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1125,11 +1125,11 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ### Relationships
 
-- `eam.ai_self_assessment.assessment_id` -> `eam.ai_project_assessment.id` (ON DELETE CASCADE)
+- `pamp.ai_self_assessment.assessment_id` -> `pamp.ai_project_assessment.id` (ON DELETE CASCADE)
 
 ---
 
-## `eam.application_data`
+## `pamp.application_data`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1146,7 +1146,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.application_data_comment`
+## `pamp.application_data_comment`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1159,7 +1159,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.application_data_entity`
+## `pamp.application_data_entity`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1176,7 +1176,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.application_data_entity_classification`
+## `pamp.application_data_entity_classification`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1190,7 +1190,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.application_data_flow`
+## `pamp.application_data_flow`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1208,7 +1208,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.application_legal_entity`
+## `pamp.application_legal_entity`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1219,7 +1219,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.application_member`
+## `pamp.application_member`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1230,7 +1230,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.bcpf_master_data`
+## `pamp.bcpf_master_data`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1257,7 +1257,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.business_object_sequences`
+## `pamp.business_object_sequences`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1266,7 +1266,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.certification`
+## `pamp.certification`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1287,7 +1287,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.cmdb_application`
+## `pamp.cmdb_application`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1316,7 +1316,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.company`
+## `pamp.company`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1335,7 +1335,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.data_center`
+## `pamp.data_center`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1346,7 +1346,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.data_classification`
+## `pamp.data_classification`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1363,7 +1363,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.df_timer_details`
+## `pamp.df_timer_details`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1379,7 +1379,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.dict_option`
+## `pamp.dict_option`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1397,7 +1397,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_actions_email_log`
+## `pamp.pamp_actions_email_log`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1413,7 +1413,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_arch_ai_check_0122`
+## `pamp.pamp_arch_ai_check_0122`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1431,7 +1431,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_ea_calendar`
+## `pamp.pamp_ea_calendar`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1452,7 +1452,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_email_log`
+## `pamp.pamp_email_log`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1470,7 +1470,7 @@ Migration tracking table recording applied migration filenames and hashes.
 | `payload_json` | `jsonb` | NOT NULL | - |
 | `send_status` | `character varying(20)` | NOT NULL | - |
 | `error_message` | `text` | NULL | - |
-| `retry_of_log_id` | `uuid` | NULL | FK -> `eam_email_log.id` |
+| `retry_of_log_id` | `uuid` | NULL | FK -> `pamp_email_log.id` |
 | `triggered_by` | `character varying(100)` | NOT NULL | - |
 | `sent_at` | `timestamp without time zone` | NULL | - |
 | `created_at` | `timestamp without time zone` | NOT NULL | - |
@@ -1478,12 +1478,12 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ### Relationships
 
-- `eam.eam_email_log.retry_of_log_id` -> `eam.eam_email_log.id`
-- `eam.eam_email_log.retry_of_log_id` <- `eam.eam_email_log`
+- `pamp.pamp_email_log.retry_of_log_id` -> `pamp.pamp_email_log.id`
+- `pamp.pamp_email_log.retry_of_log_id` <- `pamp.pamp_email_log`
 
 ---
 
-## `eam.eam_email_recipient`
+## `pamp.pamp_email_recipient`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1501,7 +1501,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_meeting_deck`
+## `pamp.pamp_meeting_deck`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1512,7 +1512,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_meeting_minutes`
+## `pamp.pamp_meeting_minutes`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1532,7 +1532,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_meetings_email_log`
+## `pamp.pamp_meetings_email_log`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1547,7 +1547,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_project_summary`
+## `pamp.pamp_project_summary`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1572,7 +1572,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_review_log`
+## `pamp.pamp_review_log`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1585,7 +1585,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_scope_check_list`
+## `pamp.pamp_scope_check_list`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1602,7 +1602,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_scope_check_list_template`
+## `pamp.pamp_scope_check_list_template`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1621,7 +1621,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_scope_of_change`
+## `pamp.pamp_scope_of_change`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1635,7 +1635,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_scope_of_change_pages`
+## `pamp.pamp_scope_of_change_pages`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1647,7 +1647,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.eam_scope_of_change_template`
+## `pamp.pamp_scope_of_change_template`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1660,7 +1660,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.email_notification_log`
+## `pamp.email_notification_log`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1679,7 +1679,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.fiscal_year_sequences`
+## `pamp.fiscal_year_sequences`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1689,7 +1689,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.help_file`
+## `pamp.help_file`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1704,7 +1704,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.process_role`
+## `pamp.process_role`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1719,7 +1719,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.project`
+## `pamp.project`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1767,7 +1767,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.project_app`
+## `pamp.project_app`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1788,7 +1788,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.project_ea_status_log`
+## `pamp.project_ea_status_log`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1799,7 +1799,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.project_task`
+## `pamp.project_task`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1820,7 +1820,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.project_team_members`
+## `pamp.project_team_members`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1837,7 +1837,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.project_user_bookmark`
+## `pamp.project_user_bookmark`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1848,7 +1848,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.resource_pool_extend`
+## `pamp.resource_pool_extend`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1889,7 +1889,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.smart_agent`
+## `pamp.smart_agent`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1897,7 +1897,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.sys_log`
+## `pamp.sys_log`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1910,7 +1910,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.tech_key_stack_auto_checking_log`
+## `pamp.tech_key_stack_auto_checking_log`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1924,7 +1924,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.tech_stack_app`
+## `pamp.tech_stack_app`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1938,7 +1938,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.tech_stack_category`
+## `pamp.tech_stack_category`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1954,7 +1954,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.tech_stack_component`
+## `pamp.tech_stack_component`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1979,7 +1979,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.tech_stack_dependency`
+## `pamp.tech_stack_dependency`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -1998,7 +1998,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.tech_stack_dependency_file`
+## `pamp.tech_stack_dependency_file`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -2014,7 +2014,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.tech_stack_item`
+## `pamp.tech_stack_item`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -2043,7 +2043,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.tech_stack_lifecyle`
+## `pamp.tech_stack_lifecyle`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -2057,7 +2057,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.tech_stack_standard`
+## `pamp.tech_stack_standard`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -2077,7 +2077,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.tech_stack_template`
+## `pamp.tech_stack_template`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|
@@ -2092,7 +2092,7 @@ Migration tracking table recording applied migration filenames and hashes.
 
 ---
 
-## `eam.user_profile`
+## `pamp.user_profile`
 
 | Column | Type | Null | FK / PK |
 |--------|------|------|---------|

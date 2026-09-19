@@ -13,7 +13,7 @@ from app.database import get_db
 from app.auth import require_permission, get_current_user
 from app.auth.models import AuthUser
 
-logger = logging.getLogger("eam.routers.architecture_check")
+logger = logging.getLogger("pamp.routers.architecture_check")
 
 router = APIRouter()
 
@@ -70,7 +70,7 @@ async def add_arch_check_app(
         await db.execute(
             text(
                 """
-                INSERT INTO eam.eam_arch_ai_check_app (
+                INSERT INTO pamp.pamp_arch_ai_check_app (
                     ai_check_id,
                     app_id,
                     id_is_standard,
@@ -154,7 +154,7 @@ async def update_arch_check_app(
         await db.execute(
             text(
                 """
-                UPDATE eam.eam_arch_ai_check_app
+                UPDATE pamp.pamp_arch_ai_check_app
                 SET
                   app_id = :app_id,
                   id_is_standard = :id_is_standard,
@@ -206,7 +206,7 @@ async def delete_arch_check_app(
         await db.execute(
             text(
                 """
-                UPDATE eam.eam_arch_ai_check_app
+                UPDATE pamp.pamp_arch_ai_check_app
                 SET
                   status = 'Deleted',
                   status_changed_by = :itcode,
@@ -251,7 +251,7 @@ async def confirm_arch_check_apps(
         await db.execute(
             text(
                 f"""
-                UPDATE eam.eam_arch_ai_check_app
+                UPDATE pamp.pamp_arch_ai_check_app
                 SET
                   status = 'Confirmed',
                   status_changed_by = :itcode,
@@ -284,16 +284,16 @@ async def list_arch_check_apps(
 ):
     """List all application entries for an architecture AI check record.
 
-    aiCheckId is the UUID of eam_arch_ai_check.id (new style). Old records in
-    eam_arch_ai_check_app store the numeric id from eam_arch_ai_check.result->>'id'
+    aiCheckId is the UUID of pamp_arch_ai_check.id (new style). Old records in
+    pamp_arch_ai_check_app store the numeric id from pamp_arch_ai_check.result->>'id'
     as ai_check_id. We resolve both to cover the full dataset.
     """
     try:
         # Step 1: resolve the legacy numeric id stored by the external AI system.
-        # eam_arch_ai_check.id is UUID; old eam_arch_ai_check_app rows store the
+        # pamp_arch_ai_check.id is UUID; old pamp_arch_ai_check_app rows store the
         # numeric string from result->>'id' instead of the UUID.
         numeric_id_row = await db.execute(
-            text("SELECT result->>'id' AS nid FROM eam.eam_arch_ai_check WHERE id = CAST(:uuid AS uuid) LIMIT 1"),
+            text("SELECT result->>'id' AS nid FROM pamp.pamp_arch_ai_check WHERE id = CAST(:uuid AS uuid) LIMIT 1"),
             {"uuid": aiCheckId},
         )
         numeric_id: str | None = None
@@ -340,11 +340,11 @@ async def list_arch_check_apps(
               ca.u_status AS "appStatus",
               ca.u_service_area AS "bizFunction"
             FROM
-              eam.eam_arch_ai_check_app eaaca
+              pamp.pamp_arch_ai_check_app eaaca
               LEFT JOIN stamp.cmdb_application ca ON ca.app_id = eaaca.app_id
-              LEFT JOIN eam.resource_pool rp_ob ON rp_ob.itcode = ca.owned_by
-              LEFT JOIN eam.resource_pool rp_do ON rp_do.itcode = ca.app_dt_owner
-              LEFT JOIN eam.resource_pool rp_cb ON rp_cb.itcode = eaaca.status_changed_by
+              LEFT JOIN pamp.resource_pool rp_ob ON rp_ob.itcode = ca.owned_by
+              LEFT JOIN pamp.resource_pool rp_do ON rp_do.itcode = ca.app_dt_owner
+              LEFT JOIN pamp.resource_pool rp_cb ON rp_cb.itcode = eaaca.status_changed_by
             WHERE
               ({where_clause})
               AND eaaca.status <> 'Deleted'

@@ -366,7 +366,7 @@ def _parse_excel_rows(content: bytes, data_version: str) -> tuple[list[dict[str,
 @router.get("/versions", dependencies=[Depends(require_permission("biz_capability", "read"))])
 async def list_biz_capability_versions(db: AsyncSession = Depends(get_db)):
     try:
-        query = text("SELECT DISTINCT data_version FROM eam.bcpf_master_data WHERE data_version IS NOT NULL ORDER BY data_version DESC")
+        query = text("SELECT DISTINCT data_version FROM pamp.bcpf_master_data WHERE data_version IS NOT NULL ORDER BY data_version DESC")
         result = await db.execute(query)
         versions = [r.get("version") or r.get("data_version") or r[0] for r in result.mappings().all()]
         return {"versions": versions}
@@ -390,7 +390,7 @@ async def get_biz_capability_filter_options(
             params["version"] = version
         
         # 1. Get Domain L1 list
-        l1_query_text = "SELECT DISTINCT lv1_domain FROM eam.bcpf_master_data WHERE level=1 AND lv1_domain IS NOT NULL"
+        l1_query_text = "SELECT DISTINCT lv1_domain FROM pamp.bcpf_master_data WHERE level=1 AND lv1_domain IS NOT NULL"
         if conditions:
             l1_query_text += " AND " + " AND ".join(conditions)
         l1_query_text += " ORDER BY lv1_domain ASC"
@@ -405,7 +405,7 @@ async def get_biz_capability_filter_options(
             l2_conditions.append("lv1_domain = :l1")
             l2_params["l1"] = domainL1
         
-        l2_query_text = "SELECT DISTINCT lv2_sub_domain FROM eam.bcpf_master_data WHERE level=2 AND lv2_sub_domain IS NOT NULL"
+        l2_query_text = "SELECT DISTINCT lv2_sub_domain FROM pamp.bcpf_master_data WHERE level=2 AND lv2_sub_domain IS NOT NULL"
         if l2_conditions:
             l2_query_text += " AND " + " AND ".join(l2_conditions)
         l2_query_text += " ORDER BY lv2_sub_domain ASC"
@@ -423,7 +423,7 @@ async def get_biz_capability_filter_options(
             l3_conditions.append("lv2_sub_domain = :l2")
             l3_params["l2"] = subDomainL2
 
-        l3_query_text = "SELECT DISTINCT lv3_capability_group FROM eam.bcpf_master_data WHERE level=3 AND lv3_capability_group IS NOT NULL"
+        l3_query_text = "SELECT DISTINCT lv3_capability_group FROM pamp.bcpf_master_data WHERE level=3 AND lv3_capability_group IS NOT NULL"
         if l3_conditions:
             l3_query_text += " AND " + " AND ".join(l3_conditions)
         l3_query_text += " ORDER BY lv3_capability_group ASC"
@@ -539,13 +539,13 @@ async def import_biz_capability_excel(
 
     try:
         await db.execute(
-            text("DELETE FROM eam.bcpf_master_data WHERE data_version = :version"),
+            text("DELETE FROM pamp.bcpf_master_data WHERE data_version = :version"),
             {"version": data_version},
         )
 
         insert_sql = text(
             """
-            INSERT INTO eam.bcpf_master_data (
+            INSERT INTO pamp.bcpf_master_data (
                 bc_id, parent_bc_id, bc_name, bc_name_cn, level,
                 alias, bc_description, biz_group, geo, biz_owner,
                 biz_team, dt_owner, dt_team, remark, data_version,
@@ -612,7 +612,7 @@ async def export_biz_capability_excel(
             dt_team,
             remark,
             data_version
-        FROM eam.bcpf_master_data
+        FROM pamp.bcpf_master_data
         WHERE {where_clause}
         ORDER BY bc_id ASC
         """

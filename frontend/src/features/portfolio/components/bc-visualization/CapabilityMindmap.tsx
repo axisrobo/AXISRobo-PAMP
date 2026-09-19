@@ -17,7 +17,7 @@ const SCALE_STEP = 0.15;
 
 function loadPositions(): Record<string, Position> {
   try {
-    const raw = localStorage.getItem('eam.bcv-node-positions');
+    const raw = localStorage.getItem('pamp.bcv-node-positions');
     return raw ? JSON.parse(raw) : {};
   } catch {
     return {};
@@ -26,7 +26,7 @@ function loadPositions(): Record<string, Position> {
 
 function savePositions(p: Record<string, Position>) {
   try {
-    localStorage.setItem('eam.bcv-node-positions', JSON.stringify(p));
+    localStorage.setItem('pamp.bcv-node-positions', JSON.stringify(p));
   } catch { /* quota exceeded */ }
 }
 

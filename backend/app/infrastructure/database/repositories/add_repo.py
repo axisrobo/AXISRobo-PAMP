@@ -12,18 +12,18 @@ class PostgresConcernRepository(ConcernRepository):
 
     async def get_by_id(self, id: str) -> Optional[Concern]:
         result = await self._session.execute(
-            text("SELECT id, concern_key, concern_name, layer, description, is_active FROM eam.avdm_pact_concern WHERE id = :id"),
+            text("SELECT id, concern_key, concern_name, layer, description, is_active FROM pamp.avdm_pact_concern WHERE id = :id"),
             {"id": id}
         )
         row = result.fetchone()
         return self._to_entity(row) if row else None
 
     async def list(self, page: int = 1, page_size: int = 20) -> tuple[list[Concern], int]:
-        count_result = await self._session.execute(text("SELECT COUNT(*) FROM eam.avdm_pact_concern"))
+        count_result = await self._session.execute(text("SELECT COUNT(*) FROM pamp.avdm_pact_concern"))
         total = count_result.scalar()
         offset = (page - 1) * page_size
         result = await self._session.execute(
-            text("SELECT id, concern_key, concern_name, layer, description, is_active FROM eam.avdm_pact_concern ORDER BY layer, concern_key LIMIT :limit OFFSET :offset"),
+            text("SELECT id, concern_key, concern_name, layer, description, is_active FROM pamp.avdm_pact_concern ORDER BY layer, concern_key LIMIT :limit OFFSET :offset"),
             {"limit": page_size, "offset": offset}
         )
         items = [self._to_entity(row) for row in result.fetchall()]
@@ -31,27 +31,27 @@ class PostgresConcernRepository(ConcernRepository):
 
     async def list_by_category(self, category: str) -> list[Concern]:
         result = await self._session.execute(
-            text("SELECT id, concern_key, concern_name, layer, description, is_active FROM eam.avdm_pact_concern WHERE layer = :category ORDER BY concern_key"),
+            text("SELECT id, concern_key, concern_name, layer, description, is_active FROM pamp.avdm_pact_concern WHERE layer = :category ORDER BY concern_key"),
             {"category": category}
         )
         return [self._to_entity(row) for row in result.fetchall()]
 
     async def create(self, entity: Concern) -> Concern:
         await self._session.execute(
-            text("INSERT INTO eam.avdm_pact_concern (concern_key, concern_name, layer, description, risk_tags, is_active, create_by, update_by) VALUES (:ck, :cn, :layer, :desc, '[]'::jsonb, TRUE, 'system', 'system')"),
+            text("INSERT INTO pamp.avdm_pact_concern (concern_key, concern_name, layer, description, risk_tags, is_active, create_by, update_by) VALUES (:ck, :cn, :layer, :desc, '[]'::jsonb, TRUE, 'system', 'system')"),
             {"ck": entity.code, "cn": entity.name, "layer": entity.category, "desc": entity.description}
         )
         return entity
 
     async def update(self, entity: Concern) -> Concern:
         await self._session.execute(
-            text("UPDATE eam.avdm_pact_concern SET concern_name=:cn, layer=:layer, description=:desc, update_at=NOW() WHERE id=:id"),
+            text("UPDATE pamp.avdm_pact_concern SET concern_name=:cn, layer=:layer, description=:desc, update_at=NOW() WHERE id=:id"),
             {"id": str(entity.id), "cn": entity.name, "layer": entity.category, "desc": entity.description}
         )
         return entity
 
     async def delete(self, id: str) -> bool:
-        result = await self._session.execute(text("DELETE FROM eam.avdm_pact_concern WHERE id = :id"), {"id": id})
+        result = await self._session.execute(text("DELETE FROM pamp.avdm_pact_concern WHERE id = :id"), {"id": id})
         return result.rowcount > 0
 
     @staticmethod

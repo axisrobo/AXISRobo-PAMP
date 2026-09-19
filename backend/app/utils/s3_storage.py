@@ -18,7 +18,7 @@ from app.infrastructure.storage.provider import StorageProvider
 
 # Implements app.infrastructure.storage.provider.StorageProvider
 
-logger = logging.getLogger("eam.utils.s3_storage")
+logger = logging.getLogger("pamp.utils.s3_storage")
 
 # ---------------------------------------------------------------------------
 # Singleton client
@@ -55,7 +55,7 @@ def make_key(relative_path: str) -> str:
     """Build a full S3 object key from a relative path.
 
     >>> make_key("3-20260316120000123.png")
-    'pm/eam/app/3-20260316120000123.png'
+    'pm/pamp/app/3-20260316120000123.png'
     """
     prefix = settings.S3_PREFIX.rstrip("/")
     return f"{prefix}/{relative_path}"

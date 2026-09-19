@@ -1,7 +1,7 @@
 -- MCP Server & Tool Governance (registration, approval, provenance)
 -- Roadmap: AI Management -> "MCP server and tool governance (registration, approval, provenance)"
 
-CREATE TABLE IF NOT EXISTS eam.mcp_server_registry (
+CREATE TABLE IF NOT EXISTS pamp.mcp_server_registry (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     server_key VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
@@ -21,9 +21,9 @@ CREATE TABLE IF NOT EXISTS eam.mcp_server_registry (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS eam.mcp_tool (
+CREATE TABLE IF NOT EXISTS pamp.mcp_tool (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    server_id UUID NOT NULL REFERENCES eam.mcp_server_registry(id) ON DELETE CASCADE,
+    server_id UUID NOT NULL REFERENCES pamp.mcp_server_registry(id) ON DELETE CASCADE,
     tool_name VARCHAR(255) NOT NULL,
     description TEXT DEFAULT ''::text,
     description_hash VARCHAR(255) DEFAULT ''::character varying,
@@ -39,5 +39,5 @@ CREATE TABLE IF NOT EXISTS eam.mcp_tool (
     UNIQUE (server_id, tool_name)
 );
 
-CREATE INDEX IF NOT EXISTS idx_mcp_tool_server_id ON eam.mcp_tool (server_id);
-CREATE INDEX IF NOT EXISTS idx_mcp_server_registry_status ON eam.mcp_server_registry (status);
+CREATE INDEX IF NOT EXISTS idx_mcp_tool_server_id ON pamp.mcp_tool (server_id);
+CREATE INDEX IF NOT EXISTS idx_mcp_server_registry_status ON pamp.mcp_server_registry (status);

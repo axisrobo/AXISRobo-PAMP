@@ -191,7 +191,7 @@ async def _get_revision(
     result = await db.execute(
         text(
             "SELECT domain_key, version, change_note, update_by, update_at "
-            "FROM eam.avdm_master_data_revision WHERE domain_key = :domain_key"
+            "FROM pamp.avdm_master_data_revision WHERE domain_key = :domain_key"
         ),
         {"domain_key": domain_key},
     )
@@ -223,12 +223,12 @@ async def _bump_revision(
     result = await db.execute(
         text(
             """
-            INSERT INTO eam.avdm_master_data_revision (
+            INSERT INTO pamp.avdm_master_data_revision (
                 domain_key, version, change_note, create_by, update_by
             )
             VALUES (:domain_key, 1, :change_note, :operator, :operator)
             ON CONFLICT (domain_key) DO UPDATE SET
-                version = eam.avdm_master_data_revision.version + 1,
+                version = pamp.avdm_master_data_revision.version + 1,
                 change_note = EXCLUDED.change_note,
                 update_by = EXCLUDED.update_by,
                 update_at = NOW()
@@ -254,7 +254,7 @@ async def _bump_revision(
 async def _get_static_document(db: AsyncSession, *, document_key: str) -> Any:
     result = await db.execute(
         text(
-            "SELECT document_json FROM eam.avdm_static_document WHERE document_key = :document_key"
+            "SELECT document_json FROM pamp.avdm_static_document WHERE document_key = :document_key"
         ),
         {"document_key": document_key},
     )
@@ -274,7 +274,7 @@ async def _upsert_static_document(
     await db.execute(
         text(
             """
-            INSERT INTO eam.avdm_static_document (
+            INSERT INTO pamp.avdm_static_document (
                 document_key, document_json, create_by, update_by
             )
             VALUES (:document_key, CAST(:document_json AS jsonb), :operator, :operator)
@@ -300,10 +300,10 @@ async def _load_project_type_profiles_config(db: AsyncSession) -> list[dict[str,
                 SELECT p.project_type_key, p.project_type_label, p.description,
                        p.typical_patterns, p.typical_risks, p.sort_order AS profile_sort_order,
                        a.artifact_key, a.artifact_name, m.default_status, m.sort_order AS mapping_sort_order
-                FROM eam.avdm_project_type_profile p
-                LEFT JOIN eam.avdm_project_type_artifact_mapping m
+                FROM pamp.avdm_project_type_profile p
+                LEFT JOIN pamp.avdm_project_type_artifact_mapping m
                   ON m.project_type_profile_id = p.id AND m.is_active = TRUE
-                LEFT JOIN eam.avdm_artifact a
+                LEFT JOIN pamp.avdm_artifact a
                   ON a.id = m.artifact_id AND a.is_active = TRUE
                 WHERE p.is_active = TRUE
                 ORDER BY p.sort_order, p.project_type_key, m.sort_order, a.sort_order, a.artifact_key
@@ -343,11 +343,11 @@ async def _save_project_type_profiles_config(
     operator: str,
 ) -> None:
     await db.execute(
-        text("UPDATE eam.avdm_project_type_profile SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
+        text("UPDATE pamp.avdm_project_type_profile SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
         {"operator": operator or "system"},
     )
     await db.execute(
-        text("UPDATE eam.avdm_project_type_artifact_mapping SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
+        text("UPDATE pamp.avdm_project_type_artifact_mapping SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
         {"operator": operator or "system"},
     )
     for index, profile in enumerate(profiles, start=1):
@@ -357,7 +357,7 @@ async def _save_project_type_profiles_config(
         await db.execute(
             text(
                 """
-                INSERT INTO eam.avdm_project_type_profile (
+                INSERT INTO pamp.avdm_project_type_profile (
                     project_type_key, project_type_label, description, typical_patterns, typical_risks,
                     sort_order, is_active, create_by, update_by
                 ) VALUES (
@@ -394,12 +394,12 @@ async def _save_project_type_profiles_config(
             await db.execute(
                 text(
                     """
-                    INSERT INTO eam.avdm_project_type_artifact_mapping (
+                    INSERT INTO pamp.avdm_project_type_artifact_mapping (
                         project_type_profile_id, artifact_id, default_status, sort_order,
                         is_active, create_by, update_by
                     ) VALUES (
-                        (SELECT id FROM eam.avdm_project_type_profile WHERE project_type_key = :project_type_key),
-                        (SELECT id FROM eam.avdm_artifact WHERE artifact_key = :artifact_key),
+                        (SELECT id FROM pamp.avdm_project_type_profile WHERE project_type_key = :project_type_key),
+                        (SELECT id FROM pamp.avdm_artifact WHERE artifact_key = :artifact_key),
                         :default_status, :sort_order, TRUE, :operator, :operator
                     )
                     ON CONFLICT (project_type_profile_id, artifact_id) DO UPDATE SET
@@ -425,7 +425,7 @@ async def _seed_question_reference_data(db: AsyncSession, *, operator: str) -> N
         await db.execute(
             text(
                 """
-                INSERT INTO eam.avdm_question_group (
+                INSERT INTO pamp.avdm_question_group (
                     group_key, group_name, description, sort_order, is_active, create_by, update_by
                 ) VALUES (
                     :group_key, :group_name, :description, :sort_order, TRUE, :operator, :operator
@@ -477,7 +477,7 @@ async def _upsert_answer_type(
     await db.execute(
         text(
             """
-            INSERT INTO eam.avdm_question_answer_type (
+            INSERT INTO pamp.avdm_question_answer_type (
                 answer_type_key, answer_type_name, storage_kind, widget,
                 allows_multiple, allows_free_text, description, is_active, create_by, update_by
             ) VALUES (
@@ -510,10 +510,10 @@ async def _upsert_answer_type(
 
 async def _set_all_questionnaire_records_inactive(db: AsyncSession, *, operator: str) -> None:
     statements = [
-        "UPDATE eam.avdm_question SET is_active = FALSE, update_by = :operator, update_at = NOW()",
-        "UPDATE eam.avdm_question_category SET is_active = FALSE, update_by = :operator, update_at = NOW()",
-        "UPDATE eam.avdm_question_option_item SET is_active = FALSE, update_by = :operator, update_at = NOW()",
-        "UPDATE eam.avdm_question_option_set SET is_active = FALSE, update_by = :operator, update_at = NOW()",
+        "UPDATE pamp.avdm_question SET is_active = FALSE, update_by = :operator, update_at = NOW()",
+        "UPDATE pamp.avdm_question_category SET is_active = FALSE, update_by = :operator, update_at = NOW()",
+        "UPDATE pamp.avdm_question_option_item SET is_active = FALSE, update_by = :operator, update_at = NOW()",
+        "UPDATE pamp.avdm_question_option_set SET is_active = FALSE, update_by = :operator, update_at = NOW()",
     ]
     for sql_text in statements:
         await db.execute(text(sql_text), {"operator": operator or "system"})
@@ -533,7 +533,7 @@ async def _upsert_option_set(
     await db.execute(
         text(
             """
-            INSERT INTO eam.avdm_question_option_set (
+            INSERT INTO pamp.avdm_question_option_set (
                 option_set_key, option_set_name, description, is_shared, sort_order, is_active, create_by, update_by
             ) VALUES (
                 :option_set_key, :option_set_name, :description, :is_shared, :sort_order, TRUE, :operator, :operator
@@ -566,11 +566,11 @@ async def _upsert_option_set(
         await db.execute(
             text(
                 """
-                INSERT INTO eam.avdm_question_option_item (
+                INSERT INTO pamp.avdm_question_option_item (
                     option_set_id, option_value, option_label, option_score,
                     sort_order, is_active, metadata, create_by, update_by
                 ) VALUES (
-                    (SELECT id FROM eam.avdm_question_option_set WHERE option_set_key = :option_set_key),
+                    (SELECT id FROM pamp.avdm_question_option_set WHERE option_set_key = :option_set_key),
                     :option_value, :option_label, :option_score,
                     :sort_order, TRUE, '{}'::jsonb, :operator, :operator
                 )
@@ -603,7 +603,7 @@ async def load_questionnaire_config(db: AsyncSession) -> dict[str, Any]:
                 """
                 SELECT answer_type_key, answer_type_name, storage_kind, widget,
                        allows_multiple, allows_free_text, description, is_active
-                FROM eam.avdm_question_answer_type
+                FROM pamp.avdm_question_answer_type
                 WHERE is_active = TRUE
                 ORDER BY answer_type_key
                 """
@@ -630,8 +630,8 @@ async def load_questionnaire_config(db: AsyncSession) -> dict[str, Any]:
                 """
                   SELECT c.category_key, c.category_name, c.description, c.sort_order,
                        g.group_key
-                FROM eam.avdm_question_category c
-                JOIN eam.avdm_question_group g ON g.id = c.group_id
+                FROM pamp.avdm_question_category c
+                JOIN pamp.avdm_question_group g ON g.id = c.group_id
                 WHERE c.is_active = TRUE AND g.is_active = TRUE
                 ORDER BY g.sort_order, c.sort_order, c.category_key
                 """
@@ -656,8 +656,8 @@ async def load_questionnaire_config(db: AsyncSession) -> dict[str, Any]:
                 SELECT s.option_set_key, s.option_set_name, s.description, s.is_shared,
                        s.sort_order AS set_sort_order,
                        i.option_value, i.option_label, i.option_score, i.sort_order
-                FROM eam.avdm_question_option_set s
-                LEFT JOIN eam.avdm_question_option_item i ON i.option_set_id = s.id AND i.is_active = TRUE
+                FROM pamp.avdm_question_option_set s
+                LEFT JOIN pamp.avdm_question_option_item i ON i.option_set_id = s.id AND i.is_active = TRUE
                 WHERE s.is_active = TRUE
                 ORDER BY s.sort_order, s.option_set_key, i.sort_order, i.option_value
                 """
@@ -704,10 +704,10 @@ async def load_questionnaire_config(db: AsyncSession) -> dict[str, Any]:
                   SELECT q.stable_question_id, q.question_key, q.question_text, q.design_intent,
                       q.placeholder, q.source_scope, q.source_ref,
                       c.category_key, t.widget AS control, s.option_set_key
-                FROM eam.avdm_question q
-                JOIN eam.avdm_question_category c ON c.id = q.category_id
-                JOIN eam.avdm_question_answer_type t ON t.id = q.answer_type_id
-                LEFT JOIN eam.avdm_question_option_set s ON s.id = q.option_set_id
+                FROM pamp.avdm_question q
+                JOIN pamp.avdm_question_category c ON c.id = q.category_id
+                JOIN pamp.avdm_question_answer_type t ON t.id = q.answer_type_id
+                LEFT JOIN pamp.avdm_question_option_set s ON s.id = q.option_set_id
                 WHERE q.is_active = TRUE AND c.is_active = TRUE AND t.is_active = TRUE
                 ORDER BY c.sort_order, q.sort_order, q.stable_question_id
                 """
@@ -783,11 +783,11 @@ async def save_questionnaire_config(
         await db.execute(
             text(
                 """
-                INSERT INTO eam.avdm_question_category (
+                INSERT INTO pamp.avdm_question_category (
                     group_id, category_key, category_name, description, sort_order,
                     is_active, create_by, update_by
                 ) VALUES (
-                    (SELECT id FROM eam.avdm_question_group WHERE group_key = :group_key),
+                    (SELECT id FROM pamp.avdm_question_group WHERE group_key = :group_key),
                     :category_key, :category_name, :description, :sort_order,
                     TRUE, :operator, :operator
                 )
@@ -866,17 +866,17 @@ async def save_questionnaire_config(
         await db.execute(
             text(
                 """
-                INSERT INTO eam.avdm_question (
+                INSERT INTO pamp.avdm_question (
                     stable_question_id, question_key, category_id, answer_type_id, option_set_id,
                     question_text, design_intent, placeholder, source_scope, source_ref, sort_order,
                     is_active, create_by, update_by
                 ) VALUES (
                     :stable_question_id, :question_key,
-                    (SELECT id FROM eam.avdm_question_category WHERE category_key = :category_key),
-                    (SELECT id FROM eam.avdm_question_answer_type WHERE answer_type_key = :answer_type_key),
+                    (SELECT id FROM pamp.avdm_question_category WHERE category_key = :category_key),
+                    (SELECT id FROM pamp.avdm_question_answer_type WHERE answer_type_key = :answer_type_key),
                     CASE WHEN CAST(:option_set_key AS VARCHAR) IS NULL THEN NULL
                          ELSE (
-                             SELECT id FROM eam.avdm_question_option_set
+                             SELECT id FROM pamp.avdm_question_option_set
                              WHERE option_set_key = CAST(:option_set_key AS VARCHAR)
                          )
                     END,
@@ -952,9 +952,9 @@ async def load_concern_mapping_config(db: AsyncSession) -> dict[str, Any]:
                 SELECT q.stable_question_id, m.answer_value, c.concern_key,
                        m.mapping_score, m.severity, m.likelihood, m.hint_text,
                        m.sort_order
-                FROM eam.avdm_question_answer_concern_mapping m
-                JOIN eam.avdm_question q ON q.id = m.question_id
-                JOIN eam.avdm_pact_concern c ON c.id = m.concern_id
+                FROM pamp.avdm_question_answer_concern_mapping m
+                JOIN pamp.avdm_question q ON q.id = m.question_id
+                JOIN pamp.avdm_pact_concern c ON c.id = m.concern_id
                 WHERE m.is_active = TRUE AND q.is_active = TRUE AND c.is_active = TRUE
                 ORDER BY q.stable_question_id, m.answer_value, m.sort_order, c.concern_key
                 """
@@ -994,9 +994,9 @@ async def load_concern_mapping_config(db: AsyncSession) -> dict[str, Any]:
                 SELECT r.rule_key, r.description, r.all_conditions, r.any_conditions,
                        c.concern_key, s.mapping_score, s.severity, s.likelihood, s.note_text,
                        r.sort_order, s.sort_order AS score_sort_order
-                FROM eam.avdm_concern_activation_rule r
-                LEFT JOIN eam.avdm_concern_activation_rule_score s ON s.rule_id = r.id AND s.is_active = TRUE
-                LEFT JOIN eam.avdm_pact_concern c ON c.id = s.concern_id AND c.is_active = TRUE
+                FROM pamp.avdm_concern_activation_rule r
+                LEFT JOIN pamp.avdm_concern_activation_rule_score s ON s.rule_id = r.id AND s.is_active = TRUE
+                LEFT JOIN pamp.avdm_pact_concern c ON c.id = s.concern_id AND c.is_active = TRUE
                 WHERE r.is_active = TRUE
                 ORDER BY r.sort_order, r.rule_key, s.sort_order, c.concern_key
                 """
@@ -1040,9 +1040,9 @@ async def save_concern_mapping_config(
     operator: str,
 ) -> dict[str, Any]:
     operator = operator or "system"
-    await db.execute(text("DELETE FROM eam.avdm_question_answer_concern_mapping"))
-    await db.execute(text("DELETE FROM eam.avdm_concern_activation_rule_score"))
-    await db.execute(text("DELETE FROM eam.avdm_concern_activation_rule"))
+    await db.execute(text("DELETE FROM pamp.avdm_question_answer_concern_mapping"))
+    await db.execute(text("DELETE FROM pamp.avdm_concern_activation_rule_score"))
+    await db.execute(text("DELETE FROM pamp.avdm_concern_activation_rule"))
 
     for item in config.get("questionConcernMappings") or []:
         question_id = int(item.get("questionId") or 0)
@@ -1057,13 +1057,13 @@ async def save_concern_mapping_config(
             await db.execute(
                 text(
                     """
-                    INSERT INTO eam.avdm_question_answer_concern_mapping (
+                    INSERT INTO pamp.avdm_question_answer_concern_mapping (
                         question_id, concern_id, match_operator, answer_value,
                         mapping_score, severity, likelihood, hint_text, sort_order,
                         is_active, create_by, update_by
                     ) VALUES (
-                        (SELECT id FROM eam.avdm_question WHERE stable_question_id = :question_id),
-                        (SELECT id FROM eam.avdm_pact_concern WHERE concern_key = :concern_key),
+                        (SELECT id FROM pamp.avdm_question WHERE stable_question_id = :question_id),
+                        (SELECT id FROM pamp.avdm_pact_concern WHERE concern_key = :concern_key),
                         'equals', :answer_value,
                         :mapping_score, :severity, :likelihood, :hint_text, :sort_order,
                         TRUE, :operator, :operator
@@ -1087,7 +1087,7 @@ async def save_concern_mapping_config(
         await db.execute(
             text(
                 """
-                INSERT INTO eam.avdm_concern_activation_rule (
+                INSERT INTO pamp.avdm_concern_activation_rule (
                     rule_key, description, all_conditions, any_conditions,
                     sort_order, is_active, create_by, update_by
                 ) VALUES (
@@ -1114,12 +1114,12 @@ async def save_concern_mapping_config(
             await db.execute(
                 text(
                     """
-                    INSERT INTO eam.avdm_concern_activation_rule_score (
+                    INSERT INTO pamp.avdm_concern_activation_rule_score (
                         rule_id, concern_id, mapping_score, severity, likelihood, note_text,
                         sort_order, is_active, create_by, update_by
                     ) VALUES (
-                        (SELECT id FROM eam.avdm_concern_activation_rule WHERE rule_key = :rule_key),
-                        (SELECT id FROM eam.avdm_pact_concern WHERE concern_key = :concern_key),
+                        (SELECT id FROM pamp.avdm_concern_activation_rule WHERE rule_key = :rule_key),
+                        (SELECT id FROM pamp.avdm_pact_concern WHERE concern_key = :concern_key),
                         :mapping_score, :severity, :likelihood, :note_text,
                         :sort_order, TRUE, :operator, :operator
                     )
@@ -1152,7 +1152,7 @@ async def _seed_artifact_categories(db: AsyncSession, *, operator: str) -> None:
         await db.execute(
             text(
                 """
-                INSERT INTO eam.avdm_artifact_category (
+                INSERT INTO pamp.avdm_artifact_category (
                     category_key, category_name, description, sort_order,
                     is_active, create_by, update_by
                 ) VALUES (
@@ -1189,7 +1189,7 @@ async def load_artifact_catalog_config(db: AsyncSession) -> dict[str, Any]:
             text(
                 """
                 SELECT artifact_key, artifact_name, purpose, typical_contents, sort_order, is_active
-                FROM eam.avdm_artifact
+                FROM pamp.avdm_artifact
                 WHERE is_active = TRUE
                 ORDER BY sort_order, artifact_name
                 """
@@ -1222,7 +1222,7 @@ async def save_artifact_catalog_config(
     operator = operator or "system"
     await _seed_artifact_categories(db, operator=operator)
     await db.execute(
-        text("UPDATE eam.avdm_artifact SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
+        text("UPDATE pamp.avdm_artifact SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
         {"operator": operator},
     )
     for index, item in enumerate(config.get("artifactTypes") or [], start=1):
@@ -1233,12 +1233,12 @@ async def save_artifact_catalog_config(
         await db.execute(
             text(
                 """
-                INSERT INTO eam.avdm_artifact (
+                INSERT INTO pamp.avdm_artifact (
                     artifact_key, artifact_category_id, artifact_name, purpose, stage,
                     typical_contents, sort_order, is_active, create_by, update_by
                 ) VALUES (
                     :artifact_key,
-                    (SELECT id FROM eam.avdm_artifact_category WHERE category_key = :category_key),
+                    (SELECT id FROM pamp.avdm_artifact_category WHERE category_key = :category_key),
                     :artifact_name, :purpose, :stage,
                     CAST(:typical_contents AS jsonb), :sort_order, TRUE, :operator, :operator
                 )
@@ -1290,14 +1290,14 @@ async def load_viewpoint_artifact_mapping_config(db: AsyncSession) -> dict[str, 
                        v.notes, v.sort_order AS viewpoint_sort_order,
                        c.concern_key, vc.sort_order AS concern_sort_order,
                        a.artifact_key, va.recommendation_status, va.sort_order AS artifact_sort_order
-                FROM eam.avdm_viewpoint v
-                LEFT JOIN eam.avdm_viewpoint_concern_mapping vc
+                FROM pamp.avdm_viewpoint v
+                LEFT JOIN pamp.avdm_viewpoint_concern_mapping vc
                   ON vc.viewpoint_id = v.id AND vc.is_active = TRUE
-                LEFT JOIN eam.avdm_pact_concern c
+                LEFT JOIN pamp.avdm_pact_concern c
                   ON c.id = vc.concern_id AND c.is_active = TRUE
-                LEFT JOIN eam.avdm_viewpoint_artifact_mapping va
+                LEFT JOIN pamp.avdm_viewpoint_artifact_mapping va
                   ON va.viewpoint_id = v.id AND va.is_active = TRUE
-                LEFT JOIN eam.avdm_artifact a
+                LEFT JOIN pamp.avdm_artifact a
                   ON a.id = va.artifact_id AND a.is_active = TRUE
                 WHERE v.is_active = TRUE
                 ORDER BY v.sort_order, v.viewpoint_number, vc.sort_order, c.concern_key, va.sort_order, a.artifact_key
@@ -1360,15 +1360,15 @@ async def save_viewpoint_artifact_mapping_config(
         operator=operator,
     )
     await db.execute(
-        text("UPDATE eam.avdm_viewpoint SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
+        text("UPDATE pamp.avdm_viewpoint SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
         {"operator": operator},
     )
     await db.execute(
-        text("UPDATE eam.avdm_viewpoint_concern_mapping SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
+        text("UPDATE pamp.avdm_viewpoint_concern_mapping SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
         {"operator": operator},
     )
     await db.execute(
-        text("UPDATE eam.avdm_viewpoint_artifact_mapping SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
+        text("UPDATE pamp.avdm_viewpoint_artifact_mapping SET is_active = FALSE, update_by = :operator, update_at = NOW()"),
         {"operator": operator},
     )
     for index, viewpoint in enumerate(config.get("viewpoints") or [], start=1):
@@ -1376,7 +1376,7 @@ async def save_viewpoint_artifact_mapping_config(
         await db.execute(
             text(
                 """
-                INSERT INTO eam.avdm_viewpoint (
+                INSERT INTO pamp.avdm_viewpoint (
                     viewpoint_number, layer_name, viewpoint_name, logical_physical, structure_behavior,
                     purpose, example, primary_source, audience, notes, sort_order,
                     is_active, create_by, update_by
@@ -1423,11 +1423,11 @@ async def save_viewpoint_artifact_mapping_config(
             await db.execute(
                 text(
                     """
-                    INSERT INTO eam.avdm_viewpoint_concern_mapping (
+                    INSERT INTO pamp.avdm_viewpoint_concern_mapping (
                         viewpoint_id, concern_id, sort_order, is_active, create_by, update_by
                     ) VALUES (
-                        (SELECT id FROM eam.avdm_viewpoint WHERE viewpoint_number = :viewpoint_number),
-                        (SELECT id FROM eam.avdm_pact_concern WHERE concern_key = :concern_key),
+                        (SELECT id FROM pamp.avdm_viewpoint WHERE viewpoint_number = :viewpoint_number),
+                        (SELECT id FROM pamp.avdm_pact_concern WHERE concern_key = :concern_key),
                         :sort_order, TRUE, :operator, :operator
                     )
                     ON CONFLICT (viewpoint_id, concern_id) DO UPDATE SET
@@ -1452,12 +1452,12 @@ async def save_viewpoint_artifact_mapping_config(
                 await db.execute(
                     text(
                         """
-                        INSERT INTO eam.avdm_viewpoint_artifact_mapping (
+                        INSERT INTO pamp.avdm_viewpoint_artifact_mapping (
                             viewpoint_id, artifact_id, recommendation_status, sort_order,
                             is_active, create_by, update_by
                         ) VALUES (
-                            (SELECT id FROM eam.avdm_viewpoint WHERE viewpoint_number = :viewpoint_number),
-                            (SELECT id FROM eam.avdm_artifact WHERE artifact_key = :artifact_key),
+                            (SELECT id FROM pamp.avdm_viewpoint WHERE viewpoint_number = :viewpoint_number),
+                            (SELECT id FROM pamp.avdm_artifact WHERE artifact_key = :artifact_key),
                             :recommendation_status, :sort_order, TRUE, :operator, :operator
                         )
                         ON CONFLICT (viewpoint_id, artifact_id, recommendation_status) DO UPDATE SET
@@ -1547,14 +1547,14 @@ async def list_viewpoint_artifact_recommendation_items(
                        a.sort_order,
                        vc.sort_order AS viewpoint_sort_order,
                        va.sort_order AS artifact_sort_order
-                FROM eam.avdm_pact_concern c
-                JOIN eam.avdm_viewpoint_concern_mapping vc
+                FROM pamp.avdm_pact_concern c
+                JOIN pamp.avdm_viewpoint_concern_mapping vc
                   ON vc.concern_id = c.id AND vc.is_active = TRUE
-                JOIN eam.avdm_viewpoint v
+                JOIN pamp.avdm_viewpoint v
                   ON v.id = vc.viewpoint_id AND v.is_active = TRUE
-                JOIN eam.avdm_viewpoint_artifact_mapping va
+                JOIN pamp.avdm_viewpoint_artifact_mapping va
                   ON va.viewpoint_id = v.id AND va.is_active = TRUE
-                JOIN eam.avdm_artifact a
+                JOIN pamp.avdm_artifact a
                   ON a.id = va.artifact_id AND a.is_active = TRUE
                 WHERE c.is_active = TRUE
                   AND UPPER(c.concern_key) = ANY(:concern_keys)

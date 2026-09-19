@@ -20,7 +20,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.models import AuthUser, Role
 
-logger = logging.getLogger("eam.auth.ownership")
+logger = logging.getLogger("pamp.auth.ownership")
 
 
 # ---------------------------------------------------------------------------
@@ -44,7 +44,7 @@ async def check_request_owner(
     Raises 403 if the user is not the requester (and not EA_Admin).
     """
     result = await db.execute(
-        text("SELECT * FROM eam.eam_request WHERE request_id = :rid"),
+        text("SELECT * FROM pamp.pamp_request WHERE request_id = :rid"),
         {"rid": request_id},
     )
     row = result.mappings().first()
@@ -140,7 +140,7 @@ async def check_reviewer_assignment(
     Raises 403 if the user is not assigned as reviewer (and not EA_Admin).
     """
     result = await db.execute(
-        text("SELECT * FROM eam.eam_request WHERE request_id = :rid"),
+        text("SELECT * FROM pamp.pamp_request WHERE request_id = :rid"),
         {"rid": request_id},
     )
     row = result.mappings().first()
@@ -201,7 +201,7 @@ async def check_app_ownership(
     # Check cmdb_application ownership fields
     result = await db.execute(
         text(
-            "SELECT 1 FROM eam.cmdb_application "
+            "SELECT 1 FROM pamp.cmdb_application "
             "WHERE app_id = :app_id "
             "  AND (app_dt_owner = :uid OR app_operation_owner = :uid OR app_it_owner = :uid) "
             "LIMIT 1"
@@ -215,7 +215,7 @@ async def check_app_ownership(
     if user.email_prefix:
         result = await db.execute(
             text(
-                "SELECT 1 FROM eam.application_member "
+                "SELECT 1 FROM pamp.application_member "
                 "WHERE app_id = :app_id AND LOWER(itcode) = :prefix "
                 "LIMIT 1"
             ),
@@ -252,7 +252,7 @@ async def check_project_ownership(
     Raises 403 if the user is not a project owner (and not EA_Admin/EA_Reviewer).
     """
     result2 = await db.execute(
-        text("SELECT id, project_id, name, status, owner_id, pm_itcode, dt_lead_itcode, it_lead_itcode FROM eam.eam_project WHERE project_id = :pid OR id::text = :pid"),
+        text("SELECT id, project_id, name, status, owner_id, pm_itcode, dt_lead_itcode, it_lead_itcode FROM pamp.pamp_project WHERE project_id = :pid OR id::text = :pid"),
         {"pid": project_id},
     )
     row2 = result2.mappings().first()
@@ -335,7 +335,7 @@ async def check_request_access_by_project(
     # Check if user is the requester of any request under this project
     result = await db.execute(
         text(
-            "SELECT 1 FROM eam.eam_request "
+            "SELECT 1 FROM pamp.pamp_request "
             "WHERE project_id = :pid AND requester = :uid "
             "LIMIT 1"
         ),
@@ -383,7 +383,7 @@ async def check_request_access_by_request_id(
         return
 
     result = await db.execute(
-        text("SELECT requester FROM eam.eam_request WHERE request_id = :rid"),
+        text("SELECT requester FROM pamp.pamp_request WHERE request_id = :rid"),
         {"rid": request_id},
     )
     row = result.mappings().first()
@@ -426,7 +426,7 @@ async def check_reviewer_assigned_to_project(
 
     result = await db.execute(
         text(
-            "SELECT 1 FROM eam.eam_request "
+            "SELECT 1 FROM pamp.pamp_request "
             "WHERE project_id = :pid AND :uid = ANY(assign_reviewer) "
             "LIMIT 1"
         ),
@@ -469,7 +469,7 @@ async def get_owned_app_ids(user: AuthUser, db: AsyncSession) -> list[str]:
     # From cmdb_application owner fields
     result = await db.execute(
         text(
-            "SELECT DISTINCT app_id FROM eam.cmdb_application "
+            "SELECT DISTINCT app_id FROM pamp.cmdb_application "
             "WHERE app_dt_owner = :uid "
             "   OR app_operation_owner = :uid "
             "   OR app_it_owner = :uid"
@@ -483,7 +483,7 @@ async def get_owned_app_ids(user: AuthUser, db: AsyncSession) -> list[str]:
     if user.email_prefix:
         result = await db.execute(
             text(
-                "SELECT DISTINCT app_id FROM eam.application_member "
+                "SELECT DISTINCT app_id FROM pamp.application_member "
                 "WHERE LOWER(itcode) = :prefix"
             ),
             {"prefix": user.email_prefix},

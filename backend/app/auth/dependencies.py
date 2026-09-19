@@ -27,7 +27,7 @@ from app.auth.rbac import check_permission as _check_permission
 # ---------------------------------------------------------------------------
 
 import logging
-logger = logging.getLogger("eam.auth.get_current_user")
+logger = logging.getLogger("pamp.auth.get_current_user")
 
 async def get_current_user(request: Request) -> AuthUser:
     """Retrieve the authenticated user from request.state.

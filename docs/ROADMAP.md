@@ -196,7 +196,7 @@ Platform-level technical infrastructure — identity, access, audit, and system 
 
 - [x] Role-based access control (3 roles: admin, reviewer, requestor)
 - [x] OSS local auth with JWT (AUTH_MODE=local)
-- [x] Audit logging with cryptographic integrity (`eam_audit_log`)
+- [x] Audit logging with cryptographic integrity (`pamp_audit_log`)
 - [x] User activity auditing and permission tracking
 - [x] Resource pool management (itcode, name, email, organization hierarchy)
 - [x] Certification management for architecture roles
@@ -230,7 +230,7 @@ Platform-level technical infrastructure — identity, access, audit, and system 
 - [x] Plugin system for integrations (auth, email, CMDB, storage)
 - [x] Frontend feature-folder restructuring
 - [x] AVDM config pages moved to `(add_config)` route group
-- [ ] Unify dual-project-table architecture (eam.project vs eam.eam_project)
+- [ ] Unify dual-project-table architecture (pamp.project vs pamp.pamp_project)
 
 ## v1.2 — Frontend Modernization
 - [ ] Unit test setup (Vitest + React Testing Library)

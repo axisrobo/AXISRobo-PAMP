@@ -79,10 +79,10 @@ async def list_actions(
 
         repo = PostgresActionRepository(db)
         data_sql = (
-            f"SELECT * FROM eam.eam_actions {where_clause} "
+            f"SELECT * FROM pamp.pamp_actions {where_clause} "
             f"ORDER BY {sort_field} {sort_order} LIMIT :limit OFFSET :offset"
         )
-        count_sql = f"SELECT COUNT(*) FROM eam.eam_actions {where_clause}"
+        count_sql = f"SELECT COUNT(*) FROM pamp.pamp_actions {where_clause}"
         count_params = {k: v for k, v in params.items() if k not in {"limit", "offset"}}
 
         rows = await repo.execute_rows(data_sql, params)
@@ -110,12 +110,12 @@ async def list_actions(
 @router.get("/{action_id}", dependencies=[Depends(require_permission("action", "read"))])
 async def get_action(action_id: str, db: AsyncSession = Depends(get_db)):
     try:
-        action_result = await db.execute(text("SELECT * FROM eam.eam_actions WHERE id = :id"), {"id": action_id})
+        action_result = await db.execute(text("SELECT * FROM pamp.pamp_actions WHERE id = :id"), {"id": action_id})
         action = action_result.mappings().first()
         if not action:
             raise HTTPException(status_code=404, detail="Action not found")
-        project_result = await db.execute(text("SELECT name as project_name FROM eam.eam_project WHERE project_id = :project_id OR id::text = :project_id"), {"project_id": action.get("project_id")})
-        request_result = await db.execute(text("SELECT request_id FROM eam.eam_architecture_review WHERE project_id = :project_id LIMIT 1"), {"project_id": action.get("project_id")})
+        project_result = await db.execute(text("SELECT name as project_name FROM pamp.pamp_project WHERE project_id = :project_id OR id::text = :project_id"), {"project_id": action.get("project_id")})
+        request_result = await db.execute(text("SELECT request_id FROM pamp.pamp_architecture_review WHERE project_id = :project_id LIMIT 1"), {"project_id": action.get("project_id")})
         payload = _map_action(action)
         payload["projectName"] = (project_result.mappings().first() or {}).get("project_name")
         payload["requestId"] = payload.get("requestId") or (request_result.mappings().first() or {}).get("request_id")
@@ -129,11 +129,11 @@ async def get_action(action_id: str, db: AsyncSession = Depends(get_db)):
 @router.get("/{action_id}/comments", dependencies=[Depends(require_permission("action", "read"))])
 async def list_action_comments(action_id: str, db: AsyncSession = Depends(get_db)):
     try:
-        action_result = await db.execute(text("SELECT id FROM eam.eam_actions WHERE id = :id"), {"id": action_id})
+        action_result = await db.execute(text("SELECT id FROM pamp.pamp_actions WHERE id = :id"), {"id": action_id})
         if not action_result.mappings().first():
             raise HTTPException(status_code=404, detail="Action not found")
         comments_result = await db.execute(
-            text("SELECT * FROM eam.comments WHERE object_type = 'action' AND object_id = :object_id ORDER BY create_at DESC"),
+            text("SELECT * FROM pamp.comments WHERE object_type = 'action' AND object_id = :object_id ORDER BY create_at DESC"),
             {"object_id": action_id},
         )
         return [dict(row) for row in comments_result.mappings().all()]
@@ -146,7 +146,7 @@ async def list_action_comments(action_id: str, db: AsyncSession = Depends(get_db
 @router.post("/{action_id}/comments", status_code=201, dependencies=[Depends(require_permission("action", "write"))])
 async def add_action_comment(action_id: str, body: dict, db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user)):
     try:
-        action_result = await db.execute(text("SELECT * FROM eam.eam_actions WHERE id = :id"), {"id": action_id})
+        action_result = await db.execute(text("SELECT * FROM pamp.pamp_actions WHERE id = :id"), {"id": action_id})
         action = action_result.mappings().first()
         if not action:
             raise HTTPException(status_code=404, detail="Action not found")
@@ -154,7 +154,7 @@ async def add_action_comment(action_id: str, body: dict, db: AsyncSession = Depe
             await check_project_ownership(user, action.get("project_id"), db)
         result = await db.execute(
             text(
-                "INSERT INTO eam.comments (id, object_type, object_id, content, create_by, create_at) "
+                "INSERT INTO pamp.comments (id, object_type, object_id, content, create_by, create_at) "
                 "VALUES (gen_random_uuid(), 'action', :object_id, :content, :create_by, NOW()) RETURNING *"
             ),
             {"object_id": action_id, "content": body.get("content"), "create_by": user.id},
@@ -171,18 +171,18 @@ async def add_action_comment(action_id: str, body: dict, db: AsyncSession = Depe
 @router.get("/{action_id}/audit-logs", dependencies=[Depends(require_permission("action", "read"))])
 async def list_action_audit_logs(action_id: str, pagination: PaginationParams = Depends(), db: AsyncSession = Depends(get_db)):
     try:
-        action_result = await db.execute(text("SELECT id FROM eam.eam_actions WHERE id = :id"), {"id": action_id})
+        action_result = await db.execute(text("SELECT id FROM pamp.pamp_actions WHERE id = :id"), {"id": action_id})
         if not action_result.mappings().first():
             raise HTTPException(status_code=404, detail="Action not found")
         data_result = await db.execute(
             text(
-                "SELECT * FROM eam.audit_log WHERE object_type = 'action' AND object_id = :object_id "
+                "SELECT * FROM pamp.audit_log WHERE object_type = 'action' AND object_id = :object_id "
                 "ORDER BY create_time DESC LIMIT :limit OFFSET :offset"
             ),
             {"object_id": action_id, "limit": pagination.page_size, "offset": pagination.offset},
         )
         count_result = await db.execute(
-            text("SELECT COUNT(*) FROM eam.audit_log WHERE object_type = 'action' AND object_id = :object_id"),
+            text("SELECT COUNT(*) FROM pamp.audit_log WHERE object_type = 'action' AND object_id = :object_id"),
             {"object_id": action_id},
         )
         return paginated_response(data_result.mappings().all(), int(count_result.scalar() or 0), pagination.page, pagination.page_size)
@@ -205,7 +205,7 @@ async def create_action(body: dict, db: AsyncSession = Depends(get_db), user: Au
         result = await db.execute(
             text(
                 """
-                INSERT INTO eam.eam_actions (
+                INSERT INTO pamp.pamp_actions (
                     project_id, action_title, priority, type, requested_by, requested_by_name,
                     applicable_domain, action_description, create_by, create_at
                 ) VALUES (
@@ -238,7 +238,7 @@ async def create_action(body: dict, db: AsyncSession = Depends(get_db), user: Au
 @router.put("/{action_id}", dependencies=[Depends(require_permission("action", "write"))])
 async def update_action(action_id: str, body: dict, db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user)):
     try:
-        existing = await db.execute(text("SELECT * FROM eam.eam_actions WHERE id = :id"), {"id": action_id})
+        existing = await db.execute(text("SELECT * FROM pamp.pamp_actions WHERE id = :id"), {"id": action_id})
         row = existing.mappings().first()
         if not row:
             raise HTTPException(status_code=404, detail="Action not found")
@@ -247,7 +247,7 @@ async def update_action(action_id: str, body: dict, db: AsyncSession = Depends(g
         result = await db.execute(
             text(
                 """
-                UPDATE eam.eam_actions
+                UPDATE pamp.pamp_actions
                 SET status = COALESCE(:status, status),
                     update_at = NOW()
                 WHERE id = :id
@@ -268,13 +268,13 @@ async def update_action(action_id: str, body: dict, db: AsyncSession = Depends(g
 @router.delete("/{action_id}", dependencies=[Depends(require_permission("action", "write"))])
 async def delete_action(action_id: str, db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user)):
     try:
-        existing = await db.execute(text("SELECT * FROM eam.eam_actions WHERE id = :id"), {"id": action_id})
+        existing = await db.execute(text("SELECT * FROM pamp.pamp_actions WHERE id = :id"), {"id": action_id})
         row = existing.mappings().first()
         if not row:
             raise HTTPException(status_code=404, detail="Action not found")
         if row.get("project_id"):
             await check_project_ownership(user, row.get("project_id"), db)
-        result = await db.execute(text("DELETE FROM eam.eam_actions WHERE id = :id"), {"id": action_id})
+        result = await db.execute(text("DELETE FROM pamp.pamp_actions WHERE id = :id"), {"id": action_id})
         if not getattr(result, "rowcount", 0):
             raise HTTPException(status_code=404, detail="Action not found")
         await db.commit()

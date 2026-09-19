@@ -58,7 +58,7 @@ When `NEXT_PUBLIC_AUTH_DISABLED=true`, skip Keycloak and fetch user info from `/
 ### Requirement: AI architecture check endpoint
 `POST /api/ea-requests/ai-check` SHALL accept `{ requestId, bizType, language, attachmentName, attachmentUuid }` and forward to `AI_CHECK_URL`.
 
-Result stored in `eam_arch_ai_check` with `attachment_uuid`, `result` (JSON), `request` (JSON).
+Result stored in `pamp_arch_ai_check` with `attachment_uuid`, `result` (JSON), `request` (JSON).
 
 Returns `{ score, result, attachmentUuid }`.
 

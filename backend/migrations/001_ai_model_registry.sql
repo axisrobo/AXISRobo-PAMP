@@ -1,7 +1,7 @@
 -- AI Model Registry with version & provenance tracking
 -- Roadmap: AI Management -> "AI model registry with version and provenance tracking"
 
-CREATE TABLE IF NOT EXISTS eam.ai_model_registry (
+CREATE TABLE IF NOT EXISTS pamp.ai_model_registry (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     model_key VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS eam.ai_model_registry (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS eam.ai_model_version (
+CREATE TABLE IF NOT EXISTS pamp.ai_model_version (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    model_id UUID NOT NULL REFERENCES eam.ai_model_registry(id) ON DELETE CASCADE,
+    model_id UUID NOT NULL REFERENCES pamp.ai_model_registry(id) ON DELETE CASCADE,
     version VARCHAR(255) NOT NULL,
     source VARCHAR(255) DEFAULT ''::character varying,
     source_uri TEXT DEFAULT ''::text,
@@ -35,5 +35,5 @@ CREATE TABLE IF NOT EXISTS eam.ai_model_version (
     UNIQUE (model_id, version)
 );
 
-CREATE INDEX IF NOT EXISTS idx_ai_model_version_model_id ON eam.ai_model_version (model_id);
-CREATE INDEX IF NOT EXISTS idx_ai_model_registry_status ON eam.ai_model_registry (status);
+CREATE INDEX IF NOT EXISTS idx_ai_model_version_model_id ON pamp.ai_model_version (model_id);
+CREATE INDEX IF NOT EXISTS idx_ai_model_registry_status ON pamp.ai_model_registry (status);

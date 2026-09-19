@@ -10,7 +10,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/axisarch"
-    DB_SCHEMA: str = "eam"
+    DB_SCHEMA: str = "pamp"
     PORT: int = 4000
     HOST: str = "0.0.0.0"
     # Comma-separated module keys to enable at runtime.

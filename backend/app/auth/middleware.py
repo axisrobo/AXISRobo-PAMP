@@ -19,7 +19,7 @@ from app.auth.role_resolver import resolve_scoped_roles
 from app.database import AsyncSessionLocal
 from app.utils.response_envelope import envelope_response
 
-logger = logging.getLogger("eam.auth")
+logger = logging.getLogger("pamp.auth")
 
 # Paths that never require authentication
 PUBLIC_PATHS: set[str] = {

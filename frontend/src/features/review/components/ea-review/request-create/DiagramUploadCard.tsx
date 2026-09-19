@@ -28,7 +28,7 @@ export interface UploadedAttachment {
   appArchType?: string;
   aiScore?: number | null;
   aiResult?: Record<string, unknown>;
-  aiCheckId?: string;      // UUID of eam_arch_ai_check record
+  aiCheckId?: string;      // UUID of pamp_arch_ai_check record
   thumbnailUrl?: string;   // generated client-side for preview
 }
 

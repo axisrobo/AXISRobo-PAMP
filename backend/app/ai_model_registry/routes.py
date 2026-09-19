@@ -120,15 +120,15 @@ async def list_models(
         params["status"] = status
     where_sql = ("WHERE " + " AND ".join(where)) if where else ""
 
-    count_r = await db.execute(text(f"SELECT COUNT(*) FROM eam.ai_model_registry m {where_sql}"), params)
+    count_r = await db.execute(text(f"SELECT COUNT(*) FROM pamp.ai_model_registry m {where_sql}"), params)
     total = count_r.scalar()
 
     offset = (page - 1) * pageSize
     rows = await db.execute(text(
         "SELECT m.*, "
-        "(SELECT COUNT(*) FROM eam.ai_model_version v WHERE v.model_id = m.id) AS version_count, "
-        "(SELECT v.version FROM eam.ai_model_version v WHERE v.model_id = m.id AND v.is_production LIMIT 1) AS production_version "
-        f"FROM eam.ai_model_registry m {where_sql} "
+        "(SELECT COUNT(*) FROM pamp.ai_model_version v WHERE v.model_id = m.id) AS version_count, "
+        "(SELECT v.version FROM pamp.ai_model_version v WHERE v.model_id = m.id AND v.is_production LIMIT 1) AS production_version "
+        f"FROM pamp.ai_model_registry m {where_sql} "
         "ORDER BY m.created_at DESC LIMIT :limit OFFSET :offset"
     ), {**params, "limit": pageSize, "offset": offset})
 
@@ -157,7 +157,7 @@ async def create_model(
     mid = str(uuid.uuid4())
     model_key = f"{_slugify(body.name)}-{uuid.uuid4().hex[:8]}"
     await db.execute(text(
-        "INSERT INTO eam.ai_model_registry (id, model_key, name, provider, model_type, description, owner, status, created_by, updated_by) "
+        "INSERT INTO pamp.ai_model_registry (id, model_key, name, provider, model_type, description, owner, status, created_by, updated_by) "
         "VALUES (CAST(:id AS uuid), :key, :name, :prov, :mt, :desc, :owner, :st, :cb, :cb)"
     ), {"id": mid, "key": model_key, "name": body.name.strip(), "prov": body.provider, "mt": body.modelType or "llm",
         "desc": body.description, "owner": body.owner, "st": body.status, "cb": user.id})
@@ -167,13 +167,13 @@ async def create_model(
 
 @router.get("/{model_id}", dependencies=[Depends(require_permission("avdm", "read"))])
 async def get_model(model_id: str, db: AsyncSession = Depends(get_db)):
-    r = await db.execute(text("SELECT * FROM eam.ai_model_registry WHERE id = CAST(:id AS uuid)"), {"id": model_id})
+    r = await db.execute(text("SELECT * FROM pamp.ai_model_registry WHERE id = CAST(:id AS uuid)"), {"id": model_id})
     row = r.mappings().first()
     if not row:
         raise HTTPException(status_code=404, detail="Model not found")
 
     vr = await db.execute(text(
-        "SELECT * FROM eam.ai_model_version WHERE model_id = CAST(:id AS uuid) ORDER BY is_production DESC, created_at DESC"
+        "SELECT * FROM pamp.ai_model_version WHERE model_id = CAST(:id AS uuid) ORDER BY is_production DESC, created_at DESC"
     ), {"id": model_id})
     versions = [_version_row(v) for v in vr.mappings().all()]
 
@@ -187,7 +187,7 @@ async def update_model(
     model_id: str, body: UpdateModelRequest,
     db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user),
 ):
-    r = await db.execute(text("SELECT 1 FROM eam.ai_model_registry WHERE id = CAST(:id AS uuid)"), {"id": model_id})
+    r = await db.execute(text("SELECT 1 FROM pamp.ai_model_registry WHERE id = CAST(:id AS uuid)"), {"id": model_id})
     if not r.fetchone():
         raise HTTPException(status_code=404, detail="Model not found")
 
@@ -210,14 +210,14 @@ async def update_model(
         return {"message": "no changes"}
     sets.append("updated_by = :ub")
     sets.append("updated_at = NOW()")
-    await db.execute(text(f"UPDATE eam.ai_model_registry SET {', '.join(sets)} WHERE id = CAST(:id AS uuid)"), params)
+    await db.execute(text(f"UPDATE pamp.ai_model_registry SET {', '.join(sets)} WHERE id = CAST(:id AS uuid)"), params)
     await db.commit()
     return {"message": "ok"}
 
 
 @router.delete("/{model_id}", dependencies=[Depends(require_role(Role.EA_ADMIN))])
 async def delete_model(model_id: str, db: AsyncSession = Depends(get_db)):
-    await db.execute(text("DELETE FROM eam.ai_model_registry WHERE id = CAST(:id AS uuid)"), {"id": model_id})
+    await db.execute(text("DELETE FROM pamp.ai_model_registry WHERE id = CAST(:id AS uuid)"), {"id": model_id})
     await db.commit()
     return {"message": "deleted"}
 
@@ -238,31 +238,31 @@ async def add_version(
     model_id: str, body: VersionRequest,
     db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user),
 ):
-    r = await db.execute(text("SELECT 1 FROM eam.ai_model_registry WHERE id = CAST(:id AS uuid)"), {"id": model_id})
+    r = await db.execute(text("SELECT 1 FROM pamp.ai_model_registry WHERE id = CAST(:id AS uuid)"), {"id": model_id})
     if not r.fetchone():
         raise HTTPException(status_code=404, detail="Model not found")
     _validate_version_payload(body)
 
     dup = await db.execute(text(
-        "SELECT 1 FROM eam.ai_model_version WHERE model_id = CAST(:id AS uuid) AND version = :v"
+        "SELECT 1 FROM pamp.ai_model_version WHERE model_id = CAST(:id AS uuid) AND version = :v"
     ), {"id": model_id, "v": body.version.strip()})
     if dup.fetchone():
         raise HTTPException(status_code=400, detail=f"Version '{body.version}' already exists for this model")
 
     if body.isProduction:
         await db.execute(text(
-            "UPDATE eam.ai_model_version SET is_production = false, updated_at = NOW() WHERE model_id = CAST(:id AS uuid)"
+            "UPDATE pamp.ai_model_version SET is_production = false, updated_at = NOW() WHERE model_id = CAST(:id AS uuid)"
         ), {"id": model_id})
 
     vid = str(uuid.uuid4())
     await db.execute(text(
-        "INSERT INTO eam.ai_model_version (id, model_id, version, source, source_uri, checksum, license, "
+        "INSERT INTO pamp.ai_model_version (id, model_id, version, source, source_uri, checksum, license, "
         "training_data_provenance, approval_status, is_production, notes, created_by, updated_by) "
         "VALUES (CAST(:vid AS uuid), CAST(:mid AS uuid), :v, :src, :uri, :chk, :lic, :prov, :appr, :prod, :notes, :cb, :cb)"
     ), {"vid": vid, "mid": model_id, "v": body.version.strip(), "src": body.source, "uri": body.sourceUri,
         "chk": body.checksum, "lic": body.license, "prov": body.trainingDataProvenance,
         "appr": body.approvalStatus, "prod": body.isProduction, "notes": body.notes, "cb": user.id})
-    await db.execute(text("UPDATE eam.ai_model_registry SET updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": model_id})
+    await db.execute(text("UPDATE pamp.ai_model_registry SET updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": model_id})
     await db.commit()
     return {"id": vid}
 
@@ -273,26 +273,26 @@ async def update_version(
     db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user),
 ):
     r = await db.execute(text(
-        "SELECT 1 FROM eam.ai_model_version WHERE id = CAST(:vid AS uuid) AND model_id = CAST(:mid AS uuid)"
+        "SELECT 1 FROM pamp.ai_model_version WHERE id = CAST(:vid AS uuid) AND model_id = CAST(:mid AS uuid)"
     ), {"vid": version_id, "mid": model_id})
     if not r.fetchone():
         raise HTTPException(status_code=404, detail="Version not found")
     _validate_version_payload(body)
 
     dup = await db.execute(text(
-        "SELECT 1 FROM eam.ai_model_version WHERE model_id = CAST(:mid AS uuid) AND version = :v AND id <> CAST(:vid AS uuid)"
+        "SELECT 1 FROM pamp.ai_model_version WHERE model_id = CAST(:mid AS uuid) AND version = :v AND id <> CAST(:vid AS uuid)"
     ), {"mid": model_id, "v": body.version.strip(), "vid": version_id})
     if dup.fetchone():
         raise HTTPException(status_code=400, detail=f"Version '{body.version}' already exists for this model")
 
     if body.isProduction:
         await db.execute(text(
-            "UPDATE eam.ai_model_version SET is_production = false, updated_at = NOW() "
+            "UPDATE pamp.ai_model_version SET is_production = false, updated_at = NOW() "
             "WHERE model_id = CAST(:mid AS uuid) AND id <> CAST(:vid AS uuid)"
         ), {"mid": model_id, "vid": version_id})
 
     await db.execute(text(
-        "UPDATE eam.ai_model_version SET version = :v, source = :src, source_uri = :uri, checksum = :chk, license = :lic, "
+        "UPDATE pamp.ai_model_version SET version = :v, source = :src, source_uri = :uri, checksum = :chk, license = :lic, "
         "training_data_provenance = :prov, approval_status = :appr, is_production = :prod, notes = :notes, "
         "updated_by = :ub, updated_at = NOW() WHERE id = CAST(:vid AS uuid)"
     ), {"v": body.version.strip(), "src": body.source, "uri": body.sourceUri, "chk": body.checksum, "lic": body.license,
@@ -305,7 +305,7 @@ async def update_version(
 @router.delete("/{model_id}/versions/{version_id}", dependencies=[Depends(require_role(Role.EA_ADMIN))])
 async def delete_version(model_id: str, version_id: str, db: AsyncSession = Depends(get_db)):
     await db.execute(text(
-        "DELETE FROM eam.ai_model_version WHERE id = CAST(:vid AS uuid) AND model_id = CAST(:mid AS uuid)"
+        "DELETE FROM pamp.ai_model_version WHERE id = CAST(:vid AS uuid) AND model_id = CAST(:mid AS uuid)"
     ), {"vid": version_id, "mid": model_id})
     await db.commit()
     return {"message": "deleted"}

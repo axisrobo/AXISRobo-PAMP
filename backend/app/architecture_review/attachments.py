@@ -43,7 +43,7 @@ async def upload_attachment(
         raise HTTPException(status_code=400, detail="bizType must be App_Arch, Tech_Arch, or Proj_Intro")
 
     req_result = await db.execute(
-        text("SELECT status, project_id FROM eam.eam_request WHERE request_id = :rid"),
+        text("SELECT status, project_id FROM pamp.pamp_request WHERE request_id = :rid"),
         {"rid": requestId},
     )
     req_row = req_result.mappings().first()
@@ -56,7 +56,7 @@ async def upload_attachment(
         project_id = req_row.get("project_id")
         assessment_result = await db.execute(
             text(
-                "SELECT evaluation, artifact_selection FROM eam.avdm_project_assessment "
+                "SELECT evaluation, artifact_selection FROM pamp.avdm_project_assessment "
                 "WHERE project_id = :pid"
             ),
             {"pid": project_id},
@@ -80,7 +80,7 @@ async def upload_attachment(
 
     count_result = await db.execute(
         text(
-            "SELECT COUNT(*) FROM eam.eam_request_attachment "
+            "SELECT COUNT(*) FROM pamp.pamp_request_attachment "
             "WHERE request_id = :rid AND biz_type = :btype"
         ),
         {"rid": requestId, "btype": bizType},
@@ -100,7 +100,7 @@ async def upload_attachment(
     original_name = originalName or file.filename or new_filename
     await db.execute(
         text(
-            "INSERT INTO eam.eam_request_attachment "
+            "INSERT INTO pamp.pamp_request_attachment "
             "(id, request_id, attachment_name, biz_type, app_arch_type, original_name, create_by, create_at) "
             "VALUES (:id, :rid, :aname, :btype, :atype, :oname, :cby, NOW())"
         ),
@@ -137,7 +137,7 @@ async def delete_attachment(
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
-        text("SELECT * FROM eam.eam_request_attachment WHERE id = :id"),
+        text("SELECT * FROM pamp.pamp_request_attachment WHERE id = :id"),
         {"id": attachment_id},
     )
     row = result.fetchone()
@@ -151,28 +151,28 @@ async def delete_attachment(
         await storage.delete(storage_key)
 
     ai_check_rows = await db.execute(
-        text("SELECT id::text FROM eam.eam_arch_ai_check WHERE attachment_uuid = :uuid"),
+        text("SELECT id::text FROM pamp.pamp_arch_ai_check WHERE attachment_uuid = :uuid"),
         {"uuid": attachment_id},
     )
     ai_check_ids = [row[0] for row in ai_check_rows.fetchall()]
 
     if ai_check_ids:
         await db.execute(
-            text("DELETE FROM eam.eam_arch_ai_check_app WHERE ai_check_id = ANY(:ids)"),
+            text("DELETE FROM pamp.pamp_arch_ai_check_app WHERE ai_check_id = ANY(:ids)"),
             {"ids": ai_check_ids},
         )
         await db.execute(
-            text("DELETE FROM eam.eam_arch_ai_check_interaction WHERE ai_check_id = ANY(:ids)"),
+            text("DELETE FROM pamp.pamp_arch_ai_check_interaction WHERE ai_check_id = ANY(:ids)"),
             {"ids": ai_check_ids},
         )
 
     await db.execute(
-        text("DELETE FROM eam.eam_arch_ai_check WHERE attachment_uuid = :uuid"),
+        text("DELETE FROM pamp.pamp_arch_ai_check WHERE attachment_uuid = :uuid"),
         {"uuid": attachment_id},
     )
 
     await db.execute(
-        text("DELETE FROM eam.eam_request_attachment WHERE id = :id"),
+        text("DELETE FROM pamp.pamp_request_attachment WHERE id = :id"),
         {"id": attachment_id},
     )
     await db.commit()
@@ -193,7 +193,7 @@ async def download_attachment(
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
-        text("SELECT attachment_name FROM eam.eam_request_attachment WHERE id = :id"),
+        text("SELECT attachment_name FROM pamp.pamp_request_attachment WHERE id = :id"),
         {"id": attachment_id},
     )
     row = result.fetchone()
@@ -230,7 +230,7 @@ async def download_attachment_file(
     import urllib.parse
 
     result = await db.execute(
-        text("SELECT attachment_name FROM eam.eam_request_attachment WHERE id = :id"),
+        text("SELECT attachment_name FROM pamp.pamp_request_attachment WHERE id = :id"),
         {"id": attachment_id},
     )
     row = result.fetchone()
@@ -274,7 +274,7 @@ async def update_attachment(
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
-        text("SELECT id FROM eam.eam_request_attachment WHERE id = :id"),
+        text("SELECT id FROM pamp.pamp_request_attachment WHERE id = :id"),
         {"id": attachment_id},
     )
     if not result.fetchone():
@@ -284,7 +284,7 @@ async def update_attachment(
     if app_arch_type is not None:
         await db.execute(
             text(
-                "UPDATE eam.eam_request_attachment SET app_arch_type = :atype WHERE id = :id"
+                "UPDATE pamp.pamp_request_attachment SET app_arch_type = :atype WHERE id = :id"
             ),
             {"atype": app_arch_type, "id": attachment_id},
         )

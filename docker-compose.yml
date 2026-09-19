@@ -23,7 +23,7 @@ services:
     build: ./backend
     environment:
       DATABASE_URL: postgresql+asyncpg://axisarch:${DB_PASSWORD:-axisarch_dev}@db:5432/axisarch
-      DB_SCHEMA: eam
+      DB_SCHEMA: pamp
       AUTH_DISABLED: "true"
       ENABLED_MODULES: add,architecture_review,application_management,data_management,project_management,technology_stack_management
       PORT: "4000"

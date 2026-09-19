@@ -242,8 +242,8 @@ model dict_option {
   @@id([category_id, option_id, lang], map: "dict_option_pk")
 }
 
-model eam_actions {
-  id                 String    @id(map: "eam_actions_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model pamp_actions {
+  id                 String    @id(map: "pamp_actions_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   project_id         String    @db.VarChar
   meeting_id         String?   @db.Uuid
   action_no          BigInt    @default(autoincrement())
@@ -271,8 +271,8 @@ model eam_actions {
   request_id         String?   @db.VarChar
 }
 
-model eam_actions_email_log {
-  id         String   @id(map: "eam_actions_email_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model pamp_actions_email_log {
+  id         String   @id(map: "pamp_actions_email_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   project_id String   @db.VarChar
   meeting_id String?  @db.Uuid
   action_id  String   @db.Uuid
@@ -283,19 +283,19 @@ model eam_actions_email_log {
   status     String   @db.VarChar
 }
 
-model eam_arch_ai_check {
+model pamp_arch_ai_check {
   total_cost      Decimal?              @db.Decimal
   check_cost      Decimal?              @db.Decimal
   request         Json?
   result          Json?
   create_at       DateTime?             @db.Timestamp(6)
   create_by       String?               @db.VarChar
-  id              String                @id(map: "eam_arch_ai_check_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String                @id(map: "pamp_arch_ai_check_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   attachment_uuid String?               @db.Uuid
-  apps            eam_arch_ai_check_app[]
+  apps            pamp_arch_ai_check_app[]
 }
 
-model eam_arch_ai_check_app {
+model pamp_arch_ai_check_app {
   id                String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   ai_check_id       String                @db.VarChar
   app_id            String                @db.VarChar
@@ -316,8 +316,8 @@ model eam_arch_ai_check_app {
   // ai_check_id stores legacy integer IDs (old records) or UUID strings (new records)
 }
 
-model eam_audit_log {
-  id          String    @id(map: "eam_field_change_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model pamp_audit_log {
+  id          String    @id(map: "pamp_field_change_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   object_type String    @db.VarChar
   object_id   String    @db.Uuid
   field       String?   @db.VarChar
@@ -328,7 +328,7 @@ model eam_audit_log {
   project_id  String?   @db.VarChar
 }
 
-model eam_bigea_team_members {
+model pamp_bigea_team_members {
   worker          String?   @db.VarChar(255)
   itcode          String    @id(map: "resource_pool_pkey") @db.VarChar(255)
   worker_type     String?   @db.VarChar(255)
@@ -366,8 +366,8 @@ model eam_bigea_team_members {
   ea_admin_status Boolean?  @default(false)
 }
 
-model eam_ea_calendar {
-  id                 String   @id(map: "eam_ea_calendar_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model pamp_ea_calendar {
+  id                 String   @id(map: "pamp_ea_calendar_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   project_id         String?  @db.VarChar
   schedule_no        BigInt   @default(autoincrement())
   schedule_title     String?  @db.VarChar
@@ -383,15 +383,15 @@ model eam_ea_calendar {
   for_meeting        String?  @db.VarChar
 }
 
-model eam_meeting_deck {
-  id         String  @id(map: "eam_meeting_deck_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+model pamp_meeting_deck {
+  id         String  @id(map: "pamp_meeting_deck_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
   meeting_id String? @db.VarChar
   deck_name  String? @db.VarChar
   deck_url   String? @db.VarChar
 }
 
-model eam_meeting_minutes {
-  id                     BigInt   @id(map: "eam_meeting_minutes_pk") @default(autoincrement())
+model pamp_meeting_minutes {
+  id                     BigInt   @id(map: "pamp_meeting_minutes_pk") @default(autoincrement())
   project_id             String   @db.VarChar
   project_name           String   @db.VarChar
   project_leader         String   @db.VarChar
@@ -406,8 +406,8 @@ model eam_meeting_minutes {
   review_recording       String[] @db.VarChar
 }
 
-model eam_meetings {
-  id                     String    @id(map: "eam_meetings_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model pamp_meetings {
+  id                     String    @id(map: "pamp_meetings_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   meeting_no             BigInt?   @default(autoincrement())
   project_id             String    @db.VarChar
   project_objectives     String?
@@ -435,8 +435,8 @@ model eam_meetings {
   request_id             String?   @db.VarChar
 }
 
-model eam_meetings_email_log {
-  id         String   @id(map: "eam_meetings_email_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model pamp_meetings_email_log {
+  id         String   @id(map: "pamp_meetings_email_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   project_id String   @db.VarChar
   meeting_id String   @db.Uuid
   log_time   DateTime @db.Timestamp(6)
@@ -446,7 +446,7 @@ model eam_meetings_email_log {
   status     String   @db.VarChar
 }
 
-model eam_project_summary {
+model pamp_project_summary {
   id                  String   @id(map: "project_summary_pk") @db.Uuid
   project_id          String   @db.VarChar
   business_owner1     String?  @db.VarChar
@@ -467,8 +467,8 @@ model eam_project_summary {
   domain_ea_reviewer  String?  @db.VarChar
 }
 
-model eam_request {
-  id                String    @id(map: "eam_request_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model pamp_request {
+  id                String    @id(map: "pamp_request_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   request_id        String    @db.VarChar
   project_id        String    @db.VarChar
   review_scope      String?   @db.VarChar
@@ -490,28 +490,28 @@ model eam_request {
   request_desc      String?   @db.VarChar
 }
 
-model eam_request_attachment {
+model pamp_request_attachment {
   request_id      String    @db.VarChar
   attachment_name String?   @db.VarChar
   create_at       DateTime? @db.Timestamp(6)
   create_by       String?   @db.VarChar
-  id              String    @id(map: "eam_request_attachment_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String    @id(map: "pamp_request_attachment_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   biz_type        String?   @db.VarChar
   app_arch_type   String?   @db.VarChar
 
   @@unique([request_id, attachment_name, biz_type], map: "request_id_attachment_name_biz_type_uniq")
 }
 
-model eam_request_process_log {
+model pamp_request_process_log {
   request_id String?   @db.VarChar
   action     String?   @db.VarChar
   comment    String?   @db.VarChar
   operator   String?   @db.VarChar
   create_at  DateTime? @db.Timestamp(6)
-  id         String    @id(map: "eam_reqeust_process_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
+  id         String    @id(map: "pamp_reqeust_process_log_pk") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
 }
 
-model eam_review_log {
+model pamp_review_log {
   id         String    @id(map: "sys_log_pk_1") @default(dbgenerated("gen_random_uuid()")) @db.VarChar
   comment    String?   @db.VarChar
   create_at  DateTime? @default(now()) @db.Timestamp(6)
@@ -520,8 +520,8 @@ model eam_review_log {
   project_id String?   @db.VarChar
 }
 
-model eam_scope_check_list {
-  id           String   @id(map: "eam_scope_check_list_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model pamp_scope_check_list {
+  id           String   @id(map: "pamp_scope_check_list_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   checklist_no Int      @db.SmallInt
   project_id   String   @db.VarChar
   category     String   @db.VarChar
@@ -535,7 +535,7 @@ model eam_scope_check_list {
   @@unique([project_id, checklist_no], map: "project_id_checklist_no_uniq")
 }
 
-model eam_scope_check_list_template {
+model pamp_scope_check_list_template {
   checklist_no     Int      @db.SmallInt
   category         String   @db.VarChar
   questions        String?  @db.VarChar
@@ -543,15 +543,15 @@ model eam_scope_check_list_template {
   option           String?  @db.VarChar
   comment          String?  @db.VarChar
   link             String[] @db.VarChar
-  id               String   @id(map: "eam_scope_check_list_template_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id               String   @id(map: "pamp_scope_check_list_template_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   sub_category     String?  @db.VarChar
   answer_type      String?  @db.VarChar
   selection_type   String?  @db.VarChar
   selection_option String[] @db.VarChar
 }
 
-model eam_scope_of_change {
-  id                    String @id(map: "eam_scope_of_change_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model pamp_scope_of_change {
+  id                    String @id(map: "pamp_scope_of_change_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   project_id            String @db.VarChar
   scope_no              BigInt @default(autoincrement())
   title                 String @db.VarChar
@@ -562,16 +562,16 @@ model eam_scope_of_change {
   @@unique([project_id, scope_no], map: "project_id_scope_no_uniq")
 }
 
-model eam_scope_of_change_pages {
-  id                 String  @id(map: "eam_scope_of_change_pages_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model pamp_scope_of_change_pages {
+  id                 String  @id(map: "pamp_scope_of_change_pages_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   scope_of_change_id String  @db.Uuid
   name               String? @db.VarChar
   description        String? @db.VarChar
   diagram            String?
 }
 
-model eam_scope_of_change_template {
-  id                    String @id(map: "eam_scope_of_change_template_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model pamp_scope_of_change_template {
+  id                    String @id(map: "pamp_scope_of_change_template_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   scope_no              BigInt
   title                 String @db.VarChar
   description           String @db.VarChar

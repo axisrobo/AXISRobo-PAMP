@@ -170,11 +170,11 @@
 
 ### 4.2 数据库 schema 命名不一致
 
-**问题:** `backend/.env.example` 和 `config.py` 使用 `DB_SCHEMA=axisarch`。代码和 OpenSpec 多处硬编码 `eam` 前缀（如 `eam.eam_request_attachment`、`eam.cmdb_application`）。
+**问题:** `backend/.env.example` 和 `config.py` 使用 `DB_SCHEMA=axisarch`。代码和 OpenSpec 多处硬编码 `pamp` 前缀（如 `pamp.pamp_request_attachment`、`pamp.cmdb_application`）。
 
 **建议:**
 - 二选一：
-  - 固定 schema 为 `eam`，更新配置和文档
+  - 固定 schema 为 `pamp`，更新配置和文档
   - 真正支持 `DB_SCHEMA`，代码中不硬编码 schema 前缀而是用 `search_path` 或安全注入
 
 ### 4.3 Team Members 写事务未提交
@@ -192,16 +192,16 @@
 
 ### 5.1 审计实现与项目原则不符
 
-**问题:** 项目规则声明 "append-only `eam_audit_log`"，但：
+**问题:** 项目规则声明 "append-only `pamp_audit_log`"，但：
 - `audit_allow` / `audit_deny` 仅写 logger（`backend/app/auth/audit.py`）
 - 仅在 `EE_ENABLED` 时启用
 - 无持久化存储
 
 **建议:**
-- 创建 `eam_audit_log` 表
+- 创建 `pamp_audit_log` 表
 - 字段：id, user_id, roles, resource, action, decision, reason, request_id, timestamp, client_ip
 - `audit_allow()` / `audit_deny()` 同时写入该表
-- 区分 `audit_log`（安全审计）、`eam_audit_log`（业务审计）、`tech_stack_operate_log`（操作日志）
+- 区分 `audit_log`（安全审计）、`pamp_audit_log`（业务审计）、`tech_stack_operate_log`（操作日志）
 
 ---
 
@@ -760,7 +760,7 @@ git commit -m "docs: regenerate API reference from OpenAPI schema"
 
 - [ ] **Step 1: 决定 schema 名称**
 
-确认正式 schema 名称。建议统一为 `axisarch` 或 `eam`。以下假设选择 `axisarch`。
+确认正式 schema 名称。建议统一为 `axisarch` 或 `pamp`。以下假设选择 `axisarch`。
 
 - [ ] **Step 2: DB_SCHEMA 增加白名单校验**
 
@@ -773,7 +773,7 @@ def validate_schema_name(cls, v):
     return v
 ```
 
-- [ ] **Step 3: 代码中硬编码的 eam 替换为动态 schema**
+- [ ] **Step 3: 代码中硬编码的 pamp 替换为动态 schema**
 
 使用 `{DB_SCHEMA}.table_name` 动态拼接（已做白名单校验，安全性可控），或依赖 `search_path`。
 
@@ -830,10 +830,10 @@ CREATE TABLE IF NOT EXISTS schema_migrations (
 - Create: `backend/migrations/XXX_create_audit_log.sql`
 - Modify: `backend/app/auth/audit.py`
 
-- [ ] **Step 1: 创建 eam_audit_log 表**
+- [ ] **Step 1: 创建 pamp_audit_log 表**
 
 ```sql
-CREATE TABLE IF NOT EXISTS eam_audit_log (
+CREATE TABLE IF NOT EXISTS pamp_audit_log (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id VARCHAR(255),
     roles JSONB,
@@ -851,16 +851,16 @@ CREATE TABLE IF NOT EXISTS eam_audit_log (
 
 ```python
 async def audit_allow(db: AsyncSession, user, resource, action, ...):
-    # Write to eam_audit_log
+    # Write to pamp_audit_log
     await db.execute(
-        text("INSERT INTO eam_audit_log (...) VALUES (...)"),
+        text("INSERT INTO pamp_audit_log (...) VALUES (...)"),
         {...}
     )
 
 async def audit_deny(db: AsyncSession, user, resource, action, reason, ...):
-    # Write to eam_audit_log
+    # Write to pamp_audit_log
     await db.execute(
-        text("INSERT INTO eam_audit_log (...) VALUES (...)"),
+        text("INSERT INTO pamp_audit_log (...) VALUES (...)"),
         {...}
     )
 ```

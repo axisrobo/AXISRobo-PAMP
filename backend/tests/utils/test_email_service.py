@@ -67,7 +67,7 @@ class TestGetAccessToken:
         email_mod._token_expires_at = 0.0
         monkeypatch.setattr(email_mod.settings, "BCT_SDK_KEY", "test-key")
         monkeypatch.setattr(email_mod.settings, "BCT_TOKEN_URL", "https://bct.example.com")
-        monkeypatch.setattr(email_mod.settings, "BCT_APP_CODE", "eam-app")
+        monkeypatch.setattr(email_mod.settings, "BCT_APP_CODE", "pamp-app")
 
         token = self._make_valid_token(3600)
         mock_response = MagicMock()
@@ -93,7 +93,7 @@ class TestGetAccessToken:
         email_mod._token_expires_at = 0.0
         monkeypatch.setattr(email_mod.settings, "BCT_SDK_KEY", "test-key")
         monkeypatch.setattr(email_mod.settings, "BCT_TOKEN_URL", "https://bct.example.com")
-        monkeypatch.setattr(email_mod.settings, "BCT_APP_CODE", "eam-app")
+        monkeypatch.setattr(email_mod.settings, "BCT_APP_CODE", "pamp-app")
 
         mock_response = MagicMock()
         mock_response.json.return_value = {"data": {}}
@@ -116,7 +116,7 @@ class TestGetAccessToken:
         email_mod._token_expires_at = 0.0
         monkeypatch.setattr(email_mod.settings, "BCT_SDK_KEY", "test-key")
         monkeypatch.setattr(email_mod.settings, "BCT_TOKEN_URL", "https://bct.example.com")
-        monkeypatch.setattr(email_mod.settings, "BCT_APP_CODE", "eam-app")
+        monkeypatch.setattr(email_mod.settings, "BCT_APP_CODE", "pamp-app")
 
         token = self._make_valid_token(3600)
         mock_response = MagicMock()

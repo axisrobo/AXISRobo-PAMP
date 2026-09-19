@@ -17,7 +17,7 @@ from app.config import settings
 from app.architecture_review.ai.agent_watch import agent_watch
 from app.architecture_review.ai.workflow import run_internal_workflow
 
-logger = logging.getLogger("eam.ea_agents.service")
+logger = logging.getLogger("pamp.ea_agents.service")
 
 
 def build_watch_context(user: AuthUser) -> dict[str, str]:
@@ -125,7 +125,7 @@ async def run_attachment_ai_check(
     await db.execute(
         text(
             """
-            INSERT INTO eam.eam_arch_ai_check
+            INSERT INTO pamp.pamp_arch_ai_check
                 (id, attachment_uuid, result, request, create_by, create_at, total_cost, check_cost)
             VALUES
                 (:id, :uuid, :result, :req, :cby, NOW(), :total_cost, :check_cost)

@@ -16,7 +16,7 @@ from app.architecture_review.ai.chains import architect_review_chain, architectu
 from app.architecture_review.ai.prompts import get_info_extract_prompt, get_review_prompt
 from app.architecture_review.ai.state import ArchitectureReviewState
 
-logger = logging.getLogger("eam.ea_agents.workflow")
+logger = logging.getLogger("pamp.ea_agents.workflow")
 
 
 class BaseArchitectureReviewWorkflow:

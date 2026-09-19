@@ -53,7 +53,7 @@ Seven independently deployable modules, controlled via `ENABLED_MODULES` env var
                                 |
                              asyncpg
                                 |
-                    PostgreSQL (schema: eam)
+                    PostgreSQL (schema: pamp)
                       100 tables | SQL DDL + seed scripts
 ```
 
@@ -129,7 +129,7 @@ Frontend Display (AVDMConcernExpandSection)
 
 The reference configuration uses the thresholds below. They are configurable at
 runtime through `GET/PUT /api/avdm/classification-policy` (stored in
-`eam.avdm_static_document` under `classification_policy`), together with the
+`pamp.avdm_static_document` under `classification_policy`), together with the
 project-complexity coefficient, optional Mandatory count/ratio caps, an optional
 top-N priority budget, and the tie-break strategy.
 
@@ -143,7 +143,7 @@ top-N priority budget, and the tie-break strategy.
 
 | Layer | File | Purpose |
 |-------|------|---------|
-| Catalog | `eam.avdm_pact_concern` | 68 PACT concerns with risk_tags, layer mapping |
+| Catalog | `pamp.avdm_pact_concern` | 68 PACT concerns with risk_tags, layer mapping |
 | Evaluation | `backend/app/add/master_data_repository.py` and `backend/app/add/service.py` | Questionnaire mapping, activation-rule scoring, and compatibility evaluation |
 | Contributions | `avdm_project_assessment.evaluation` | Stores concern decisions and contribution details for request-level views |
 | API | `backend/app/architecture_review/concerns.py` | `GET /ea-requests/{id}/concerns` |

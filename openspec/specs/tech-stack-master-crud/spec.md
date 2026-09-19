@@ -82,7 +82,7 @@
 
 #### Scenario: 创建成功
 - **WHEN** 发送有效的 POST 请求到 `/api/technology-stack`，携带必填字段
-- **THEN** 在 `eam.tech_stack_master_data` 表创建新记录，返回 201 和新记录 ID
+- **THEN** 在 `pamp.tech_stack_master_data` 表创建新记录，返回 201 和新记录 ID
 
 #### Scenario: 缺少必填字段
 - **WHEN** 发送 POST 请求缺少必填字段（category / component / version 等）
@@ -95,7 +95,7 @@
 
 #### Scenario: 更新成功
 - **WHEN** 发送有效的 PUT 请求到 `/api/technology-stack/{id}`
-- **THEN** 更新 `eam.tech_stack_master_data` 中对应记录，返回 200 和更新后的记录
+- **THEN** 更新 `pamp.tech_stack_master_data` 中对应记录，返回 200 和更新后的记录
 
 #### Scenario: 记录不存在
 - **WHEN** id 不存在

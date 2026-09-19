@@ -8,7 +8,7 @@ from typing import Any
 
 from app.config import settings
 
-logger = logging.getLogger("eam.ea_agents.agent_watch")
+logger = logging.getLogger("pamp.ea_agents.agent_watch")
 
 
 class AgentWatchAdapter:

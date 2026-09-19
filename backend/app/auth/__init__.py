@@ -1,12 +1,12 @@
 """AxisArch Authentication & Authorization module.
 
 Role model:
-    EA_Admin        — unrestricted (from eam_bigea_team_members.ea_admin_status)
+    EA_Admin        — unrestricted (from pamp_bigea_team_members.ea_admin_status)
     Normal_User     — every authenticated user
     EA_Reviewer     — scoped: assigned review authority
     App_Owner       — scoped: owned application data authority
     Project_Owner   — scoped: owned project data authority
-    Request_Owner   — per-record: resolved from eam_request.requester
+    Request_Owner   — per-record: resolved from pamp_request.requester
 
 Public API:
     Models:    AuthUser, Role

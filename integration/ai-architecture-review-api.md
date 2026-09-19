@@ -47,8 +47,8 @@ POST <configured-endpoint>/sit/v1/services/ea/openapi/ea/architecture/review
 - `language` (string): Language code (e.g., "zh")
 - `reviewType` (string): Review type (e.g., "Tech_Arch")
 - `appArchRuleName` (string): Architecture rule name (e.g., "New_App")
-- `scenario` (string): Scenario (e.g., "EAM")
-- `bizType` (string): Business type (e.g., "EAM")
+- `scenario` (string): Scenario (e.g., "PAMP")
+- `bizType` (string): Business type (e.g., "PAMP")
 - `bizOrderNo` (string): Business order number (e.g., "EA250008")
 - `file` (file): Architecture diagram file to upload
 
@@ -62,7 +62,7 @@ curl --location '<configured-endpoint>/sit/v1/services/ea/openapi/ea/architectur
   --form 'reviewType="Tech_Arch"' \
   --form 'appArchRuleName="New_App"' \
   --form 'scenario="AxisArch"' \
-  --form 'bizType="EAM"' \
+  --form 'bizType="PAMP"' \
   --form 'bizOrderNo="EA250008"' \
   --form 'file=@"/path/to/your/architecture-diagram.png"'
 ```

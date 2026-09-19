@@ -9,7 +9,7 @@ from sqlalchemy import text
 from app.config import settings
 from app.database import AsyncSessionLocal
 
-logger = logging.getLogger("eam.tasks.cmdb_sync")
+logger = logging.getLogger("pamp.tasks.cmdb_sync")
 
 
 def _get_app_columns() -> List[Dict[str, Any]]:
@@ -145,7 +145,7 @@ async def _upsert_rows(rows: List[Dict[str, Any]]):
             
             # UPSERT query
             query = text("""
-                INSERT INTO eam.cmdb_application (
+                INSERT INTO pamp.cmdb_application (
                     _id, short_description, u_service_area, u_status, app_full_name,
                     owned_by, "name", app_it_owner, app_owner_tower, app_owner_domain,
                     app_id, patch_level, portfolio_mgt, app_classification,
@@ -179,7 +179,7 @@ async def _upsert_rows(rows: List[Dict[str, Any]]):
                     app_operation_owner = EXCLUDED.app_operation_owner,
                     app_operation_owner_tower = EXCLUDED.app_operation_owner_tower,
                     app_operation_owner_domain = EXCLUDED.app_operation_owner_domain,
-                    decommissioned_at = COALESCE(EXCLUDED.decommissioned_at, eam.cmdb_application.decommissioned_at),
+                    decommissioned_at = COALESCE(EXCLUDED.decommissioned_at, pamp.cmdb_application.decommissioned_at),
                     app_dt_owner = EXCLUDED.app_dt_owner
             """)
             await db.execute(query, params)

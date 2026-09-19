@@ -15,7 +15,7 @@ class TestAuditAllow:
 
     def test_logs_at_info_level(self, caplog):
         user = make_user(roles=[Role.NORMAL_USER])
-        with caplog.at_level(logging.INFO, logger="eam.auth.audit"):
+        with caplog.at_level(logging.INFO, logger="pamp.auth.audit"):
             audit_allow(
                 user=user,
                 action="create",
@@ -27,7 +27,7 @@ class TestAuditAllow:
 
     def test_log_contains_allow_marker(self, caplog):
         user = make_user(roles=[Role.NORMAL_USER])
-        with caplog.at_level(logging.INFO, logger="eam.auth.audit"):
+        with caplog.at_level(logging.INFO, logger="pamp.auth.audit"):
             audit_allow(
                 user=user,
                 action="create",
@@ -37,7 +37,7 @@ class TestAuditAllow:
 
     def test_log_contains_user_id(self, caplog):
         user = make_user(user_id="alice", roles=[Role.NORMAL_USER])
-        with caplog.at_level(logging.INFO, logger="eam.auth.audit"):
+        with caplog.at_level(logging.INFO, logger="pamp.auth.audit"):
             audit_allow(
                 user=user,
                 action="update",
@@ -48,7 +48,7 @@ class TestAuditAllow:
 
     def test_log_contains_action_and_resource(self, caplog):
         user = make_user(roles=[Role.EA_ADMIN])
-        with caplog.at_level(logging.INFO, logger="eam.auth.audit"):
+        with caplog.at_level(logging.INFO, logger="pamp.auth.audit"):
             audit_allow(
                 user=user,
                 action="delete",
@@ -64,7 +64,7 @@ class TestAuditAllow:
 
     def test_default_scope_basis_is_baseline(self, caplog):
         user = make_user(roles=[Role.NORMAL_USER])
-        with caplog.at_level(logging.INFO, logger="eam.auth.audit"):
+        with caplog.at_level(logging.INFO, logger="pamp.auth.audit"):
             audit_allow(
                 user=user,
                 action="create",
@@ -74,7 +74,7 @@ class TestAuditAllow:
 
     def test_default_resource_id_is_dash(self, caplog):
         user = make_user(roles=[Role.NORMAL_USER])
-        with caplog.at_level(logging.INFO, logger="eam.auth.audit"):
+        with caplog.at_level(logging.INFO, logger="pamp.auth.audit"):
             audit_allow(
                 user=user,
                 action="create",
@@ -89,7 +89,7 @@ class TestAuditDeny:
 
     def test_logs_at_warning_level(self, caplog):
         user = make_user(roles=[Role.NORMAL_USER])
-        with caplog.at_level(logging.WARNING, logger="eam.auth.audit"):
+        with caplog.at_level(logging.WARNING, logger="pamp.auth.audit"):
             audit_deny(
                 user=user,
                 action="delete",
@@ -102,7 +102,7 @@ class TestAuditDeny:
 
     def test_log_contains_deny_marker(self, caplog):
         user = make_user(roles=[Role.NORMAL_USER])
-        with caplog.at_level(logging.WARNING, logger="eam.auth.audit"):
+        with caplog.at_level(logging.WARNING, logger="pamp.auth.audit"):
             audit_deny(
                 user=user,
                 action="update",
@@ -112,7 +112,7 @@ class TestAuditDeny:
 
     def test_log_contains_reason(self, caplog):
         user = make_user(user_id="mallory", roles=[Role.NORMAL_USER])
-        with caplog.at_level(logging.WARNING, logger="eam.auth.audit"):
+        with caplog.at_level(logging.WARNING, logger="pamp.auth.audit"):
             audit_deny(
                 user=user,
                 action="delete",
@@ -127,7 +127,7 @@ class TestAuditDeny:
 
     def test_log_contains_roles(self, caplog):
         user = make_user(roles=[Role.NORMAL_USER, Role.APP_OWNER])
-        with caplog.at_level(logging.WARNING, logger="eam.auth.audit"):
+        with caplog.at_level(logging.WARNING, logger="pamp.auth.audit"):
             audit_deny(
                 user=user,
                 action="write",

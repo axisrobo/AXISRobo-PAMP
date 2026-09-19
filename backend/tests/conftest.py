@@ -169,7 +169,7 @@ def make_mock_db(execute_results: list[MockResult] | None = None) -> AsyncMock:
 
 
 # ---------------------------------------------------------------------------
-# Quarantined stale tests — predecessor "Simple-eam" API that was redesigned,
+# Quarantined stale tests — predecessor "Simple-pamp" API that was redesigned,
 # removed, or moved to EE modules during the OSS split.  These are preserved
 # (not deleted) because the rewrite/delete decision requires product input.
 # Removing them from the skip list signals that a test has been updated.
@@ -301,7 +301,7 @@ _STALE_NODEIDS: set[str] = {
 
 
 def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
-    """Quarantine known-stale legacy tests from the predecessor Simple-eam API.
+    """Quarantine known-stale legacy tests from the predecessor Simple-pamp API.
 
     These tests target endpoints that were redesigned, removed, or moved to
     EE modules during the OSS split.  They are preserved (not deleted) so the

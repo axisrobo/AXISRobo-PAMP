@@ -32,18 +32,18 @@ async def lead_time_report(
         where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
         data_result = await db.execute(
             text(
-                f"SELECT * FROM eam.eam_architecture_review {where_clause} "
+                f"SELECT * FROM pamp.pamp_architecture_review {where_clause} "
                 "ORDER BY create_at DESC LIMIT :limit OFFSET :offset"
             ),
             {**params, "limit": pagination.page_size, "offset": pagination.offset},
         )
         rows = data_result.mappings().all()
-        count_result = await db.execute(text(f"SELECT COUNT(*) FROM eam.eam_architecture_review {where_clause}"), params)
+        count_result = await db.execute(text(f"SELECT COUNT(*) FROM pamp.pamp_architecture_review {where_clause}"), params)
         mapped = []
         for row in rows:
-            project_result = await db.execute(text("SELECT name as project_name FROM eam.eam_project WHERE project_id = :project_id OR id::text = :project_id"), {"project_id": row.get("project_id")})
+            project_result = await db.execute(text("SELECT name as project_name FROM pamp.pamp_project WHERE project_id = :project_id OR id::text = :project_id"), {"project_id": row.get("project_id")})
             logs_result = await db.execute(
-                text("SELECT action, create_at FROM eam.eam_process_log WHERE request_id = :request_id ORDER BY create_at ASC"),
+                text("SELECT action, create_at FROM pamp.pamp_process_log WHERE request_id = :request_id ORDER BY create_at ASC"),
                 {"request_id": row.get("request_id")},
             )
             project = project_result.mappings().first() or {}

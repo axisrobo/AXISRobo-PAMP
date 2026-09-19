@@ -1,9 +1,9 @@
 """Authentication providers — Dev mode.
 
 Role resolution:
-    EA_Admin      — resolved from eam_bigea_team_members.ea_admin_status (via role_resolver)
+    EA_Admin      — resolved from pamp_bigea_team_members.ea_admin_status (via role_resolver)
     Normal_User   — every authenticated user (automatic)
-    EA_Reviewer   — resolved from eam_bigea_team_members (via role_resolver)
+    EA_Reviewer   — resolved from pamp_bigea_team_members (via role_resolver)
     App_Owner     — resolved from cmdb_application / application_member (via role_resolver)
 """
 from __future__ import annotations
@@ -23,7 +23,7 @@ from app.auth.rbac import build_permission_list
 from app.config import settings
 from app.infrastructure.auth.provider import AuthProvider
 
-logger = logging.getLogger("eam.auth")
+logger = logging.getLogger("pamp.auth")
 
 
 def _email_prefix(email: str) -> str:
@@ -40,7 +40,7 @@ class DevAuthProvider(AuthProvider):
 
     NOTE: In dev mode, EA_Admin is granted directly based on AUTH_DEV_ROLE
     without querying the database.  In production, EA_Admin is resolved
-    from eam_bigea_team_members.ea_admin_status by the role_resolver.
+    from pamp_bigea_team_members.ea_admin_status by the role_resolver.
     """
 
     def __init__(self, _settings=None):
@@ -113,7 +113,7 @@ class LocalAuthProvider(AuthProvider):
         async with AsyncSessionLocal() as session:
             result = await session.execute(
                 text(
-                    "SELECT username, name, email, role FROM eam.local_users "
+                    "SELECT username, name, email, role FROM pamp.local_users "
                     "WHERE username = :un AND is_active = TRUE"
                 ),
                 {"un": username},
@@ -151,7 +151,7 @@ class LocalAuthProvider(AuthProvider):
             result = await session.execute(
                 text(
                     "SELECT username, password_hash, name, email, role "
-                    "FROM eam.local_users "
+                    "FROM pamp.local_users "
                     "WHERE username = :un AND is_active = TRUE"
                 ),
                 {"un": username},

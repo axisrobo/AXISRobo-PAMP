@@ -34,9 +34,9 @@ AxisArch 系统采用前后端分离架构：`frontend`（Next.js 15�? `backend
 | **后端小计** | | **2,622 �?* |
 | **前端小计** | | **~2,670 �?* |
 
-**DB Tables�?* `eam_request`, `eam_request_attachment`, `eam_arch_ai_check`, `eam_actions`, `eam_meetings`, `eam_ea_calendar`, `eam_scope_of_change`, `eam_scope_check_list`
+**DB Tables�?* `pamp_request`, `pamp_request_attachment`, `pamp_arch_ai_check`, `pamp_actions`, `pamp_meetings`, `pamp_ea_calendar`, `pamp_scope_of_change`, `pamp_scope_check_list`
 
-**耦合说明�?* 这是系统的核心聚合根，`eam_request` 表是枢纽，actions/meetings/scope 都通过 request_id 关联�?
+**耦合说明�?* 这是系统的核心聚合根，`pamp_request` 表是枢纽，actions/meetings/scope 都通过 request_id 关联�?
 
 **两人分工建议�?*
 - 人员 A1：Request 生命周期 + Scope（`ea_requests.py` 979�? `scope.py` 445�? 前端 request 相关页面�?
@@ -145,7 +145,7 @@ AxisArch 系统采用前后端分离架构：`frontend`（Next.js 15�? `backend
 | **后端小计** | | **~890 �?* |
 | **前端小计** | | **~436 �?* |
 
-**DB Tables�?* `resource_pool`, `eam_bigea_team_members`, `user_profile`
+**DB Tables�?* `resource_pool`, `pamp_bigea_team_members`, `user_profile`
 
 **认证架构（已实现）：**
 

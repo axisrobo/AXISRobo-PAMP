@@ -143,7 +143,7 @@
 
 #### Scenario: 注册成功
 - **WHEN** 发送有效 POST 请求，app_id 不在 `tech_stack_app` 中
-- **THEN** 在 `eam.tech_stack_app` 创建记录，返回 201
+- **THEN** 在 `pamp.tech_stack_app` 创建记录，返回 201
 
 #### Scenario: 重复注册
 - **WHEN** app_id 已存在于 `tech_stack_app`

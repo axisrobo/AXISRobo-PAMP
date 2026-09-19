@@ -270,9 +270,9 @@ async def get_concern_viewpoint_mapping(
         rows = await db.execute(
             text(
                 "SELECT c.concern_key, c.concern_name, c.layer, NULL::integer AS viewpoint_number, NULL::varchar AS viewpoint_name, NULL::varchar AS layer_name "
-                "FROM eam.avdm_pact_concern c "
+                "FROM pamp.avdm_pact_concern c "
                 "WHERE c.is_active = TRUE "
-                "AND NOT EXISTS (SELECT 1 FROM eam.avdm_viewpoint_concern_mapping m WHERE m.concern_id = c.id AND m.is_active = TRUE) "
+                "AND NOT EXISTS (SELECT 1 FROM pamp.avdm_viewpoint_concern_mapping m WHERE m.concern_id = c.id AND m.is_active = TRUE) "
                 "ORDER BY c.concern_key"
             )
         )
@@ -280,9 +280,9 @@ async def get_concern_viewpoint_mapping(
         rows = await db.execute(
             text(
                 "SELECT c.concern_key, c.concern_name, c.layer, vp.viewpoint_number, vp.viewpoint_name, vp.layer_name "
-                "FROM eam.avdm_viewpoint_concern_mapping m "
-                "JOIN eam.avdm_pact_concern c ON c.id = m.concern_id AND c.is_active = TRUE "
-                "JOIN eam.avdm_viewpoint vp ON vp.id = m.viewpoint_id AND vp.is_active = TRUE "
+                "FROM pamp.avdm_viewpoint_concern_mapping m "
+                "JOIN pamp.avdm_pact_concern c ON c.id = m.concern_id AND c.is_active = TRUE "
+                "JOIN pamp.avdm_viewpoint vp ON vp.id = m.viewpoint_id AND vp.is_active = TRUE "
                 "WHERE m.is_active = TRUE ORDER BY c.concern_key, vp.viewpoint_number"
             )
         )
@@ -307,7 +307,7 @@ async def list_viewpoints(
         text(
             "SELECT id, viewpoint_number, layer_name, viewpoint_name, logical_physical, structure_behavior, "
             "purpose, example, primary_source, audience, notes, sort_order, is_active "
-            "FROM eam.avdm_viewpoint ORDER BY sort_order, viewpoint_number"
+            "FROM pamp.avdm_viewpoint ORDER BY sort_order, viewpoint_number"
         )
     )
     items = []
@@ -720,7 +720,7 @@ async def confirm_questionnaire(
 
     await db.execute(
         text(
-            "UPDATE eam.avdm_project_assessment "
+            "UPDATE pamp.avdm_project_assessment "
             "SET questionnaire_confirmed_at = NOW(), update_at = NOW(), update_by = :operator "
             "WHERE project_id = :project_id"
         ),
@@ -745,7 +745,7 @@ async def confirm_concern_requirement(
 
     await db.execute(
         text(
-            "UPDATE eam.avdm_project_assessment "
+            "UPDATE pamp.avdm_project_assessment "
             "SET concern_requirement_confirmed_at = NOW(), update_at = NOW(), update_by = :operator "
             "WHERE project_id = :project_id"
         ),
@@ -770,7 +770,7 @@ async def confirm_artifact_requirement(
 
     await db.execute(
         text(
-            "UPDATE eam.avdm_project_assessment "
+            "UPDATE pamp.avdm_project_assessment "
             "SET artifact_requirement_confirmed_at = NOW(), artifact_confirmed_at = NOW(), update_at = NOW(), update_by = :operator "
             "WHERE project_id = :project_id"
         ),

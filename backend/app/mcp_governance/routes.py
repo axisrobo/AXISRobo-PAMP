@@ -187,15 +187,15 @@ async def list_servers(
         params["status"] = status
     where_sql = ("WHERE " + " AND ".join(where)) if where else ""
 
-    count_r = await db.execute(text(f"SELECT COUNT(*) FROM eam.mcp_server_registry s {where_sql}"), params)
+    count_r = await db.execute(text(f"SELECT COUNT(*) FROM pamp.mcp_server_registry s {where_sql}"), params)
     total = count_r.scalar()
 
     offset = (page - 1) * pageSize
     rows = await db.execute(text(
         "SELECT s.*, "
-        "(SELECT COUNT(*) FROM eam.mcp_tool t WHERE t.server_id = s.id) AS tool_count, "
-        "(SELECT COUNT(*) FROM eam.mcp_tool t WHERE t.server_id = s.id AND t.lifecycle_stage = 'production') AS production_tool_count "
-        f"FROM eam.mcp_server_registry s {where_sql} "
+        "(SELECT COUNT(*) FROM pamp.mcp_tool t WHERE t.server_id = s.id) AS tool_count, "
+        "(SELECT COUNT(*) FROM pamp.mcp_tool t WHERE t.server_id = s.id AND t.lifecycle_stage = 'production') AS production_tool_count "
+        f"FROM pamp.mcp_server_registry s {where_sql} "
         "ORDER BY s.created_at DESC LIMIT :limit OFFSET :offset"
     ), {**params, "limit": pageSize, "offset": offset})
 
@@ -223,7 +223,7 @@ async def create_server(
     sid = str(uuid.uuid4())
     server_key = f"{_slugify(body.name)}-{uuid.uuid4().hex[:8]}"
     await db.execute(text(
-        "INSERT INTO eam.mcp_server_registry (id, server_key, name, description, owner, provider, transport, "
+        "INSERT INTO pamp.mcp_server_registry (id, server_key, name, description, owner, provider, transport, "
         "endpoint_uri, auth_method, provenance_source, provenance_uri, scopes, status, created_by, updated_by) "
         "VALUES (CAST(:id AS uuid), :key, :name, :desc, :owner, :prov, :tr, :uri, :auth, :psrc, :puri, "
         "CAST(:scopes AS jsonb), :st, :cb, :cb)"
@@ -239,13 +239,13 @@ async def create_server(
 
 @router.get("/{server_id}", dependencies=[Depends(require_permission("avdm", "read"))])
 async def get_server(server_id: str, db: AsyncSession = Depends(get_db)):
-    r = await db.execute(text("SELECT * FROM eam.mcp_server_registry WHERE id = CAST(:id AS uuid)"), {"id": server_id})
+    r = await db.execute(text("SELECT * FROM pamp.mcp_server_registry WHERE id = CAST(:id AS uuid)"), {"id": server_id})
     row = r.mappings().first()
     if not row:
         raise HTTPException(status_code=404, detail="MCP server not found")
 
     tr = await db.execute(text(
-        "SELECT * FROM eam.mcp_tool WHERE server_id = CAST(:id AS uuid) ORDER BY tool_name"
+        "SELECT * FROM pamp.mcp_tool WHERE server_id = CAST(:id AS uuid) ORDER BY tool_name"
     ), {"id": server_id})
     tools = [_tool_row(t) for t in tr.mappings().all()]
 
@@ -259,7 +259,7 @@ async def update_server(
     server_id: str, body: UpdateServerRequest,
     db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user),
 ):
-    r = await db.execute(text("SELECT * FROM eam.mcp_server_registry WHERE id = CAST(:id AS uuid)"), {"id": server_id})
+    r = await db.execute(text("SELECT * FROM pamp.mcp_server_registry WHERE id = CAST(:id AS uuid)"), {"id": server_id})
     cur = r.mappings().first()
     if not cur:
         raise HTTPException(status_code=404, detail="MCP server not found")
@@ -283,7 +283,7 @@ async def update_server(
     _check_server_gate(merged["status"], merged["provenance_source"] or "")
 
     await db.execute(text(
-        "UPDATE eam.mcp_server_registry SET name = :name, description = :description, owner = :owner, provider = :provider, "
+        "UPDATE pamp.mcp_server_registry SET name = :name, description = :description, owner = :owner, provider = :provider, "
         "transport = :transport, endpoint_uri = :endpoint_uri, auth_method = :auth_method, "
         "provenance_source = :provenance_source, provenance_uri = :provenance_uri, scopes = CAST(:scopes AS jsonb), "
         "status = :status, updated_by = :ub, updated_at = NOW() WHERE id = CAST(:id AS uuid)"
@@ -294,7 +294,7 @@ async def update_server(
 
 @router.delete("/{server_id}", dependencies=[Depends(require_role(Role.EA_ADMIN))])
 async def delete_server(server_id: str, db: AsyncSession = Depends(get_db)):
-    await db.execute(text("DELETE FROM eam.mcp_server_registry WHERE id = CAST(:id AS uuid)"), {"id": server_id})
+    await db.execute(text("DELETE FROM pamp.mcp_server_registry WHERE id = CAST(:id AS uuid)"), {"id": server_id})
     await db.commit()
     return {"message": "deleted"}
 
@@ -304,21 +304,21 @@ async def add_tool(
     server_id: str, body: ToolRequest,
     db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user),
 ):
-    r = await db.execute(text("SELECT 1 FROM eam.mcp_server_registry WHERE id = CAST(:id AS uuid)"), {"id": server_id})
+    r = await db.execute(text("SELECT 1 FROM pamp.mcp_server_registry WHERE id = CAST(:id AS uuid)"), {"id": server_id})
     if not r.fetchone():
         raise HTTPException(status_code=404, detail="MCP server not found")
     _validate_tool(body)
     _check_tool_gate(body.lifecycleStage, body.approvalStatus, body.descriptionHash)
 
     dup = await db.execute(text(
-        "SELECT 1 FROM eam.mcp_tool WHERE server_id = CAST(:id AS uuid) AND tool_name = :name"
+        "SELECT 1 FROM pamp.mcp_tool WHERE server_id = CAST(:id AS uuid) AND tool_name = :name"
     ), {"id": server_id, "name": body.toolName.strip()})
     if dup.fetchone():
         raise HTTPException(status_code=400, detail=f"Tool '{body.toolName}' already exists for this server")
 
     tid = str(uuid.uuid4())
     await db.execute(text(
-        "INSERT INTO eam.mcp_tool (id, server_id, tool_name, description, description_hash, signature, risk_level, "
+        "INSERT INTO pamp.mcp_tool (id, server_id, tool_name, description, description_hash, signature, risk_level, "
         "approval_status, lifecycle_stage, notes, created_by, updated_by) "
         "VALUES (CAST(:tid AS uuid), CAST(:sid AS uuid), :name, :desc, :hash, :sig, :risk, :appr, :stage, :notes, :cb, :cb)"
     ), {
@@ -326,7 +326,7 @@ async def add_tool(
         "hash": body.descriptionHash, "sig": body.signature, "risk": body.riskLevel,
         "appr": body.approvalStatus, "stage": body.lifecycleStage, "notes": body.notes, "cb": user.id,
     })
-    await db.execute(text("UPDATE eam.mcp_server_registry SET updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": server_id})
+    await db.execute(text("UPDATE pamp.mcp_server_registry SET updated_at = NOW() WHERE id = CAST(:id AS uuid)"), {"id": server_id})
     await db.commit()
     return {"id": tid}
 
@@ -337,7 +337,7 @@ async def update_tool(
     db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user),
 ):
     r = await db.execute(text(
-        "SELECT 1 FROM eam.mcp_tool WHERE id = CAST(:tid AS uuid) AND server_id = CAST(:sid AS uuid)"
+        "SELECT 1 FROM pamp.mcp_tool WHERE id = CAST(:tid AS uuid) AND server_id = CAST(:sid AS uuid)"
     ), {"tid": tool_id, "sid": server_id})
     if not r.fetchone():
         raise HTTPException(status_code=404, detail="Tool not found")
@@ -345,13 +345,13 @@ async def update_tool(
     _check_tool_gate(body.lifecycleStage, body.approvalStatus, body.descriptionHash)
 
     dup = await db.execute(text(
-        "SELECT 1 FROM eam.mcp_tool WHERE server_id = CAST(:sid AS uuid) AND tool_name = :name AND id <> CAST(:tid AS uuid)"
+        "SELECT 1 FROM pamp.mcp_tool WHERE server_id = CAST(:sid AS uuid) AND tool_name = :name AND id <> CAST(:tid AS uuid)"
     ), {"sid": server_id, "name": body.toolName.strip(), "tid": tool_id})
     if dup.fetchone():
         raise HTTPException(status_code=400, detail=f"Tool '{body.toolName}' already exists for this server")
 
     await db.execute(text(
-        "UPDATE eam.mcp_tool SET tool_name = :name, description = :desc, description_hash = :hash, signature = :sig, "
+        "UPDATE pamp.mcp_tool SET tool_name = :name, description = :desc, description_hash = :hash, signature = :sig, "
         "risk_level = :risk, approval_status = :appr, lifecycle_stage = :stage, notes = :notes, "
         "updated_by = :ub, updated_at = NOW() WHERE id = CAST(:tid AS uuid)"
     ), {
@@ -366,7 +366,7 @@ async def update_tool(
 @router.delete("/{server_id}/tools/{tool_id}", dependencies=[Depends(require_role(Role.EA_ADMIN))])
 async def delete_tool(server_id: str, tool_id: str, db: AsyncSession = Depends(get_db)):
     await db.execute(text(
-        "DELETE FROM eam.mcp_tool WHERE id = CAST(:tid AS uuid) AND server_id = CAST(:sid AS uuid)"
+        "DELETE FROM pamp.mcp_tool WHERE id = CAST(:tid AS uuid) AND server_id = CAST(:sid AS uuid)"
     ), {"tid": tool_id, "sid": server_id})
     await db.commit()
     return {"message": "deleted"}

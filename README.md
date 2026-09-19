@@ -10,9 +10,9 @@ AxisRobo-PAMP was sparked by the **PAMF series of papers** (PACT, AVDM, AADM, AR
 |-------|-----------|
 | Frontend | Next.js 16.2 (Turbopack), React 19, TanStack Query, Ant Design v6, Tailwind CSS |
 | Backend | FastAPI (Python 3.12+), SQLAlchemy asyncpg, Raw SQL via `text()` |
-| Database | PostgreSQL 14+, 100 tables in `eam` schema DDL |
+| Database | PostgreSQL 14+, 100 tables in `pamp` schema DDL |
 | Auth | Pluggable: OSS local (JWT + bcrypt), Keycloak SSO (EE), Dev mode. RBAC (3 roles, 24 resources) |
-| Storage | Pluggable: S3-compatible or database-backed (`eam_file_storage`) |
+| Storage | Pluggable: S3-compatible or database-backed (`pamp_file_storage`) |
 | Testing | pytest (backend + API integration), Playwright (E2E) |
 
 ## Quick Start
@@ -54,21 +54,33 @@ docker run -d --name axisarch-pg \
 
 ### Initialize Schema & Seed Data
 
-The database schema and AVDM seed data are maintained as SQL scripts under [`docs/SQL/`](docs/SQL/). Create the `eam` schema, load the table DDL, then load the AVDM seed data:
+The database schema and AVDM seed data are maintained as SQL scripts under [`docs/SQL/`](docs/SQL/). A single idempotent script performs the full sequence (schema -> migrations -> DDL -> seed) and can be re-run safely:
 
 ```bash
-# Connection string matches the docker container above (db: axisarch)
+# Connection matches the docker container above (db: axisarch)
+export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/axisarch"
+
+scripts/init_db.sh
+```
+
+Under the hood this runs `scripts/init_db.py`, which:
+
+1. creates the `pamp` schema if absent;
+2. applies `backend/migrations/*.sql` in filename order (migration `000` moves a legacy `eam` schema to `pamp`);
+3. loads `docs/SQL/pamp_schema_ddl.sql`;
+4. loads `docs/SQL/avdm_schema_seed.sql`.
+
+The equivalent manual steps (matching the container above) are:
+
+```bash
 PG="postgresql://postgres:postgres@localhost:5432/axisarch"
-
-# 1. Create the eam schema
-psql "$PG" -c "CREATE SCHEMA IF NOT EXISTS eam;"
-
-# 2. Load all table definitions
-psql "$PG" -f docs/SQL/eam_schema_ddl.sql
-
-# 3. Load AVDM seed data (concerns, viewpoints, artifacts, mappings)
+psql "$PG" -c "CREATE SCHEMA IF NOT EXISTS pamp;"
+for f in backend/migrations/*.sql; do psql "$PG" -f "$f"; done
+psql "$PG" -f docs/SQL/pamp_schema_ddl.sql
 psql "$PG" -f docs/SQL/avdm_schema_seed.sql
 ```
+
+See [`docs/database-initialization.md`](docs/database-initialization.md) for details and the legacy `eam` -> `pamp` migration.
 
 ### Run
 
@@ -85,7 +97,7 @@ cd frontend && npm run dev
 | Mode | `AUTH_MODE` | Description |
 |------|-------------|-------------|
 | **Dev** | `dev` | Fixed admin user (`AUTH_DEV_USER`), no auth required |
-| **Local (OSS)** | `local` | Username/password + JWT, users stored in `eam.local_users` |
+| **Local (OSS)** | `local` | Username/password + JWT, users stored in `pamp.local_users` |
 | **OIDC (EE)** | `oidc` | Keycloak SSO with JWT validation |
 
 ### Local Auth (OSS)
@@ -134,7 +146,7 @@ Modules selectively enabled via `ENABLED_MODULES` env var.
 
 ```
 Browser → Next.js :3000 → FastAPI :4000 → PostgreSQL :5432
-                                         → S3 / eam_file_storage (attachments)
+                                         → S3 / pamp_file_storage (attachments)
                                          → LLM API (AI architecture review)
 ```
 
@@ -142,10 +154,10 @@ Browser → Next.js :3000 → FastAPI :4000 → PostgreSQL :5432
 
 1. **Modular by contract** — Each module self-contained with own DB access
 2. **Deny by default** — All 95+ API endpoints RBAC-gated via `require_permission(resource, scope)`
-3. **Audit everything** — Append-only `eam_audit_log` with `audit_allow()` / `audit_deny()` hooks
+3. **Audit everything** — Append-only `pamp_audit_log` with `audit_allow()` / `audit_deny()` hooks
 4. **Plugin-first** — Auth providers, email services, CMDB connectors, and storage backends are abstracted behind interfaces
 5. **Raw SQL over ORM** — SQLAlchemy `text()` for performance; Pydantic for request/response validation
-6. **Storage abstraction** — S3-compatible when configured, database-backed (`eam_file_storage`) when not
+6. **Storage abstraction** — S3-compatible when configured, database-backed (`pamp_file_storage`) when not
 
 ### AVDM Decision Chain
 
@@ -191,11 +203,11 @@ See [docs/api.md](docs/api.md) for full reference.
 | **S3** | Set `S3_ENDPOINT` | Production, enterprise deployments |
 | **Database** | S3 not configured (default) | Local development, OSS deployments |
 
-Files stored in `eam.eam_file_storage` table when S3 is unavailable.
+Files stored in `pamp.pamp_file_storage` table when S3 is unavailable.
 
 ## Database
 
-100 tables across the `eam` schema DDL. Complete documentation at [docs/database-schema.md](docs/database-schema.md).
+100 tables across the `pamp` schema DDL. Complete documentation at [docs/database-schema.md](docs/database-schema.md).
 
 ```bash
 # Generate fresh schema documentation
@@ -226,7 +238,7 @@ cd frontend && npx playwright test
 | [docs/threat-model.md](docs/threat-model.md) | Security threat model |
 | [docs/design.md](docs/design.md) | Detailed design (Chinese) |
 | [docs/database-schema.md](docs/database-schema.md) | Complete DB schema (100 tables) |
-| [docs/SQL/eam_schema_ddl.sql](docs/SQL/eam_schema_ddl.sql) | Complete schema DDL — `CREATE TABLE` definitions for all tables |
+| [docs/SQL/pamp_schema_ddl.sql](docs/SQL/pamp_schema_ddl.sql) | Complete schema DDL — `CREATE TABLE` definitions for all tables |
 | [docs/SQL/avdm_schema_seed.sql](docs/SQL/avdm_schema_seed.sql) | AVDM schema + seed data (concerns, viewpoints, artifacts, mappings) |
 | [docs/authorization.md](docs/authorization.md) | Auth model: RBAC + record-level ownership |
 | [docs/standards/](docs/standards/) | Coding conventions |

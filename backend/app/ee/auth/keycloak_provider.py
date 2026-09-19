@@ -13,7 +13,7 @@ from app.auth.rbac import build_permission_list
 from app.config import settings
 from app.infrastructure.auth.provider import AuthProvider
 
-logger = logging.getLogger("eam.auth")
+logger = logging.getLogger("pamp.auth")
 
 # ---------------------------------------------------------------------------
 # Keycloak JWT — production mode

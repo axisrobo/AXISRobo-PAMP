@@ -14,9 +14,9 @@ from PIL import Image, ImageDraw, ImageFont
 
 from app.utils.s3_storage import download_file
 
-logger = logging.getLogger("eam.utils.cert_image")
+logger = logging.getLogger("pamp.utils.cert_image")
 
-TEMPLATE_S3_KEY = "pm/eam/Certificate"
+TEMPLATE_S3_KEY = "pm/pamp/Certificate"
 
 
 @lru_cache(maxsize=1)

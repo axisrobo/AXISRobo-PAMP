@@ -283,20 +283,20 @@ app = FastAPI(title="AxisArch API", version="2.0.0", lifespan=lifespan)
 
 - [ ] **Step 2: Update email subjects in ea_requests.py**
 
-In `backend/app/architecture_review/ea_requests.py`, replace all `[EAM]` with `[AxisArch]`:
+In `backend/app/architecture_review/ea_requests.py`, replace all `[PAMP]` with `[AxisArch]`:
 
-Search for `subject=f"[EAM]"` → `subject=f"[AxisArch]"` (expected ~5 occurrences around lines 1565, 1581, 1644, 1712, 1786)
+Search for `subject=f"[PAMP]"` → `subject=f"[AxisArch]"` (expected ~5 occurrences around lines 1565, 1581, 1644, 1712, 1786)
 
 - [ ] **Step 3: Update AI service scenario names**
 
 In `backend/app/architecture_review/ai/service_common.py`:
 ```python
-scenario="AxisArch"  # was "EAM"
+scenario="AxisArch"  # was "PAMP"
 ```
 
 In `backend/app/architecture_review/ai/workflow_common.py`:
 ```python
-scenario=kwargs.get("scenario", "AxisArch")  # was "EAM"
+scenario=kwargs.get("scenario", "AxisArch")  # was "PAMP"
 ```
 
 - [ ] **Step 4: Update tech architect review prompt**
@@ -366,11 +366,11 @@ Rename-Item frontend/public/legacy-brand.png frontend/public/axisarch.png
 
 - [ ] **Step 3: Update help page reference**
 
-In `frontend/src/app/(data_management)/help/page.tsx`, replace `for EAM Review` with `for AxisArch Review`.
+In `frontend/src/app/(data_management)/help/page.tsx`, replace `for PAMP Review` with `for AxisArch Review`.
 
 - [ ] **Step 4: Update tech stack modal role reference**
 
-In `frontend/src/modules/technology_stack_management/components/lifecycle/ApplicationTechStackModal.tsx`, replace `EAM Admin` with `AxisArch Admin`.
+In `frontend/src/modules/technology_stack_management/components/lifecycle/ApplicationTechStackModal.tsx`, replace `PAMP Admin` with `AxisArch Admin`.
 
 - [ ] **Step 5: Commit**
 
@@ -395,7 +395,7 @@ git commit -m "chore: de-brand frontend code and assets"
 
 In `openspec/specs/authorization/spec.md`:
 - Replace all legacy organization references with generic descriptions
-- Replace `EAM` with `AxisArch`
+- Replace `PAMP` with `AxisArch`
 
 - [ ] **Step 2: Update certification-management spec**
 
@@ -414,7 +414,7 @@ In `openspec/specs/ea-request-flow/spec.md`:
 In `openspec/specs/shared-services/spec.md`:
 - Replace enterprise URLs with `<configured-endpoint>` placeholders
 - Replace enterprise emails with `<configured-email>`
-- `Subject: EAM -` → `Subject: AxisArch -`
+- `Subject: PAMP -` → `Subject: AxisArch -`
 
 - [ ] **Step 5: Update sync-cmdb-application spec**
 
@@ -524,7 +524,7 @@ KEYCLOAK_SERVER_URL=
 
 In `scripts/upsert-apps.sql`:
 - Replace organization-specific application names with `Example Platform (EXP)`
-- `EAM` app entry → `AxisArch` app entry
+- `PAMP` app entry → `AxisArch` app entry
 
 - [ ] **Step 6: Update UAT test data**
 
@@ -687,7 +687,7 @@ Browser → Nginx (reverse proxy) → Next.js :3000 → FastAPI :4000 → Postgr
 | Concern | Implementation |
 |---------|---------------|
 | Auth | Middleware → JWT extraction → RBAC Depends() → ownership checks |
-| Audit | Append-only eam_audit_log table, audit_allow()/audit_deny() |
+| Audit | Append-only pamp_audit_log table, audit_allow()/audit_deny() |
 | Logging | Python colorlog, structured key=value pairs |
 | Error Handling | Global exception handlers → {code, message, data} envelope |
 | Pagination | paginate() helper → {items, total, page, page_size} |
@@ -919,7 +919,7 @@ git commit -m "docs: add development roadmap"
 
 1. **No CSRF tokens**: API uses JWT Bearer → not CSRF-vulnerable by default, but double-submit cookie adds defense-in-depth
 2. **No rate limiting**: AI review endpoint can be abused for resource exhaustion
-3. **Plain-text audit log**: No hash chain or tamper detection on `eam_audit_log`
+3. **Plain-text audit log**: No hash chain or tamper detection on `pamp_audit_log`
 4. **Secrets in environment**: S3 keys, CMDB tokens, email tokens in plain env vars — should use Vault/Secrets Manager
 5. **No WAF**: No web application firewall for injection/shellshock protection
 6. **Email tokens long-lived**: Messaging-service tokens have extended expiry without rotation automation
@@ -1137,7 +1137,7 @@ In `docs/design.md` and `docs/design-En.md`:
 - [ ] **Step 2: Update authorization doc**
 
 In `docs/authorization.md`:
-- Replace `EAM uses` → `AxisArch uses`
+- Replace `PAMP uses` → `AxisArch uses`
 - Replace enterprise-specific role descriptions with generic ones
 
 - [ ] **Step 3: Update module splitting plan**
@@ -1217,7 +1217,7 @@ ENABLED_MODULES=add,architecture_review,application_management,data_management,p
 
 1. **Modular by contract**: Modules enabled/disabled via `ENABLED_MODULES` env var. Each module self-contained with its own DB access.
 2. **Deny by default**: All 81 API endpoints are RBAC-gated via `require_permission(resource, scope)`. Zero business code intrusion.
-3. **Audit everything**: Append-only `eam_audit_log` with `audit_allow()` / `audit_deny()` hooks.
+3. **Audit everything**: Append-only `pamp_audit_log` with `audit_allow()` / `audit_deny()` hooks.
 4. **Plugin-first**: Auth providers, email services, CMDB connectors, and storage backends are abstracted behind interfaces. Default to dev-mode stubs, plug in enterprise adapters via config.
 5. **Raw SQL over ORM**: Backend uses SQLAlchemy `text()` for performance. Pydantic models for request/response validation. DB schema tracked in migration SQL files under `backend/migrations/`.
 
@@ -1440,10 +1440,10 @@ cd api-tests; python -m pytest tests/ -v --tb=short 2>&1 | tail -20
 
 - [ ] **Step 5: Fix any failures**
 
-If tests fail due to naming changes (e.g., `EAM` references in test assertions), fix them and re-run.
+If tests fail due to naming changes (e.g., `PAMP` references in test assertions), fix them and re-run.
 
 Common expected failures:
-- Tests referencing `EAM` in assertions → replace with `AxisArch`
+- Tests referencing `PAMP` in assertions → replace with `AxisArch`
 - Tests with hardcoded enterprise URLs → replace with generic placeholders
 - Tests with organization-specific seed data → replace with generic data
 

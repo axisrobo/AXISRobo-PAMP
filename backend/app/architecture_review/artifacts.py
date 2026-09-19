@@ -19,7 +19,7 @@ async def get_request_artifacts(
     user: AuthUser = Depends(get_current_user),
 ):
     req_result = await db.execute(
-        text("SELECT request_id, project_id FROM eam.eam_request WHERE request_id = :rid OR id::text = :rid LIMIT 1"),
+        text("SELECT request_id, project_id FROM pamp.pamp_request WHERE request_id = :rid OR id::text = :rid LIMIT 1"),
         {"rid": request_id},
     )
     req_row = req_result.mappings().first()
@@ -34,7 +34,7 @@ async def get_request_artifacts(
         text(
             "SELECT project_id, evaluation, artifact_selection, concern_requirement_confirmed_at, "
             "artifact_requirement_confirmed_at, artifact_submitted_at, status "
-            "FROM eam.avdm_project_assessment WHERE project_id = :pid"
+            "FROM pamp.avdm_project_assessment WHERE project_id = :pid"
         ),
         {"pid": project_id},
     )
@@ -70,11 +70,11 @@ async def get_request_artifacts(
         map_rows = await db.execute(
             text(
                 "SELECT c.concern_key, a.artifact_name "
-                "FROM eam.avdm_pact_concern c "
-                "JOIN eam.avdm_viewpoint_concern_mapping vc ON vc.concern_id = c.id AND vc.is_active = TRUE "
-                "JOIN eam.avdm_viewpoint v ON v.id = vc.viewpoint_id AND v.is_active = TRUE "
-                "JOIN eam.avdm_viewpoint_artifact_mapping va ON va.viewpoint_id = v.id AND va.is_active = TRUE "
-                "JOIN eam.avdm_artifact a ON a.id = va.artifact_id AND a.is_active = TRUE "
+                "FROM pamp.avdm_pact_concern c "
+                "JOIN pamp.avdm_viewpoint_concern_mapping vc ON vc.concern_id = c.id AND vc.is_active = TRUE "
+                "JOIN pamp.avdm_viewpoint v ON v.id = vc.viewpoint_id AND v.is_active = TRUE "
+                "JOIN pamp.avdm_viewpoint_artifact_mapping va ON va.viewpoint_id = v.id AND va.is_active = TRUE "
+                "JOIN pamp.avdm_artifact a ON a.id = va.artifact_id AND a.is_active = TRUE "
                 "WHERE c.is_active = TRUE AND c.concern_key = ANY(:keys) "
                 "ORDER BY c.concern_key, vc.sort_order, va.sort_order, a.artifact_name"
             ),

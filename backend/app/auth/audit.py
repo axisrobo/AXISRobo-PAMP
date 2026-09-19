@@ -1,7 +1,7 @@
 """Authorization audit logging.
 
 Records privileged and denied authorization decisions for auditability.
-Events are written to the ``eam_audit_log`` database table (EE mode) and
+Events are written to the ``pamp_audit_log`` database table (EE mode) and
 logged via Python's logging module.
 """
 from __future__ import annotations
@@ -13,7 +13,7 @@ from sqlalchemy import text
 from app.auth.models import AuthUser
 from app.database import AsyncSessionLocal
 
-logger = logging.getLogger("eam.auth.audit")
+logger = logging.getLogger("pamp.auth.audit")
 
 
 async def _write_audit_log(
@@ -25,7 +25,7 @@ async def _write_audit_log(
     decision: str,
     reason: str = "",
 ) -> None:
-    """Write an audit event to the ``eam_audit_log`` table.
+    """Write an audit event to the ``pamp_audit_log`` table.
 
     Failures are silently caught so that a missing column or transient
     database issue does not affect the request.
@@ -34,7 +34,7 @@ async def _write_audit_log(
         async with AsyncSessionLocal() as session:
             await session.execute(
                 text(
-                    "INSERT INTO eam.eam_audit_log "
+                    "INSERT INTO pamp.pamp_audit_log "
                     "(user_id, roles, resource, action, decision, reason) "
                     "VALUES (:user_id, :roles, :resource, :action, :decision, :reason)"
                 ),

@@ -24,8 +24,8 @@ Total: ~119 API endpoints, 180+ FastAPI route handlers.
 ## Recent Changes (2026-06-24)
 
 - **AI Self-Assessment**: Full AI project self-assessment module — AT0-AT8 adoption tier × L0-L4 governance maturity matrix, 11-section 49-item architecture review checklist, counterparty type (CP1-CP4) governance contexts, automated matrix positioning with go/no-go guidance.
-- **Auth**: OSS local auth mode (`AUTH_MODE=local`) with username/password + JWT, 3 roles (admin/reviewer/requestor), `eam.local_users` table, user CRUD endpoints
-- **Storage**: Database-backed file storage (`eam.eam_file_storage`) as fallback when S3 not configured
+- **Auth**: OSS local auth mode (`AUTH_MODE=local`) with username/password + JWT, 3 roles (admin/reviewer/requestor), `pamp.local_users` table, user CRUD endpoints
+- **Storage**: Database-backed file storage (`pamp.pamp_file_storage`) as fallback when S3 not configured
 - **AVDM Data Chain**: Populated 68 PACT concerns, 45 viewpoints, concern-to-viewpoint mappings, and 73 canonical viewpoint-to-artifact mappings. Direct concern-to-artifact mapping has been removed; artifacts are derived through viewpoints only.
 - **Frontend**: OSS login page, AVDM config pages moved to `(add_config)` route group, expandable concern/viewpoint/artifact views in EA Review, concern-viewpoint and viewpoint-artifact mapping pages
 - **DB**: Renumbered `stable_question_id` to contiguous 1-69, `avdm_pact_concern` column restore, search_path fix for asyncpg
@@ -34,7 +34,7 @@ Total: ~119 API endpoints, 180+ FastAPI route handlers.
 ## Known Gaps
 
 - Browser smoke test: verify questionnaire submission activates concerns, derives viewpoints, and recommends artifacts after backend restart
-- Dual project table architecture (`eam.project` vs `eam.eam_project`): GET unified via COALESCE fallback; UPDATE/DELETE still use legacy `eam.project` only
+- Dual project table architecture (`pamp.project` vs `pamp.pamp_project`): GET unified via COALESCE fallback; UPDATE/DELETE still use legacy `pamp.project` only
 - CSRF protection: not implemented (JWT Bearer only)
 - Rate limiting: AI review endpoint has no throttling
 - Frontend unit tests: no Vitest setup

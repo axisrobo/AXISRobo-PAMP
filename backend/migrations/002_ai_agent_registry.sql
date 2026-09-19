@@ -2,7 +2,7 @@
 -- NOTE: This is governance registration, NOT runtime Agent identity (SPIFFE/SVID/ANS).
 -- Maps to roadmap v2.0 "Architecture Element Registry" (AI-agent slice).
 
-CREATE TABLE IF NOT EXISTS eam.ai_agent_registry (
+CREATE TABLE IF NOT EXISTS pamp.ai_agent_registry (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     agent_key VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS eam.ai_agent_registry (
     trust_level VARCHAR(255) NOT NULL DEFAULT 'limited'::character varying,
     hitl_required BOOLEAN NOT NULL DEFAULT false,
     capabilities JSONB NOT NULL DEFAULT '[]'::jsonb,
-    model_id_ref UUID REFERENCES eam.ai_model_registry(id) ON DELETE SET NULL,
+    model_id_ref UUID REFERENCES pamp.ai_model_registry(id) ON DELETE SET NULL,
     status VARCHAR(255) NOT NULL DEFAULT 'draft'::character varying,
     created_by VARCHAR(255) NOT NULL,
     updated_by VARCHAR(255) NOT NULL DEFAULT ''::character varying,
@@ -24,5 +24,5 @@ CREATE TABLE IF NOT EXISTS eam.ai_agent_registry (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE INDEX IF NOT EXISTS idx_ai_agent_registry_status ON eam.ai_agent_registry (status);
-CREATE INDEX IF NOT EXISTS idx_ai_agent_registry_model_id_ref ON eam.ai_agent_registry (model_id_ref);
+CREATE INDEX IF NOT EXISTS idx_ai_agent_registry_status ON pamp.ai_agent_registry (status);
+CREATE INDEX IF NOT EXISTS idx_ai_agent_registry_model_id_ref ON pamp.ai_agent_registry (model_id_ref);

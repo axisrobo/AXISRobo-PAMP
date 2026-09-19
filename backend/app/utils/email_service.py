@@ -19,7 +19,7 @@ import httpx
 
 from app.config import settings
 
-logger = logging.getLogger("eam.email_service")
+logger = logging.getLogger("pamp.email_service")
 
 # ---------------------------------------------------------------------------
 # Token cache — avoid fetching a new token for every email

@@ -143,7 +143,7 @@ def _check_approval_gate(status: str, capabilities: list[str], hitl_required: bo
 
 
 async def _ensure_model_exists(db: AsyncSession, model_id: str) -> None:
-    r = await db.execute(text("SELECT 1 FROM eam.ai_model_registry WHERE id = CAST(:id AS uuid)"), {"id": model_id})
+    r = await db.execute(text("SELECT 1 FROM pamp.ai_model_registry WHERE id = CAST(:id AS uuid)"), {"id": model_id})
     if not r.fetchone():
         raise HTTPException(status_code=400, detail="Referenced model not found")
 
@@ -181,13 +181,13 @@ async def list_agents(
         params["status"] = status
     where_sql = ("WHERE " + " AND ".join(where)) if where else ""
 
-    count_r = await db.execute(text(f"SELECT COUNT(*) FROM eam.ai_agent_registry a {where_sql}"), params)
+    count_r = await db.execute(text(f"SELECT COUNT(*) FROM pamp.ai_agent_registry a {where_sql}"), params)
     total = count_r.scalar()
 
     offset = (page - 1) * pageSize
     rows = await db.execute(text(
-        "SELECT a.*, (SELECT m.name FROM eam.ai_model_registry m WHERE m.id = a.model_id_ref) AS model_name "
-        f"FROM eam.ai_agent_registry a {where_sql} "
+        "SELECT a.*, (SELECT m.name FROM pamp.ai_model_registry m WHERE m.id = a.model_id_ref) AS model_name "
+        f"FROM pamp.ai_agent_registry a {where_sql} "
         "ORDER BY a.created_at DESC LIMIT :limit OFFSET :offset"
     ), {**params, "limit": pageSize, "offset": offset})
 
@@ -221,7 +221,7 @@ async def create_agent(
     aid = str(uuid.uuid4())
     agent_key = f"{_slugify(body.name)}-{uuid.uuid4().hex[:8]}"
     await db.execute(text(
-        "INSERT INTO eam.ai_agent_registry (id, agent_key, name, agent_type, description, owner, scenario_class, "
+        "INSERT INTO pamp.ai_agent_registry (id, agent_key, name, agent_type, description, owner, scenario_class, "
         "counterparty_type, adoption_tier, autonomy_level, trust_level, hitl_required, capabilities, model_id_ref, "
         "status, created_by, updated_by) "
         "VALUES (CAST(:id AS uuid), :key, :name, :atype, :desc, :owner, :sc, :cp, :tier, :auto, :trust, :hitl, "
@@ -239,8 +239,8 @@ async def create_agent(
 @router.get("/{agent_id}", dependencies=[Depends(require_permission("avdm", "read"))])
 async def get_agent(agent_id: str, db: AsyncSession = Depends(get_db)):
     r = await db.execute(text(
-        "SELECT a.*, (SELECT m.name FROM eam.ai_model_registry m WHERE m.id = a.model_id_ref) AS model_name "
-        "FROM eam.ai_agent_registry a WHERE a.id = CAST(:id AS uuid)"
+        "SELECT a.*, (SELECT m.name FROM pamp.ai_model_registry m WHERE m.id = a.model_id_ref) AS model_name "
+        "FROM pamp.ai_agent_registry a WHERE a.id = CAST(:id AS uuid)"
     ), {"id": agent_id})
     row = r.mappings().first()
     if not row:
@@ -255,7 +255,7 @@ async def update_agent(
     agent_id: str, body: UpdateAgentRequest,
     db: AsyncSession = Depends(get_db), user: AuthUser = Depends(get_current_user),
 ):
-    r = await db.execute(text("SELECT * FROM eam.ai_agent_registry WHERE id = CAST(:id AS uuid)"), {"id": agent_id})
+    r = await db.execute(text("SELECT * FROM pamp.ai_agent_registry WHERE id = CAST(:id AS uuid)"), {"id": agent_id})
     cur = r.mappings().first()
     if not cur:
         raise HTTPException(status_code=404, detail="Agent not found")
@@ -291,7 +291,7 @@ async def update_agent(
     _check_approval_gate(merged["status"], merged["capabilities"], merged["hitl_required"])
 
     await db.execute(text(
-        "UPDATE eam.ai_agent_registry SET name = :name, agent_type = :agent_type, description = :description, "
+        "UPDATE pamp.ai_agent_registry SET name = :name, agent_type = :agent_type, description = :description, "
         "owner = :owner, scenario_class = :scenario_class, counterparty_type = :counterparty_type, "
         "adoption_tier = :adoption_tier, autonomy_level = :autonomy_level, trust_level = :trust_level, "
         "hitl_required = :hitl_required, capabilities = CAST(:capabilities AS jsonb), "
@@ -308,6 +308,6 @@ async def update_agent(
 
 @router.delete("/{agent_id}", dependencies=[Depends(require_role(Role.EA_ADMIN))])
 async def delete_agent(agent_id: str, db: AsyncSession = Depends(get_db)):
-    await db.execute(text("DELETE FROM eam.ai_agent_registry WHERE id = CAST(:id AS uuid)"), {"id": agent_id})
+    await db.execute(text("DELETE FROM pamp.ai_agent_registry WHERE id = CAST(:id AS uuid)"), {"id": agent_id})
     await db.commit()
     return {"message": "deleted"}

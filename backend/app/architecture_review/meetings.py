@@ -59,10 +59,10 @@ async def list_meetings(
         where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
         repo = PostgresMeetingRepository(db)
         data_sql = (
-            f"SELECT * FROM eam.eam_meeting {where_clause} "
+            f"SELECT * FROM pamp.pamp_meeting {where_clause} "
             "ORDER BY start_time DESC LIMIT :limit OFFSET :offset"
         )
-        count_sql = f"SELECT COUNT(*) FROM eam.eam_meeting {where_clause}"
+        count_sql = f"SELECT COUNT(*) FROM pamp.pamp_meeting {where_clause}"
         data_params = {**params, "limit": pagination.page_size, "offset": pagination.offset}
         rows = await repo.execute_rows(data_sql, data_params)
         total = await repo.execute_scalar(count_sql, params) or 0
@@ -91,7 +91,7 @@ async def parse_attendees(file: UploadFile = File(...)):
 @router.get("/{meeting_no}", dependencies=[Depends(require_permission("meeting", "read"))])
 async def get_meeting(meeting_no: str, db: AsyncSession = Depends(get_db)):
     try:
-        result = await db.execute(text("SELECT * FROM eam.eam_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
+        result = await db.execute(text("SELECT * FROM pamp.pamp_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
         row = result.mappings().first()
         if not row:
             raise HTTPException(status_code=404, detail="Meeting not found")
@@ -109,7 +109,7 @@ async def create_meeting(body: dict, db: AsyncSession = Depends(get_db), user: A
         result = await db.execute(
             text(
                 """
-                INSERT INTO eam.eam_meeting (project_id, meeting_title, start_time, end_time, create_by, create_at)
+                INSERT INTO pamp.pamp_meeting (project_id, meeting_title, start_time, end_time, create_by, create_at)
                 VALUES (:project_id, :meeting_title, :start_time, :end_time, :create_by, NOW())
                 RETURNING *
                 """
@@ -134,12 +134,12 @@ async def create_meeting(body: dict, db: AsyncSession = Depends(get_db), user: A
 @router.put("/{meeting_no}", dependencies=[Depends(require_permission("meeting", "write"))])
 async def update_meeting(meeting_no: str, body: dict, db: AsyncSession = Depends(get_db)):
     try:
-        existing = await db.execute(text("SELECT * FROM eam.eam_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
+        existing = await db.execute(text("SELECT * FROM pamp.pamp_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
         if not existing.mappings().first():
             raise HTTPException(status_code=404, detail="Meeting not found")
         result = await db.execute(
             text(
-                "UPDATE eam.eam_meeting SET meeting_title = COALESCE(:meeting_title, meeting_title), update_at = NOW() "
+                "UPDATE pamp.pamp_meeting SET meeting_title = COALESCE(:meeting_title, meeting_title), update_at = NOW() "
                 "WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no RETURNING *"
             ),
             {"meeting_no": meeting_no, "meeting_title": body.get("title")},
@@ -156,12 +156,12 @@ async def update_meeting(meeting_no: str, body: dict, db: AsyncSession = Depends
 @router.patch("/{meeting_no}/cancel", dependencies=[Depends(require_permission("meeting", "write"))])
 async def cancel_meeting(meeting_no: str, db: AsyncSession = Depends(get_db)):
     try:
-        existing = await db.execute(text("SELECT * FROM eam.eam_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
+        existing = await db.execute(text("SELECT * FROM pamp.pamp_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
         if not existing.mappings().first():
             raise HTTPException(status_code=404, detail="Meeting not found")
         result = await db.execute(
             text(
-                "UPDATE eam.eam_meeting SET status = 'Cancelled', cancelled_at = NOW() "
+                "UPDATE pamp.pamp_meeting SET status = 'Cancelled', cancelled_at = NOW() "
                 "WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no RETURNING *"
             ),
             {"meeting_no": meeting_no},
@@ -178,12 +178,12 @@ async def cancel_meeting(meeting_no: str, db: AsyncSession = Depends(get_db)):
 @router.post("/{meeting_no}/set-ea-review-result", dependencies=[Depends(require_permission("meeting", "write"))])
 async def set_ea_review_result(meeting_no: str, body: dict, db: AsyncSession = Depends(get_db)):
     try:
-        existing = await db.execute(text("SELECT * FROM eam.eam_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
+        existing = await db.execute(text("SELECT * FROM pamp.pamp_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
         if not existing.mappings().first():
             raise HTTPException(status_code=404, detail="Meeting not found")
         result = await db.execute(
             text(
-                "UPDATE eam.eam_meeting SET ea_review_result = :result, update_at = NOW() "
+                "UPDATE pamp.pamp_meeting SET ea_review_result = :result, update_at = NOW() "
                 "WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no RETURNING *"
             ),
             {"meeting_no": meeting_no, "result": body.get("eaReviewResult")},
@@ -200,7 +200,7 @@ async def set_ea_review_result(meeting_no: str, body: dict, db: AsyncSession = D
 @router.post("/{meeting_no}/send-minute", dependencies=[Depends(require_permission("meeting", "write"))])
 async def send_meeting_minute(meeting_no: str, db: AsyncSession = Depends(get_db)):
     try:
-        existing = await db.execute(text("SELECT * FROM eam.eam_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
+        existing = await db.execute(text("SELECT * FROM pamp.pamp_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
         row = existing.mappings().first()
         if not row:
             raise HTTPException(status_code=404, detail="Meeting not found")
@@ -216,10 +216,10 @@ async def send_meeting_minute(meeting_no: str, db: AsyncSession = Depends(get_db
 @router.delete("/{meeting_no}", dependencies=[Depends(require_permission("meeting", "write"))])
 async def delete_meeting(meeting_no: str, db: AsyncSession = Depends(get_db)):
     try:
-        existing = await db.execute(text("SELECT * FROM eam.eam_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
+        existing = await db.execute(text("SELECT * FROM pamp.pamp_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
         if not existing.mappings().first():
             raise HTTPException(status_code=404, detail="Meeting not found")
-        result = await db.execute(text("DELETE FROM eam.eam_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
+        result = await db.execute(text("DELETE FROM pamp.pamp_meeting WHERE meeting_no = :meeting_no OR CAST(id AS text) = :meeting_no"), {"meeting_no": meeting_no})
         if not getattr(result, "rowcount", 0):
             raise HTTPException(status_code=404, detail="Meeting not found")
         await db.commit()
@@ -234,7 +234,7 @@ async def delete_meeting(meeting_no: str, db: AsyncSession = Depends(get_db)):
 @router.get("/{meeting_no}/decks", dependencies=[Depends(require_permission("meeting_deck", "read"))])
 async def list_meeting_decks(meeting_no: str, db: AsyncSession = Depends(get_db)):
     try:
-        result = await db.execute(text("SELECT * FROM eam.eam_meeting_deck WHERE meeting_id = :meeting_id OR CAST(meeting_id AS text) = :meeting_id"), {"meeting_id": meeting_no})
+        result = await db.execute(text("SELECT * FROM pamp.pamp_meeting_deck WHERE meeting_id = :meeting_id OR CAST(meeting_id AS text) = :meeting_id"), {"meeting_id": meeting_no})
         return {"data": result.mappings().all()}
     except Exception as exc:
         raise HTTPException(status_code=500, detail="Failed to fetch meeting decks") from exc
@@ -245,7 +245,7 @@ async def create_meeting_deck(meeting_no: str, body: dict, db: AsyncSession = De
     try:
         result = await db.execute(
             text(
-                "INSERT INTO eam.eam_meeting_deck (deck_id, meeting_id, deck_name, created_by, created_at) "
+                "INSERT INTO pamp.pamp_meeting_deck (deck_id, meeting_id, deck_name, created_by, created_at) "
                 "VALUES (gen_random_uuid(), :meeting_id, :deck_name, :created_by, NOW()) RETURNING *"
             ),
             {"meeting_id": meeting_no, "deck_name": body.get("deckName"), "created_by": user.id},
@@ -261,13 +261,13 @@ async def create_meeting_deck(meeting_no: str, body: dict, db: AsyncSession = De
 async def delete_meeting_deck(meeting_no: str, deck_id: str, db: AsyncSession = Depends(get_db)):
     try:
         existing = await db.execute(
-            text("SELECT * FROM eam.eam_meeting_deck WHERE (meeting_id = :meeting_id OR CAST(meeting_id AS text) = :meeting_id) AND deck_id = :deck_id"),
+            text("SELECT * FROM pamp.pamp_meeting_deck WHERE (meeting_id = :meeting_id OR CAST(meeting_id AS text) = :meeting_id) AND deck_id = :deck_id"),
             {"meeting_id": meeting_no, "deck_id": deck_id},
         )
         if not existing.mappings().first():
             raise HTTPException(status_code=404, detail="Meeting deck not found")
         result = await db.execute(
-            text("DELETE FROM eam.eam_meeting_deck WHERE (meeting_id = :meeting_id OR CAST(meeting_id AS text) = :meeting_id) AND deck_id = :deck_id"),
+            text("DELETE FROM pamp.pamp_meeting_deck WHERE (meeting_id = :meeting_id OR CAST(meeting_id AS text) = :meeting_id) AND deck_id = :deck_id"),
             {"meeting_id": meeting_no, "deck_id": deck_id},
         )
         if not getattr(result, "rowcount", 0):

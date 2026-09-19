@@ -21,9 +21,9 @@ UI elements but does not replace server-side checks.
 |------|------|--------|-------------|
 | `Normal_User` | Baseline | Automatic | Granted to every authenticated user |
 | `EA_Admin` | Baseline | Keycloak group/claim | Unrestricted platform access |
-| `EA_Reviewer` | Scoped | `eam_bigea_team_members` table | Can complete reviews on assigned EA requests |
+| `EA_Reviewer` | Scoped | `pamp_bigea_team_members` table | Can complete reviews on assigned EA requests |
 | `App_Owner` | Scoped | `cmdb_application` + `application_member` | Can maintain BCM and lifecycle data for owned applications |
-| `Project_Owner` | Scoped | `eam_project` table | Can maintain owned project data |
+| `Project_Owner` | Scoped | `pamp_project` table | Can maintain owned project data |
 
 Scoped roles are additive. A user with `EA_Reviewer` also has all
 `Normal_User` permissions.
@@ -35,7 +35,7 @@ Scoped roles are additive. A user with `EA_Reviewer` also has all
    - `Normal_User` is always added
    - `EA_Admin` is added if the user's Keycloak claims include the admin group
 3. **Scoped roles** are resolved from the database by `role_resolver.resolve_scoped_roles()`:
-   - `EA_Reviewer`: user's itcode exists in `eam_bigea_team_members`
+   - `EA_Reviewer`: user's itcode exists in `pamp_bigea_team_members`
    - `App_Owner`: user's itcode matches `cmdb_application.app_dt_owner`,
      `cmdb_application.app_operation_owner`, `cmdb_application.app_it_owner`,
      or `application_member.itcode` (matched by lowercase email prefix)
@@ -82,11 +82,11 @@ All ownership checks:
 Write operations are audited via `app/auth/audit.py` in both log and database:
 
 - `audit_allow(user, action, resource_type, resource_id, scope_basis)` — logged at
-  `INFO` level and written to `eam.eam_audit_log` table on successful write operations
+  `INFO` level and written to `pamp.pamp_audit_log` table on successful write operations
 - `audit_deny(user, action, resource_type, resource_id, reason)` — logged at
-  `WARNING` level and written to `eam.eam_audit_log` table on authorization failures
+  `WARNING` level and written to `pamp.pamp_audit_log` table on authorization failures
 
-Audit events are persisted in the append-only `eam.eam_audit_log` database table
+Audit events are persisted in the append-only `pamp.pamp_audit_log` database table
 with fields: `id` (UUID), `user_id`, `roles` (JSONB), `resource`, `action`,
 `decision` (allow/deny), `reason`, `created_at`.
 

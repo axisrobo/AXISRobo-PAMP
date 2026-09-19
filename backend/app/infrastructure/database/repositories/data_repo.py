@@ -12,18 +12,18 @@ class PostgresMasterDataRepository(MasterDataRepository):
 
     async def get_by_id(self, id: str) -> Optional[MasterDataEntry]:
         result = await self._session.execute(
-            text("SELECT id, data_type, code, name, description, is_active, created_at FROM eam_master_data WHERE id = :id"),
+            text("SELECT id, data_type, code, name, description, is_active, created_at FROM pamp_master_data WHERE id = :id"),
             {"id": id}
         )
         row = result.fetchone()
         return self._to_entity(row) if row else None
 
     async def list(self, page: int = 1, page_size: int = 20) -> tuple[list[MasterDataEntry], int]:
-        count_result = await self._session.execute(text("SELECT COUNT(*) FROM eam_master_data"))
+        count_result = await self._session.execute(text("SELECT COUNT(*) FROM pamp_master_data"))
         total = count_result.scalar()
         offset = (page - 1) * page_size
         result = await self._session.execute(
-            text("SELECT id, data_type, code, name, description, is_active, created_at FROM eam_master_data ORDER BY code LIMIT :limit OFFSET :offset"),
+            text("SELECT id, data_type, code, name, description, is_active, created_at FROM pamp_master_data ORDER BY code LIMIT :limit OFFSET :offset"),
             {"limit": page_size, "offset": offset}
         )
         items = [self._to_entity(row) for row in result.fetchall()]
@@ -31,34 +31,34 @@ class PostgresMasterDataRepository(MasterDataRepository):
 
     async def search(self, query: str) -> list[MasterDataEntry]:
         result = await self._session.execute(
-            text("SELECT id, data_type, code, name, description, is_active, created_at FROM eam_master_data WHERE name ILIKE :query OR code ILIKE :query ORDER BY code"),
+            text("SELECT id, data_type, code, name, description, is_active, created_at FROM pamp_master_data WHERE name ILIKE :query OR code ILIKE :query ORDER BY code"),
             {"query": f"%{query}%"}
         )
         return [self._to_entity(row) for row in result.fetchall()]
 
     async def list_by_type(self, data_type: str) -> list[MasterDataEntry]:
         result = await self._session.execute(
-            text("SELECT id, data_type, code, name, description, is_active, created_at FROM eam_master_data WHERE data_type = :data_type ORDER BY code"),
+            text("SELECT id, data_type, code, name, description, is_active, created_at FROM pamp_master_data WHERE data_type = :data_type ORDER BY code"),
             {"data_type": data_type}
         )
         return [self._to_entity(row) for row in result.fetchall()]
 
     async def create(self, entity: MasterDataEntry) -> MasterDataEntry:
         await self._session.execute(
-            text("INSERT INTO eam_master_data (id, data_type, code, name, description, is_active, created_at) VALUES (:id, :data_type, :code, :name, :description, :is_active, :created_at)"),
+            text("INSERT INTO pamp_master_data (id, data_type, code, name, description, is_active, created_at) VALUES (:id, :data_type, :code, :name, :description, :is_active, :created_at)"),
             {"id": str(entity.id), "data_type": entity.data_type, "code": entity.code, "name": entity.name, "description": entity.description, "is_active": entity.is_active, "created_at": entity.created_at}
         )
         return entity
 
     async def update(self, entity: MasterDataEntry) -> MasterDataEntry:
         await self._session.execute(
-            text("UPDATE eam_master_data SET name=:name, description=:description, is_active=:is_active WHERE id=:id"),
+            text("UPDATE pamp_master_data SET name=:name, description=:description, is_active=:is_active WHERE id=:id"),
             {"id": str(entity.id), "name": entity.name, "description": entity.description, "is_active": entity.is_active}
         )
         return entity
 
     async def delete(self, id: str) -> bool:
-        result = await self._session.execute(text("UPDATE eam_master_data SET is_active=false WHERE id = :id"), {"id": id})
+        result = await self._session.execute(text("UPDATE pamp_master_data SET is_active=false WHERE id = :id"), {"id": id})
         return result.rowcount > 0
 
     @staticmethod
@@ -70,50 +70,50 @@ class PostgresCertificationRepository(CertificationRepository):
         self._session = session
 
     async def get_by_id(self, id: str) -> Optional[Certification]:
-        result = await self._session.execute(text("SELECT id, person_itcode, cert_type, cert_name, issue_date, expiry_date, status FROM eam_certifications WHERE id = :id"), {"id": id})
+        result = await self._session.execute(text("SELECT id, person_itcode, cert_type, cert_name, issue_date, expiry_date, status FROM pamp_certifications WHERE id = :id"), {"id": id})
         row = result.fetchone()
         return self._to_entity(row) if row else None
 
     async def list(self, page: int = 1, page_size: int = 20) -> tuple[list[Certification], int]:
-        count_result = await self._session.execute(text("SELECT COUNT(*) FROM eam_certifications"))
+        count_result = await self._session.execute(text("SELECT COUNT(*) FROM pamp_certifications"))
         total = count_result.scalar()
         offset = (page - 1) * page_size
         result = await self._session.execute(
-            text("SELECT id, person_itcode, cert_type, cert_name, issue_date, expiry_date, status FROM eam_certifications ORDER BY cert_name LIMIT :limit OFFSET :offset"),
+            text("SELECT id, person_itcode, cert_type, cert_name, issue_date, expiry_date, status FROM pamp_certifications ORDER BY cert_name LIMIT :limit OFFSET :offset"),
             {"limit": page_size, "offset": offset}
         )
         return [self._to_entity(row) for row in result.fetchall()], total
 
     async def list_by_person(self, itcode: str) -> list[Certification]:
         result = await self._session.execute(
-            text("SELECT id, person_itcode, cert_type, cert_name, issue_date, expiry_date, status FROM eam_certifications WHERE person_itcode = :itcode"),
+            text("SELECT id, person_itcode, cert_type, cert_name, issue_date, expiry_date, status FROM pamp_certifications WHERE person_itcode = :itcode"),
             {"itcode": itcode}
         )
         return [self._to_entity(row) for row in result.fetchall()]
 
     async def list_expiring_soon(self, days: int = 30) -> list[Certification]:
         result = await self._session.execute(
-            text("SELECT id, person_itcode, cert_type, cert_name, issue_date, expiry_date, status FROM eam_certifications WHERE expiry_date <= CURRENT_DATE + :days AND status = 'active'"),
+            text("SELECT id, person_itcode, cert_type, cert_name, issue_date, expiry_date, status FROM pamp_certifications WHERE expiry_date <= CURRENT_DATE + :days AND status = 'active'"),
             {"days": days}
         )
         return [self._to_entity(row) for row in result.fetchall()]
 
     async def create(self, entity: Certification) -> Certification:
         await self._session.execute(
-            text("INSERT INTO eam_certifications (id, person_itcode, cert_type, cert_name, issue_date, expiry_date, status) VALUES (:id, :person_itcode, :cert_type, :cert_name, :issue_date, :expiry_date, :status)"),
+            text("INSERT INTO pamp_certifications (id, person_itcode, cert_type, cert_name, issue_date, expiry_date, status) VALUES (:id, :person_itcode, :cert_type, :cert_name, :issue_date, :expiry_date, :status)"),
             {"id": str(entity.id), "person_itcode": entity.person_itcode, "cert_type": entity.cert_type, "cert_name": entity.cert_name, "issue_date": entity.issue_date, "expiry_date": entity.expiry_date, "status": entity.status}
         )
         return entity
 
     async def update(self, entity: Certification) -> Certification:
         await self._session.execute(
-            text("UPDATE eam_certifications SET cert_type=:cert_type, cert_name=:cert_name, issue_date=:issue_date, expiry_date=:expiry_date, status=:status WHERE id=:id"),
+            text("UPDATE pamp_certifications SET cert_type=:cert_type, cert_name=:cert_name, issue_date=:issue_date, expiry_date=:expiry_date, status=:status WHERE id=:id"),
             {"id": str(entity.id), "cert_type": entity.cert_type, "cert_name": entity.cert_name, "issue_date": entity.issue_date, "expiry_date": entity.expiry_date, "status": entity.status}
         )
         return entity
 
     async def delete(self, id: str) -> bool:
-        result = await self._session.execute(text("UPDATE eam_certifications SET status='inactive' WHERE id = :id"), {"id": id})
+        result = await self._session.execute(text("UPDATE pamp_certifications SET status='inactive' WHERE id = :id"), {"id": id})
         return result.rowcount > 0
 
     @staticmethod
@@ -129,14 +129,14 @@ class PostgresResourceRepository(ResourceRepository):
 
     async def list_by_type(self, resource_type: str) -> list[Resource]:
         result = await self._session.execute(
-            text("SELECT id, name, resource_type, description, is_available FROM eam_resources WHERE resource_type = :resource_type ORDER BY name"),
+            text("SELECT id, name, resource_type, description, is_available FROM pamp_resources WHERE resource_type = :resource_type ORDER BY name"),
             {"resource_type": resource_type}
         )
         return [self._to_entity(row) for row in result.fetchall()]
 
     async def create(self, entity: Resource) -> Resource:
         await self._session.execute(
-            text("INSERT INTO eam_resources (id, name, resource_type, description, is_available) VALUES (:id, :name, :resource_type, :description, :is_available)"),
+            text("INSERT INTO pamp_resources (id, name, resource_type, description, is_available) VALUES (:id, :name, :resource_type, :description, :is_available)"),
             {"id": str(entity.id), "name": entity.name, "resource_type": entity.resource_type, "description": entity.description, "is_available": entity.is_available}
         )
         return entity

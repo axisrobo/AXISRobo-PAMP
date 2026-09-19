@@ -45,7 +45,7 @@ Path-style addressing (`s3.addressing_style = "path"`) and S3 v2 signature (`sig
 | `S3_ACCESS_KEY` | (configured) | Access key ID |
 | `S3_SECRET_KEY` | (configured) | Secret access key |
 | `S3_BUCKET` | `<your-bucket>` | Bucket name |
-| `S3_PREFIX` | `pm/eam/app` | Object key prefix |
+| `S3_PREFIX` | `pm/pamp/app` | Object key prefix |
 
 ### Requirement: Upload explicitly sets ContentLength
 `upload_file()` SHALL set `ContentLength` to avoid `Transfer-Encoding: chunked` (unsupported by target OSS).
@@ -110,13 +110,13 @@ When `BCT_SDK_KEY` is empty, return `{ status: "skipped" }` without HTTP call.
 HTTP errors return `{ status: "error", message: "HTTP <code>: <body>" }`. Network errors return `{ status: "error", message: "<detail>" }`. Timeout: 30 seconds for email send, 15 seconds for token acquisition.
 
 ### Requirement: EA team recipients
-Email addresses read from `eam.dict_option` where `category_id = '2400'`, `description` field.
+Email addresses read from `pamp.dict_option` where `category_id = '2400'`, `description` field.
 
 ### Requirement: Action status notification endpoint
 `POST /api/actions/send-status-notification` (EA_ADMIN) — digest email of Action status changes in last 24h. Subject: `AxisArch – Action Status Change Collection[<date>]`, template: `Actions` / `Action`.
 
 ### Requirement: Action expiration notification endpoint
-`POST /api/actions/send-expiration-notification` (EA_ADMIN) — per-assignee emails for actions nearing due date (`due_date <= NOW()+1 day`, `notification_times < 3`). CC to EA team. Increments `notification_times`, logs to `eam_actions_email_log`.
+`POST /api/actions/send-expiration-notification` (EA_ADMIN) — per-assignee emails for actions nearing due date (`due_date <= NOW()+1 day`, `notification_times < 3`). CC to EA team. Increments `notification_times`, logs to `pamp_actions_email_log`.
 
 ### Requirement: Certification expiration notification endpoint
 `POST /api/certifications/send-expiration-notification` (EA_ADMIN) — digest email of certs expired or expiring within 30 days. Subject: `AxisArch – Certification Expiration Reminder [<date>]`, template: `Certifications` / `CertExpiration`.

@@ -99,18 +99,18 @@ Clicking delete SHALL call `DELETE /api/ea-requests/attachments/{id}` and remove
 ### Requirement: Upload attachment file
 `POST /api/ea-requests/attachments/upload` SHALL accept multipart/form-data with `file`, `requestId`, `bizType` (`App_Arch` | `Tech_Arch` | `Proj_Intro`), optional `appArchType`.
 
-File stored to S3 via `s3_storage.upload_file()` with key `<S3_PREFIX>/<sequence>-<YYYYMMDDHHmmssSSS>.<ext>`. Record inserted into `eam_request_attachment`. Returns `{ attachmentName, attachmentUuid, fileName }`.
+File stored to S3 via `s3_storage.upload_file()` with key `<S3_PREFIX>/<sequence>-<YYYYMMDDHHmmssSSS>.<ext>`. Record inserted into `pamp_request_attachment`. Returns `{ attachmentName, attachmentUuid, fileName }`.
 
 File size limit: 10MB.
 
 ### Requirement: Delete attachment
-`DELETE /api/ea-requests/attachments/{id}` SHALL delete from S3 and DB, including associated `eam_arch_ai_check` records.
+`DELETE /api/ea-requests/attachments/{id}` SHALL delete from S3 and DB, including associated `pamp_arch_ai_check` records.
 
 ### Requirement: Download attachment file
 `GET /api/ea-requests/attachments/{id}/file` SHALL serve the file from S3 with appropriate Content-Type.
 
 ### Requirement: AI architecture check endpoint
-`POST /api/ea-requests/ai-check` SHALL forward to `AI_CHECK_URL` third-party service and store result in `eam_arch_ai_check`. Returns 503 when not configured.
+`POST /api/ea-requests/ai-check` SHALL forward to `AI_CHECK_URL` third-party service and store result in `pamp_arch_ai_check`. Returns 503 when not configured.
 
 ---
 
@@ -170,7 +170,7 @@ The payload SHALL include the following variables matching the BCT template:
 The `linkUrl` SHALL use the request's UUID (not `request_id`) to match the frontend route: `{EAM_SITE_URL}/ea-review/request/{uuid}`.
 
 ### Requirement: Email recipients and CC
-- **To**: EA team recipients from `eam.dict_option` where `category_id = '2400'`
+- **To**: EA team recipients from `pamp.dict_option` where `category_id = '2400'`
 - **CC**: `<configured-email>` + PM email + DT Lead email (if available)
 
 ### Requirement: Email subject

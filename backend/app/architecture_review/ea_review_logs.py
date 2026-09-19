@@ -39,10 +39,10 @@ async def list_ea_review_logs(
         where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
         sort_field = SORT_FIELDS.get(pagination.sort_field or "", "create_at")
         sort_order = "DESC" if (pagination.sort_order or "").lower() == "desc" else "ASC"
-        count_result = await db.execute(text(f"SELECT COUNT(*) FROM eam.eam_review_log {where_clause}"), params)
+        count_result = await db.execute(text(f"SELECT COUNT(*) FROM pamp.pamp_review_log {where_clause}"), params)
         data_result = await db.execute(
             text(
-                f"SELECT * FROM eam.eam_review_log {where_clause} "
+                f"SELECT * FROM pamp.pamp_review_log {where_clause} "
                 f"ORDER BY {sort_field} {sort_order} LIMIT :limit OFFSET :offset"
             ),
             {**params, "limit": pagination.page_size, "offset": pagination.offset},

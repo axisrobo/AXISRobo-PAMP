@@ -138,7 +138,7 @@ async def list_cmdb(
 async def get_cmdb_detail(app_id: str, db: AsyncSession = Depends(get_db)):
     try:
         result = await db.execute(
-            text("SELECT * FROM eam.cmdb_application WHERE app_id = :p_appId LIMIT 1"),
+            text("SELECT * FROM pamp.cmdb_application WHERE app_id = :p_appId LIMIT 1"),
             {"p_appId": app_id},
         )
         row = result.fetchone()

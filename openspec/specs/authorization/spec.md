@@ -40,7 +40,7 @@ The system MUST treat scoped business roles as additive permissions on top of `N
 
 ### Requirement: The system SHALL define baseline role sources explicitly
 The system SHALL derive baseline roles from the following sources:
-- `EA_Admin`: sourced from table `eam_bigea_team_members` field `ea_admin_status`
+- `EA_Admin`: sourced from table `pamp_bigea_team_members` field `ea_admin_status`
 - `Normal_User`: automatically granted to every authenticated user
 
 The system MUST treat every successfully authenticated user as `Normal_User` even if no additional application-specific role is resolved.
@@ -117,7 +117,7 @@ The system MUST NOT allow `Normal_User` to approve, assign, close, review, or ot
 ### Requirement: The system SHALL define scoped business role sources explicitly
 The system SHALL derive scoped business roles from application data.
 
-The system SHALL resolve `EA_Reviewer` from table `eam_bigea_team_members`.
+The system SHALL resolve `EA_Reviewer` from table `pamp_bigea_team_members`.
 
 The system SHALL resolve `App_Owner` from:
 - table `cmdb_application` field `app_dt_owner`
@@ -131,7 +131,7 @@ The system SHALL resolve `Project_Owner` from:
 - table `project` field `it_lead_itcode`
 
 The system SHALL resolve `Request_Owner` per-record from:
-- table `eam_request` field `requester`
+- table `pamp_request` field `requester`
 
 The system SHALL interpret `application_member.itcode` as the email prefix of the current user.
 
@@ -142,7 +142,7 @@ The system MUST NOT grant unrestricted access merely because a scoped business r
 The system SHALL apply scoped business roles only to records explicitly assigned to or owned by the current user.
 
 #### Scenario: Scoped reviewer role is resolved
-- **WHEN** the authenticated user exists in `eam_bigea_team_members`
+- **WHEN** the authenticated user exists in `pamp_bigea_team_members`
 - **THEN** the system SHALL add `EA_Reviewer` to the user's authorization context
 
 #### Scenario: Scoped app owner role is resolved by application member
@@ -519,7 +519,7 @@ The system SHALL treat `EA_Reviewer` as a scoped business role for the Review Fl
 
 The system SHALL allow `EA_Reviewer` to operate only in the `Complete EA Review` step of Review Flow.
 
-The system SHALL determine whether a request is reviewable by the current `EA_Reviewer` using table `eam_request` and field `assign_reviewer`.
+The system SHALL determine whether a request is reviewable by the current `EA_Reviewer` using table `pamp_request` and field `assign_reviewer`.
 
 The system SHALL allow an `EA_Reviewer` to perform the following actions on an assigned request:
 - complete the review
@@ -545,11 +545,11 @@ The system MUST NOT allow an `EA_Reviewer` to access Certification, Resources, R
 The system MUST NOT allow an `EA_Reviewer` to create, change, or delete Technology Stack data.
 
 #### Scenario: Assigned reviewer completes EA review
-- **WHEN** the current user is an `EA_Reviewer`, the target `eam_request.assign_reviewer` includes that user, and the request is in `Complete EA Review`
+- **WHEN** the current user is an `EA_Reviewer`, the target `pamp_request.assign_reviewer` includes that user, and the request is in `Complete EA Review`
 - **THEN** the system SHALL allow the user to set the review result and submit review comments
 
 #### Scenario: Reviewer accesses unassigned request
-- **WHEN** the current user is an `EA_Reviewer` but the target request is not assigned through `eam_request.assign_reviewer`
+- **WHEN** the current user is an `EA_Reviewer` but the target request is not assigned through `pamp_request.assign_reviewer`
 - **THEN** the system SHALL reject the review operation with `403 Forbidden`
 
 #### Scenario: Reviewer attempts unrelated update
@@ -647,7 +647,7 @@ The system MUST NOT allow `Project_Owner` to change projects that the user does 
 
 
 ### Requirement: The system SHALL recognize Request_Owner as a per-record ownership concept
-The system SHALL determine Request_Owner status by comparing the authenticated user's identifier with the `requester` field on table `eam_request`.
+The system SHALL determine Request_Owner status by comparing the authenticated user's identifier with the `requester` field on table `pamp_request`.
 
 The system SHALL NOT resolve Request_Owner as a session-wide role. Request_Owner status is evaluated per record at the time of each mutation request.
 
@@ -665,7 +665,7 @@ The system MUST NOT allow the Request_Owner to:
 - Upload diagrams or attachments on a request in Completed status
 
 #### Scenario: Request owner identified by requester field
-- **WHEN** the authenticated user's identifier matches `eam_request.requester` for a given request
+- **WHEN** the authenticated user's identifier matches `pamp_request.requester` for a given request
 - **THEN** the system SHALL treat the user as the Request_Owner for that request
 
 #### Scenario: Request owner uploads attachment on in-progress request
@@ -714,18 +714,18 @@ The system SHALL normalize the authenticated user into an authorization context 
 - normalized email prefix for ownership matching
 
 The system SHALL derive:
-- `EA_Admin` from `eam_bigea_team_members` field `ea_admin_status`
+- `EA_Admin` from `pamp_bigea_team_members` field `ea_admin_status`
 - `Normal_User` from successful authentication
-- `EA_Reviewer` from `eam_bigea_team_members`
+- `EA_Reviewer` from `pamp_bigea_team_members`
 - `App_Owner` from `cmdb_application` and `application_member`
 - `Project_Owner` from `project` (fields `pm_itcode`, `dt_lead_itcode`, `it_lead_itcode`)
-- `Request_Owner` per-record from `eam_request.requester`
+- `Request_Owner` per-record from `pamp_request.requester`
 
 The system SHOULD cache authorization context briefly per request or token lifetime, but MUST ensure that scoped data decisions remain correct for the current request.
 
 #### Scenario: Unified authorization context is created
 - **WHEN** a valid token is presented
-- **THEN** the system SHALL resolve baseline roles from authentication state and application data (including `EA_Admin` from `eam_bigea_team_members.ea_admin_status`), and scoped roles from application data, before business authorization is evaluated
+- **THEN** the system SHALL resolve baseline roles from authentication state and application data (including `EA_Admin` from `pamp_bigea_team_members.ea_admin_status`), and scoped roles from application data, before business authorization is evaluated
 
 
 ### Requirement: The system SHALL make scoped authorization decisions auditable

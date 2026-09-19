@@ -12,7 +12,7 @@ class DatabaseStorage(StorageProvider):
     async def upload(self, key: str, data: bytes, content_type: str = "application/octet-stream") -> str:
         await self._session.execute(
             text(
-                "INSERT INTO eam.eam_file_storage (key, data, content_type) "
+                "INSERT INTO pamp.pamp_file_storage (key, data, content_type) "
                 "VALUES (:key, :data, :ct) "
                 "ON CONFLICT (key) DO UPDATE SET data = :data, content_type = :ct"
             ),
@@ -22,7 +22,7 @@ class DatabaseStorage(StorageProvider):
 
     async def download(self, key: str) -> bytes:
         result = await self._session.execute(
-            text("SELECT data FROM eam.eam_file_storage WHERE key = :key"),
+            text("SELECT data FROM pamp.pamp_file_storage WHERE key = :key"),
             {"key": key},
         )
         row = result.fetchone()
@@ -32,7 +32,7 @@ class DatabaseStorage(StorageProvider):
 
     async def delete(self, key: str) -> bool:
         result = await self._session.execute(
-            text("DELETE FROM eam.eam_file_storage WHERE key = :key"),
+            text("DELETE FROM pamp.pamp_file_storage WHERE key = :key"),
             {"key": key},
         )
         return result.rowcount > 0

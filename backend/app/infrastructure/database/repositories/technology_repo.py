@@ -12,23 +12,23 @@ class PostgresTechStackRepository(TechStackRepository):
         self._session = session
 
     async def get_by_id(self, id: str) -> Optional[TechStackItem]:
-        result = await self._session.execute(text("SELECT id, name, category, version, status, eol_date, security_advice, created_at FROM eam_tech_key_stack_item WHERE id = :id"), {"id": id})
+        result = await self._session.execute(text("SELECT id, name, category, version, status, eol_date, security_advice, created_at FROM pamp_tech_key_stack_item WHERE id = :id"), {"id": id})
         row = result.fetchone()
         return self._to_entity(row) if row else None
 
     async def list(self, page: int = 1, page_size: int = 20) -> tuple[list[TechStackItem], int]:
-        count_result = await self._session.execute(text("SELECT COUNT(*) FROM eam_tech_key_stack_item WHERE status != 'Deleted'"))
+        count_result = await self._session.execute(text("SELECT COUNT(*) FROM pamp_tech_key_stack_item WHERE status != 'Deleted'"))
         total = count_result.scalar()
         offset = (page - 1) * page_size
         result = await self._session.execute(
-            text("SELECT id, name, category, version, status, eol_date, security_advice, created_at FROM eam_tech_key_stack_item WHERE status != 'Deleted' ORDER BY name LIMIT :limit OFFSET :offset"),
+            text("SELECT id, name, category, version, status, eol_date, security_advice, created_at FROM pamp_tech_key_stack_item WHERE status != 'Deleted' ORDER BY name LIMIT :limit OFFSET :offset"),
             {"limit": page_size, "offset": offset}
         )
         return [self._to_entity(row) for row in result.fetchall()], total
 
     async def list_by_category(self, category: str) -> list[TechStackItem]:
         result = await self._session.execute(
-            text("SELECT id, name, category, version, status, eol_date, security_advice, created_at FROM eam_tech_key_stack_item WHERE category = :category AND status != 'Deleted' ORDER BY name"),
+            text("SELECT id, name, category, version, status, eol_date, security_advice, created_at FROM pamp_tech_key_stack_item WHERE category = :category AND status != 'Deleted' ORDER BY name"),
             {"category": category}
         )
         return [self._to_entity(row) for row in result.fetchall()]
@@ -38,7 +38,7 @@ class PostgresTechStackRepository(TechStackRepository):
         return {"compliant": True, "item": item.name if item else "unknown"}
 
     async def soft_delete(self, id: str) -> bool:
-        result = await self._session.execute(text("UPDATE eam_tech_key_stack_item SET status='Deleted' WHERE id = :id"), {"id": id})
+        result = await self._session.execute(text("UPDATE pamp_tech_key_stack_item SET status='Deleted' WHERE id = :id"), {"id": id})
         return result.rowcount > 0
 
     async def list_master_filtered(
@@ -75,7 +75,7 @@ class PostgresTechStackRepository(TechStackRepository):
         offset = (page - 1) * page_size
 
         total_result = await self._session.execute(
-            text(f"SELECT COUNT(*) AS total FROM eam.tech_stack_master_data {where_clause}"),
+            text(f"SELECT COUNT(*) AS total FROM pamp.tech_stack_master_data {where_clause}"),
             params,
         )
         total = int(total_result.scalar() or 0)
@@ -84,7 +84,7 @@ class PostgresTechStackRepository(TechStackRepository):
         params["offset"] = offset
         data_result = await self._session.execute(
             text(
-                f"SELECT * FROM eam.tech_stack_master_data {where_clause} "
+                f"SELECT * FROM pamp.tech_stack_master_data {where_clause} "
                 f"ORDER BY {sort_field} {order_dir} NULLS LAST LIMIT :limit OFFSET :offset"
             ),
             params,
@@ -94,14 +94,14 @@ class PostgresTechStackRepository(TechStackRepository):
 
     async def create(self, entity: TechStackItem) -> TechStackItem:
         await self._session.execute(
-            text("INSERT INTO eam_tech_key_stack_item (id, name, category, version, status, eol_date, security_advice, created_at) VALUES (:id, :name, :category, :version, :status, :eol_date, :security_advice, :created_at)"),
+            text("INSERT INTO pamp_tech_key_stack_item (id, name, category, version, status, eol_date, security_advice, created_at) VALUES (:id, :name, :category, :version, :status, :eol_date, :security_advice, :created_at)"),
             {"id": str(entity.id), "name": entity.name, "category": entity.category, "version": entity.version, "status": entity.status, "eol_date": entity.eol_date, "security_advice": entity.security_advice, "created_at": entity.created_at}
         )
         return entity
 
     async def update(self, entity: TechStackItem) -> TechStackItem:
         await self._session.execute(
-            text("UPDATE eam_tech_key_stack_item SET name=:name, category=:category, version=:version, status=:status, eol_date=:eol_date, security_advice=:security_advice WHERE id=:id"),
+            text("UPDATE pamp_tech_key_stack_item SET name=:name, category=:category, version=:version, status=:status, eol_date=:eol_date, security_advice=:security_advice WHERE id=:id"),
             {"id": str(entity.id), "name": entity.name, "category": entity.category, "version": entity.version, "status": entity.status, "eol_date": entity.eol_date, "security_advice": entity.security_advice}
         )
         return entity
@@ -121,7 +121,7 @@ class PostgresLifecycleLogRepository(LifecycleLogRepository):
     async def list(self, page: int = 1, page_size: int = 20) -> tuple[list[LifecycleLog], int]: return [], 0
     async def list_by_item(self, item_id: str) -> list[LifecycleLog]:
         result = await self._session.execute(
-            text("SELECT id, item_id, action, previous_status, new_status, changed_by, changed_at FROM eam_tech_stack_operate_log WHERE item_id = :item_id ORDER BY changed_at DESC"),
+            text("SELECT id, item_id, action, previous_status, new_status, changed_by, changed_at FROM pamp_tech_stack_operate_log WHERE item_id = :item_id ORDER BY changed_at DESC"),
             {"item_id": item_id}
         )
         return [self._to_entity(row) for row in result.fetchall()]

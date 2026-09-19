@@ -1,4 +1,4 @@
-"""User CRUD — admin only. Manages eam.local_users table."""
+"""User CRUD — admin only. Manages pamp.local_users table."""
 from __future__ import annotations
 
 import uuid
@@ -66,7 +66,7 @@ async def list_users(
         params["q"] = f"%{q.strip()}%"
 
     count_result = await db.execute(
-        text(f"SELECT COUNT(*) FROM eam.local_users {where}"), params
+        text(f"SELECT COUNT(*) FROM pamp.local_users {where}"), params
     )
     total = count_result.scalar()
 
@@ -74,7 +74,7 @@ async def list_users(
     result = await db.execute(
         text(
             f"SELECT id::text, username, name, email, role, is_active, "
-            f"created_at, updated_at FROM eam.local_users {where} "
+            f"created_at, updated_at FROM pamp.local_users {where} "
             f"ORDER BY created_at DESC LIMIT :limit OFFSET :offset"
         ),
         {**params, "limit": pageSize, "offset": offset},
@@ -114,7 +114,7 @@ async def create_user(
         raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
 
     existing = await db.execute(
-        text("SELECT 1 FROM eam.local_users WHERE username = :un"),
+        text("SELECT 1 FROM pamp.local_users WHERE username = :un"),
         {"un": body.username},
     )
     if existing.fetchone():
@@ -123,7 +123,7 @@ async def create_user(
     user_id = str(uuid.uuid4())
     await db.execute(
         text(
-            "INSERT INTO eam.local_users (id, username, password_hash, name, email, role) "
+            "INSERT INTO pamp.local_users (id, username, password_hash, name, email, role) "
             "VALUES (:id, :un, :ph, :name, :email, :role)"
         ),
         {
@@ -156,7 +156,7 @@ async def update_user(
     _assert_local_mode()
 
     existing = await db.execute(
-        text("SELECT id FROM eam.local_users WHERE id = :id::uuid"),
+        text("SELECT id FROM pamp.local_users WHERE id = :id::uuid"),
         {"id": user_id},
     )
     if not existing.fetchone():
@@ -183,13 +183,13 @@ async def update_user(
     if sets:
         sets.append("updated_at = NOW()")
         await db.execute(
-            text(f"UPDATE eam.local_users SET {', '.join(sets)} WHERE id = :id::uuid"),
+            text(f"UPDATE pamp.local_users SET {', '.join(sets)} WHERE id = :id::uuid"),
             params,
         )
         await db.commit()
 
     result = await db.execute(
-        text("SELECT id::text, username, name, email, role, is_active FROM eam.local_users WHERE id = :id::uuid"),
+        text("SELECT id::text, username, name, email, role, is_active FROM pamp.local_users WHERE id = :id::uuid"),
         {"id": user_id},
     )
     row = result.mappings().first()
@@ -212,7 +212,7 @@ async def delete_user(
     _assert_local_mode()
 
     result = await db.execute(
-        text("DELETE FROM eam.local_users WHERE id = :id::uuid"),
+        text("DELETE FROM pamp.local_users WHERE id = :id::uuid"),
         {"id": user_id},
     )
     if result.rowcount == 0:
@@ -234,7 +234,7 @@ async def reset_password(
         raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
 
     result = await db.execute(
-        text("UPDATE eam.local_users SET password_hash = :ph, updated_at = NOW() WHERE id = :id::uuid"),
+        text("UPDATE pamp.local_users SET password_hash = :ph, updated_at = NOW() WHERE id = :id::uuid"),
         {"ph": _hash_password(body.password), "id": user_id},
     )
     if result.rowcount == 0:

@@ -81,7 +81,7 @@ async def list_concerns(
         text(
             f"""
             SELECT id, concern_key, concern_name, layer, risk_tags, description, is_active, update_at, update_by
-            FROM eam.avdm_pact_concern
+            FROM pamp.avdm_pact_concern
             WHERE {where_clause}
             ORDER BY layer ASC, concern_key ASC
             """
@@ -114,7 +114,7 @@ async def upsert_concern(
     result = await db.execute(
         text(
             """
-            INSERT INTO eam.avdm_pact_concern (
+            INSERT INTO pamp.avdm_pact_concern (
                 concern_key, concern_name, layer, risk_tags, description, is_active, create_by, update_by
             )
             VALUES (
@@ -148,7 +148,7 @@ async def get_assessment_by_project(db: AsyncSession, project_id: str) -> dict[s
                                          questionnaire_submitted_at, questionnaire_confirmed_at,
                                          concern_requirement_confirmed_at, artifact_requirement_confirmed_at, artifact_submitted_at,
                    update_at, update_by
-            FROM eam.avdm_project_assessment
+            FROM pamp.avdm_project_assessment
             WHERE project_id = :project_id
             """
         ),
@@ -193,7 +193,7 @@ async def upsert_project_assessment(
     result = await db.execute(
         text(
             """
-            INSERT INTO eam.avdm_project_assessment (
+            INSERT INTO pamp.avdm_project_assessment (
                 project_id, project_type, project_complexity,
                 questionnaire, risk_items, evaluation, review_result, artifact_selection,
                 needs_avdm, judgement_reason, status,
@@ -221,15 +221,15 @@ async def upsert_project_assessment(
                 judgement_reason = EXCLUDED.judgement_reason,
                 status = EXCLUDED.status,
                 questionnaire_submitted_at = CASE
-                    WHEN eam.avdm_project_assessment.questionnaire_submitted_at IS NOT NULL THEN eam.avdm_project_assessment.questionnaire_submitted_at
+                    WHEN pamp.avdm_project_assessment.questionnaire_submitted_at IS NOT NULL THEN pamp.avdm_project_assessment.questionnaire_submitted_at
                     WHEN :questionnaire_submitted THEN NOW()
-                    ELSE eam.avdm_project_assessment.questionnaire_submitted_at
+                    ELSE pamp.avdm_project_assessment.questionnaire_submitted_at
                 END,
                 artifact_submitted_at = CASE
                     WHEN :artifact_submitted THEN NOW()
-                    ELSE eam.avdm_project_assessment.artifact_submitted_at
+                    ELSE pamp.avdm_project_assessment.artifact_submitted_at
                 END,
-                version = eam.avdm_project_assessment.version + 1,
+                version = pamp.avdm_project_assessment.version + 1,
                 update_by = EXCLUDED.update_by,
                 update_at = NOW()
             RETURNING id, project_id, project_type, project_complexity, questionnaire, risk_items,
@@ -263,7 +263,7 @@ async def list_assessment_records_for_stats(
         text(
             f"""
             SELECT project_id, needs_avdm, evaluation, update_at
-            FROM eam.avdm_project_assessment
+            FROM pamp.avdm_project_assessment
             WHERE {where_clause}
             ORDER BY update_at ASC
             """

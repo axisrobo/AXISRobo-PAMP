@@ -12,16 +12,16 @@ class PostgresApplicationRepository(ApplicationRepository):
         self._session = session
 
     async def get_by_id(self, id: str) -> Optional[Application]:
-        result = await self._session.execute(text("SELECT id, app_id, app_name, description, owner, status, created_at FROM eam_project_app WHERE id = :id"), {"id": id})
+        result = await self._session.execute(text("SELECT id, app_id, app_name, description, owner, status, created_at FROM pamp_project_app WHERE id = :id"), {"id": id})
         row = result.fetchone()
         return self._to_entity(row) if row else None
 
     async def list(self, page: int = 1, page_size: int = 20) -> tuple[list[Application], int]:
-        count_result = await self._session.execute(text("SELECT COUNT(*) FROM eam_project_app"))
+        count_result = await self._session.execute(text("SELECT COUNT(*) FROM pamp_project_app"))
         total = count_result.scalar()
         offset = (page - 1) * page_size
         result = await self._session.execute(
-            text("SELECT id, app_id, app_name, description, owner, status, created_at FROM eam_project_app ORDER BY app_name LIMIT :limit OFFSET :offset"),
+            text("SELECT id, app_id, app_name, description, owner, status, created_at FROM pamp_project_app ORDER BY app_name LIMIT :limit OFFSET :offset"),
             {"limit": page_size, "offset": offset}
         )
         items = [self._to_entity(row) for row in result.fetchall()]
@@ -29,7 +29,7 @@ class PostgresApplicationRepository(ApplicationRepository):
 
     async def list_by_app_id(self, app_id: str) -> list[Application]:
         result = await self._session.execute(
-            text("SELECT id, app_id, app_name, description, owner, status, created_at FROM eam_project_app WHERE app_id = :app_id"),
+            text("SELECT id, app_id, app_name, description, owner, status, created_at FROM pamp_project_app WHERE app_id = :app_id"),
             {"app_id": app_id}
         )
         return [self._to_entity(row) for row in result.fetchall()]
@@ -62,7 +62,7 @@ class PostgresApplicationRepository(ApplicationRepository):
         offset = (page - 1) * page_size
 
         count_result = await self._session.execute(
-            text(f"SELECT COUNT(*) as total FROM eam.project_app {where_clause}"),
+            text(f"SELECT COUNT(*) as total FROM pamp.project_app {where_clause}"),
             params,
         )
         total = int(count_result.scalar() or 0)
@@ -72,7 +72,7 @@ class PostgresApplicationRepository(ApplicationRepository):
 
         data_result = await self._session.execute(
             text(
-                f"SELECT * FROM eam.project_app {where_clause} "
+                f"SELECT * FROM pamp.project_app {where_clause} "
                 f"ORDER BY {sort_field} {order_dir} "
                 f"LIMIT :p_limit OFFSET :p_offset"
             ),
@@ -105,7 +105,7 @@ class PostgresApplicationRepository(ApplicationRepository):
         offset = (page - 1) * page_size
 
         count_result = await self._session.execute(
-            text(f"SELECT COUNT(*) as total FROM eam.cmdb_application {where_clause}"),
+            text(f"SELECT COUNT(*) as total FROM pamp.cmdb_application {where_clause}"),
             params,
         )
         total = int(count_result.scalar() or 0)
@@ -116,7 +116,7 @@ class PostgresApplicationRepository(ApplicationRepository):
         data_result = await self._session.execute(
             text(
                 f"SELECT app_id, name, owned_by, app_dt_owner, u_status "
-                f"FROM eam.cmdb_application {where_clause} "
+                f"FROM pamp.cmdb_application {where_clause} "
                 f"ORDER BY {sort_field} {order_dir} "
                 f"LIMIT :p_limit OFFSET :p_offset"
             ),
@@ -127,7 +127,7 @@ class PostgresApplicationRepository(ApplicationRepository):
 
     async def list_bcm_versions(self) -> list[str]:
         result = await self._session.execute(
-            text("SELECT DISTINCT data_version FROM eam.bcpf_master_data ORDER BY data_version DESC")
+            text("SELECT DISTINCT data_version FROM pamp.bcpf_master_data ORDER BY data_version DESC")
         )
         return [r[0] for r in result.fetchall()]
 
@@ -190,7 +190,7 @@ class PostgresApplicationRepository(ApplicationRepository):
         offset = (page - 1) * page_size
 
         count_result = await self._session.execute(
-            text(f"SELECT count(*) as count FROM eam.cmdb_application {where_clause}"),
+            text(f"SELECT count(*) as count FROM pamp.cmdb_application {where_clause}"),
             params,
         )
         total = int(count_result.scalar() or 0)
@@ -200,7 +200,7 @@ class PostgresApplicationRepository(ApplicationRepository):
 
         data_result = await self._session.execute(
             text(
-                f"SELECT * FROM eam.cmdb_application {where_clause} "
+                f"SELECT * FROM pamp.cmdb_application {where_clause} "
                 f"{order_by} LIMIT :p_limit OFFSET :p_offset"
             ),
             params,
@@ -210,20 +210,20 @@ class PostgresApplicationRepository(ApplicationRepository):
 
     async def create(self, entity: Application) -> Application:
         await self._session.execute(
-            text("INSERT INTO eam_project_app (id, app_id, app_name, description, owner, status, created_at) VALUES (:id, :app_id, :app_name, :description, :owner, :status, :created_at)"),
+            text("INSERT INTO pamp_project_app (id, app_id, app_name, description, owner, status, created_at) VALUES (:id, :app_id, :app_name, :description, :owner, :status, :created_at)"),
             {"id": str(entity.id), "app_id": entity.app_id, "app_name": entity.app_name, "description": entity.description, "owner": entity.owner, "status": entity.status, "created_at": entity.created_at}
         )
         return entity
 
     async def update(self, entity: Application) -> Application:
         await self._session.execute(
-            text("UPDATE eam_project_app SET app_name=:app_name, description=:description, owner=:owner, status=:status WHERE id=:id"),
+            text("UPDATE pamp_project_app SET app_name=:app_name, description=:description, owner=:owner, status=:status WHERE id=:id"),
             {"id": str(entity.id), "app_name": entity.app_name, "description": entity.description, "owner": entity.owner, "status": entity.status}
         )
         return entity
 
     async def delete(self, id: str) -> bool:
-        result = await self._session.execute(text("DELETE FROM eam_project_app WHERE id = :id"), {"id": id})
+        result = await self._session.execute(text("DELETE FROM pamp_project_app WHERE id = :id"), {"id": id})
         return result.rowcount > 0
 
     @staticmethod
@@ -237,32 +237,32 @@ class PostgresBCMappingRepository(BCMappingRepository):
     async def get_by_id(self, id: str) -> Optional[BCMapping]: return None
 
     async def list(self, page: int = 1, page_size: int = 20) -> tuple[list[BCMapping], int]:
-        count_result = await self._session.execute(text("SELECT COUNT(*) FROM eam_biz_cap_map"))
+        count_result = await self._session.execute(text("SELECT COUNT(*) FROM pamp_biz_cap_map"))
         total = count_result.scalar()
         offset = (page - 1) * page_size
         result = await self._session.execute(
-            text("SELECT id, application_id, capability_id, capability_name, mapping_level FROM eam_biz_cap_map ORDER BY capability_name LIMIT :limit OFFSET :offset"),
+            text("SELECT id, application_id, capability_id, capability_name, mapping_level FROM pamp_biz_cap_map ORDER BY capability_name LIMIT :limit OFFSET :offset"),
             {"limit": page_size, "offset": offset}
         )
         return [self._to_entity(row) for row in result.fetchall()], total
 
     async def list_by_application(self, application_id: str) -> list[BCMapping]:
         result = await self._session.execute(
-            text("SELECT id, application_id, capability_id, capability_name, mapping_level FROM eam_biz_cap_map WHERE application_id = :app_id"),
+            text("SELECT id, application_id, capability_id, capability_name, mapping_level FROM pamp_biz_cap_map WHERE application_id = :app_id"),
             {"app_id": application_id}
         )
         return [self._to_entity(row) for row in result.fetchall()]
 
     async def list_by_capability(self, capability_id: str) -> list[BCMapping]:
         result = await self._session.execute(
-            text("SELECT id, application_id, capability_id, capability_name, mapping_level FROM eam_biz_cap_map WHERE capability_id = :cid"),
+            text("SELECT id, application_id, capability_id, capability_name, mapping_level FROM pamp_biz_cap_map WHERE capability_id = :cid"),
             {"cid": capability_id}
         )
         return [self._to_entity(row) for row in result.fetchall()]
 
     async def create(self, entity: BCMapping) -> BCMapping:
         await self._session.execute(
-            text("INSERT INTO eam_biz_cap_map (id, application_id, capability_id, capability_name, mapping_level) VALUES (:id, :application_id, :capability_id, :capability_name, :mapping_level)"),
+            text("INSERT INTO pamp_biz_cap_map (id, application_id, capability_id, capability_name, mapping_level) VALUES (:id, :application_id, :capability_id, :capability_name, :mapping_level)"),
             {"id": str(entity.id), "application_id": entity.application_id, "capability_id": entity.capability_id, "capability_name": entity.capability_name, "mapping_level": entity.mapping_level}
         )
         return entity
@@ -281,20 +281,20 @@ class PostgresBizCapabilityRepository(BizCapabilityRepository):
     async def get_by_id(self, id: str) -> Optional[BizCapability]: return None
 
     async def list(self, page: int = 1, page_size: int = 20) -> tuple[list[BizCapability], int]:
-        count_result = await self._session.execute(text("SELECT COUNT(*) FROM eam_bcpf_master_data"))
+        count_result = await self._session.execute(text("SELECT COUNT(*) FROM pamp_bcpf_master_data"))
         total = count_result.scalar()
         offset = (page - 1) * page_size
         result = await self._session.execute(
-            text("SELECT id, code, name, parent_code, level, description FROM eam_bcpf_master_data ORDER BY code LIMIT :limit OFFSET :offset"),
+            text("SELECT id, code, name, parent_code, level, description FROM pamp_bcpf_master_data ORDER BY code LIMIT :limit OFFSET :offset"),
             {"limit": page_size, "offset": offset}
         )
         return [self._to_entity(row) for row in result.fetchall()], total
 
     async def list_by_parent(self, parent_code: str | None) -> list[BizCapability]:
         if parent_code:
-            result = await self._session.execute(text("SELECT id, code, name, parent_code, level, description FROM eam_bcpf_master_data WHERE parent_code = :pc ORDER BY code"), {"pc": parent_code})
+            result = await self._session.execute(text("SELECT id, code, name, parent_code, level, description FROM pamp_bcpf_master_data WHERE parent_code = :pc ORDER BY code"), {"pc": parent_code})
         else:
-            result = await self._session.execute(text("SELECT id, code, name, parent_code, level, description FROM eam_bcpf_master_data WHERE parent_code IS NULL ORDER BY code"))
+            result = await self._session.execute(text("SELECT id, code, name, parent_code, level, description FROM pamp_bcpf_master_data WHERE parent_code IS NULL ORDER BY code"))
         return [self._to_entity(row) for row in result.fetchall()]
 
     async def get_tree(self) -> list[dict]: return []
@@ -338,7 +338,7 @@ class PostgresBizCapabilityRepository(BizCapabilityRepository):
 
         data_result = await self._session.execute(
             text(
-                f"SELECT * FROM eam.bcpf_master_data WHERE {where_clause} "
+                f"SELECT * FROM pamp.bcpf_master_data WHERE {where_clause} "
                 f"ORDER BY {sort_field} {order_dir} "
                 f"LIMIT :limit OFFSET :offset"
             ),
@@ -348,7 +348,7 @@ class PostgresBizCapabilityRepository(BizCapabilityRepository):
 
         count_params = {k: v for k, v in params.items() if k not in ("limit", "offset")}
         count_result = await self._session.execute(
-            text(f"SELECT COUNT(*) FROM eam.bcpf_master_data WHERE {where_clause}"),
+            text(f"SELECT COUNT(*) FROM pamp.bcpf_master_data WHERE {where_clause}"),
             count_params,
         )
         total = int(count_result.scalar() or 0)

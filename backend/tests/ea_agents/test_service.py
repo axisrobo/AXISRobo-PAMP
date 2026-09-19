@@ -76,7 +76,7 @@ async def test_process_attachment_ai_check_persists_raw_and_structured_results(m
         request_id="EA1001",
         biz_type="App_Arch",
         language="en",
-        attachment_name="pm/eam/app/1-sample.png",
+        attachment_name="pm/pamp/app/1-sample.png",
         attachment_uuid="uuid-1",
         file_content=b"png",
     )

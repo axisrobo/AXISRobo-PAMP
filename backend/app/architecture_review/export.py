@@ -16,12 +16,12 @@ from app.database import get_db
 router = APIRouter()
 
 ENTITY_QUERIES = {
-    "certifications": "SELECT * FROM eam.certification ORDER BY id DESC LIMIT 1000",
-    "projects": "SELECT * FROM eam.eam_project ORDER BY created_at DESC LIMIT 1000",
-    "ea-requests": "SELECT * FROM eam.eam_architecture_review ORDER BY id DESC LIMIT 1000",
-    "meetings": "SELECT * FROM eam.eam_meeting ORDER BY id DESC LIMIT 1000",
-    "actions": "SELECT * FROM eam.eam_actions ORDER BY id DESC LIMIT 1000",
-    "technology-stack": "SELECT * FROM eam.tech_stack_master_data ORDER BY id DESC LIMIT 1000",
+    "certifications": "SELECT * FROM pamp.certification ORDER BY id DESC LIMIT 1000",
+    "projects": "SELECT * FROM pamp.pamp_project ORDER BY created_at DESC LIMIT 1000",
+    "ea-requests": "SELECT * FROM pamp.pamp_architecture_review ORDER BY id DESC LIMIT 1000",
+    "meetings": "SELECT * FROM pamp.pamp_meeting ORDER BY id DESC LIMIT 1000",
+    "actions": "SELECT * FROM pamp.pamp_actions ORDER BY id DESC LIMIT 1000",
+    "technology-stack": "SELECT * FROM pamp.tech_stack_master_data ORDER BY id DESC LIMIT 1000",
 }
 
 

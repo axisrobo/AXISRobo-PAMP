@@ -1,14 +1,14 @@
 """AxisArch authorization roles — baseline RBAC + scoped business roles.
 
 Role model:
-    EA_Admin        — platform-wide unrestricted access (sourced from eam_bigea_team_members.ea_admin_status)
+    EA_Admin        — platform-wide unrestricted access (sourced from pamp_bigea_team_members.ea_admin_status)
     Normal_User     — default for every authenticated user
     EA_Reviewer     — scoped: can complete reviews on assigned requests
     App_Owner       — scoped: can maintain owned BCM, tech stack, and lifecycle data
     Project_Owner   — scoped: can maintain owned project data
 
 Request_Owner is a per-record ownership concept (not a session-wide role).
-It is evaluated at the record level by checking eam_request.requester.
+It is evaluated at the record level by checking pamp_request.requester.
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ class Role(str, Enum):
     """AxisArch authorization roles — baseline RBAC + scoped business roles.
 
     Baseline roles:
-        EA_ADMIN       — unrestricted (from eam_bigea_team_members.ea_admin_status)
+        EA_ADMIN       — unrestricted (from pamp_bigea_team_members.ea_admin_status)
         NORMAL_USER    — every authenticated user
 
     Scoped business roles (additive on top of Normal_User):

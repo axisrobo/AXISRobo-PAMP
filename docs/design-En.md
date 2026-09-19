@@ -63,7 +63,7 @@ AxisArch is a generic enterprise architecture management platform, supporting th
 | Language  | Python 3.11+      |
 | Web Framework | FastAPI       |
 | ORM/DB Driver | SQLAlchemy (AsyncIO) + asyncpg |
-| Database  | PostgreSQL (Schema: `eam`) |
+| Database  | PostgreSQL (Schema: `pamp`) |
 | Authentication | Keycloak (JWT/OIDC) |
 | Data Migration | Custom SQL files (executed at startup) |
 | Scheduled Tasks | APScheduler (AsyncIOScheduler) |

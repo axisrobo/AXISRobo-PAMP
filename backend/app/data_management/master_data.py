@@ -19,7 +19,7 @@ router = APIRouter()
 @router.get("/data-classification", dependencies=[Depends(require_permission("master_data", "read"))])
 async def list_data_classification(db: AsyncSession = Depends(get_db)):
     try:
-        result = await db.execute(text("SELECT * FROM eam.data_classification ORDER BY sort, id"))
+        result = await db.execute(text("SELECT * FROM pamp.data_classification ORDER BY sort, id"))
         try:
             repo = PostgresMasterDataRepository(db)
             service = MasterDataService(repo)
@@ -34,7 +34,7 @@ async def list_data_classification(db: AsyncSession = Depends(get_db)):
 @router.get("/data-centers", dependencies=[Depends(require_permission("master_data", "read"))])
 async def list_data_centers(db: AsyncSession = Depends(get_db)):
     try:
-        result = await db.execute(text("SELECT * FROM eam.data_center ORDER BY name ASC"))
+        result = await db.execute(text("SELECT * FROM pamp.data_center ORDER BY name ASC"))
         try:
             repo = PostgresMasterDataRepository(db)
             service = MasterDataService(repo)
@@ -54,7 +54,7 @@ async def list_companies(search: str | None = Query(None), db: AsyncSession = De
         if search:
             where_clause = "WHERE company_code ILIKE :search OR company_name ILIKE :search"
             params["search"] = f"%{search}%"
-        result = await db.execute(text(f"SELECT * FROM eam.company {where_clause} ORDER BY company_code ASC"), params)
+        result = await db.execute(text(f"SELECT * FROM pamp.company {where_clause} ORDER BY company_code ASC"), params)
         try:
             repo = PostgresMasterDataRepository(db)
             service = MasterDataService(repo)
@@ -78,7 +78,7 @@ async def list_legal_entities(appId: str | None = Query(None), db: AsyncSession 
                 return []
             where_clause = "WHERE app_id = :app_id"
             params["app_id"] = appId
-        result = await db.execute(text(f"SELECT * FROM eam.legal_entity {where_clause} ORDER BY create_at DESC"), params)
+        result = await db.execute(text(f"SELECT * FROM pamp.legal_entity {where_clause} ORDER BY create_at DESC"), params)
         try:
             repo = PostgresMasterDataRepository(db)
             service = MasterDataService(repo)
@@ -93,7 +93,7 @@ async def list_legal_entities(appId: str | None = Query(None), db: AsyncSession 
 @router.get("/help-files", dependencies=[Depends(require_permission("master_data", "read"))])
 async def list_help_files(db: AsyncSession = Depends(get_db)):
     try:
-        result = await db.execute(text("SELECT * FROM eam.help_file ORDER BY create_at DESC"))
+        result = await db.execute(text("SELECT * FROM pamp.help_file ORDER BY create_at DESC"))
         try:
             repo = PostgresMasterDataRepository(db)
             service = MasterDataService(repo)

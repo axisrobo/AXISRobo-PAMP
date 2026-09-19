@@ -60,12 +60,12 @@ async def list_team_members(
         sort_field = sortField
     direction = "DESC" if sortOrder and sortOrder.upper() == "DESC" else "ASC"
 
-    count_query = text(f"SELECT COUNT(*) FROM eam.eam_bigea_team_members t {where_sql}")
+    count_query = text(f"SELECT COUNT(*) FROM pamp.pamp_bigea_team_members t {where_sql}")
     count_result = await db.execute(count_query, params)
     total = count_result.scalar()
 
     offset = (page - 1) * page_size
-    data_query = text(f"SELECT * FROM eam.eam_bigea_team_members t {where_sql} ORDER BY t.{sort_field} {direction} LIMIT :limit OFFSET :offset")
+    data_query = text(f"SELECT * FROM pamp.pamp_bigea_team_members t {where_sql} ORDER BY t.{sort_field} {direction} LIMIT :limit OFFSET :offset")
     params["limit"] = page_size
     params["offset"] = offset
     data_result = await db.execute(data_query, params)
@@ -91,7 +91,7 @@ async def create_team_member(
 
     try:
         result = await db.execute(
-            text("INSERT INTO eam.eam_bigea_team_members (itcode, name, email, worker, worker_type, country, location, primary_skill, skill_level, job_role, track_focal, manager_itcode, manager_name, email_option, ea_admin_status, tier_1_org, tier_2_org) VALUES (:itcode, :name, :email, :worker, :worker_type, :country, :location, :primary_skill, :skill_level, :job_role, :track_focal, :manager_itcode, :manager_name, :email_option, :ea_admin_status, :tier_1_org, :tier_2_org) RETURNING *"),
+            text("INSERT INTO pamp.pamp_bigea_team_members (itcode, name, email, worker, worker_type, country, location, primary_skill, skill_level, job_role, track_focal, manager_itcode, manager_name, email_option, ea_admin_status, tier_1_org, tier_2_org) VALUES (:itcode, :name, :email, :worker, :worker_type, :country, :location, :primary_skill, :skill_level, :job_role, :track_focal, :manager_itcode, :manager_name, :email_option, :ea_admin_status, :tier_1_org, :tier_2_org) RETURNING *"),
             {
                 "itcode": itcode,
                 "name": body.get("name", ""),
@@ -128,7 +128,7 @@ async def update_team_member(
     user: AuthUser = Depends(get_current_user),
 ):
     check = await db.execute(
-        text("SELECT 1 FROM eam.eam_bigea_team_members WHERE itcode = :itcode LIMIT 1"),
+        text("SELECT 1 FROM pamp.pamp_bigea_team_members WHERE itcode = :itcode LIMIT 1"),
         {"itcode": itcode},
     )
     if check.first() is None:
@@ -144,12 +144,12 @@ async def update_team_member(
     try:
         if set_parts:
             await db.execute(
-                text(f"UPDATE eam.eam_bigea_team_members SET {', '.join(set_parts)} WHERE itcode = :itcode"),
+                text(f"UPDATE pamp.pamp_bigea_team_members SET {', '.join(set_parts)} WHERE itcode = :itcode"),
                 params,
             )
 
         result = await db.execute(
-            text("SELECT * FROM eam.eam_bigea_team_members WHERE itcode = :itcode"),
+            text("SELECT * FROM pamp.pamp_bigea_team_members WHERE itcode = :itcode"),
             {"itcode": itcode},
         )
         row = result.mappings().first()
@@ -168,7 +168,7 @@ async def delete_team_member(
 ):
     try:
         result = await db.execute(
-            text("DELETE FROM eam.eam_bigea_team_members WHERE itcode = :itcode"),
+            text("DELETE FROM pamp.pamp_bigea_team_members WHERE itcode = :itcode"),
             {"itcode": itcode},
         )
         if result.rowcount == 0:

@@ -22,7 +22,7 @@ from app.auth.audit import audit_allow, audit_deny
 from app.infrastructure.database.repositories.application_repo import PostgresApplicationRepository
 from app.application.application.services import ApplicationService
 
-logger = logging.getLogger("eam.routers.applications")
+logger = logging.getLogger("pamp.routers.applications")
 
 router = APIRouter()
 
@@ -181,7 +181,7 @@ async def bcm_bc_tree(
             text(
                 f"SELECT id, bc_id, bc_name, lv1_domain, lv2_sub_domain, "
                 f"lv3_capability_group, data_version, level "
-                f"FROM eam.bcpf_master_data {where_clause} "
+                f"FROM pamp.bcpf_master_data {where_clause} "
                 f"ORDER BY bc_id ASC LIMIT 500"
             ),
             params,
@@ -218,15 +218,15 @@ async def bcm_filter_options(
 ):
     try:
         # 1. Distinct Versions
-        v_res = await db.execute(text("SELECT DISTINCT data_version FROM eam.bcpf_master_data WHERE data_version IS NOT NULL ORDER BY data_version DESC"))
+        v_res = await db.execute(text("SELECT DISTINCT data_version FROM pamp.bcpf_master_data WHERE data_version IS NOT NULL ORDER BY data_version DESC"))
         versions = [r[0] for r in v_res.fetchall()]
 
         # 2. Distinct Application Classifications
-        c_res = await db.execute(text("SELECT DISTINCT app_classification FROM eam.cmdb_application WHERE app_classification IS NOT NULL AND app_classification <> '' ORDER BY app_classification ASC"))
+        c_res = await db.execute(text("SELECT DISTINCT app_classification FROM pamp.cmdb_application WHERE app_classification IS NOT NULL AND app_classification <> '' ORDER BY app_classification ASC"))
         classifications = [r[0] for r in c_res.fetchall()]
 
         # 3. Distinct Functions (Value Chain)
-        f_res = await db.execute(text("SELECT DISTINCT business_function FROM eam.project_app WHERE business_function IS NOT NULL AND business_function <> '' ORDER BY business_function ASC"))
+        f_res = await db.execute(text("SELECT DISTINCT business_function FROM pamp.project_app WHERE business_function IS NOT NULL AND business_function <> '' ORDER BY business_function ASC"))
         functions = [r[0] for r in f_res.fetchall()]
 
         # 4. Cascading BizCapability options
@@ -237,7 +237,7 @@ async def bcm_filter_options(
             base_params["v"] = version
         
         # Domain L1
-        l1_sql = "SELECT DISTINCT lv1_domain FROM eam.bcpf_master_data WHERE lv1_domain IS NOT NULL"
+        l1_sql = "SELECT DISTINCT lv1_domain FROM pamp.bcpf_master_data WHERE lv1_domain IS NOT NULL"
         if base_cond:
             l1_sql += " AND " + " AND ".join(base_cond)
         l1_sql += " ORDER BY lv1_domain ASC"
@@ -251,7 +251,7 @@ async def bcm_filter_options(
             l2_cond.append("lv1_domain = :l1")
             l2_params["l1"] = domainL1
         
-        l2_sql = "SELECT DISTINCT lv2_sub_domain FROM eam.bcpf_master_data WHERE lv2_sub_domain IS NOT NULL"
+        l2_sql = "SELECT DISTINCT lv2_sub_domain FROM pamp.bcpf_master_data WHERE lv2_sub_domain IS NOT NULL"
         if l2_cond:
             l2_sql += " AND " + " AND ".join(l2_cond)
         l2_sql += " ORDER BY lv2_sub_domain ASC"
@@ -265,7 +265,7 @@ async def bcm_filter_options(
             l3_cond.append("lv2_sub_domain = :l2")
             l3_params["l2"] = subDomainL2
         
-        l3_sql = "SELECT DISTINCT lv3_capability_group FROM eam.bcpf_master_data WHERE lv3_capability_group IS NOT NULL"
+        l3_sql = "SELECT DISTINCT lv3_capability_group FROM pamp.bcpf_master_data WHERE lv3_capability_group IS NOT NULL"
         if l3_cond:
             l3_sql += " AND " + " AND ".join(l3_cond)
         l3_sql += " ORDER BY lv3_capability_group ASC"
@@ -381,14 +381,14 @@ async def bcm_list(
         order_clause = f"ORDER BY {db_sort_col} {db_sort_dir}, m.bc_id ASC"
 
         app_joins = (
-            "LEFT JOIN eam.project_app a ON b.app_id = a.app_id "
-            "LEFT JOIN eam.cmdb_application c ON b.app_id = c.app_id"
+            "LEFT JOIN pamp.project_app a ON b.app_id = a.app_id "
+            "LEFT JOIN pamp.cmdb_application c ON b.app_id = c.app_id"
         )
 
         count_result = await db.execute(
             text(
-                f"SELECT count(*) as count FROM eam.biz_cap_map b "
-                f"LEFT JOIN eam.bcpf_master_data m ON b.data_version = m.data_version AND b.bc_id = m.bc_id "
+                f"SELECT count(*) as count FROM pamp.biz_cap_map b "
+                f"LEFT JOIN pamp.bcpf_master_data m ON b.data_version = m.data_version AND b.bc_id = m.bc_id "
                 f"{app_joins} {where_clause}"
             ),
             params,
@@ -418,8 +418,8 @@ async def bcm_list(
                 f"m.lv3_capability_group, m.data_version, m.level, m.alias, m.bc_description, m.biz_group, m.geo, "
                 f"TO_CHAR(b.create_at, 'YYYY-MM-DD HH24:MI:SS') as created_at, "
                 f"b.create_by as created_by "
-                f"FROM eam.biz_cap_map b "
-                f"LEFT JOIN eam.bcpf_master_data m ON b.data_version = m.data_version AND b.bc_id = m.bc_id "
+                f"FROM pamp.biz_cap_map b "
+                f"LEFT JOIN pamp.bcpf_master_data m ON b.data_version = m.data_version AND b.bc_id = m.bc_id "
                 f"{app_joins} {where_clause} "
                 f"{order_clause} "
                 f"LIMIT :p_limit OFFSET :p_offset"
@@ -559,8 +559,8 @@ async def bcm_export(
         order_clause = f"ORDER BY {db_sort_col} {db_sort_dir}, m.bc_id ASC"
 
         app_joins = (
-            "LEFT JOIN eam.project_app a ON b.app_id = a.app_id "
-            "LEFT JOIN eam.cmdb_application c ON b.app_id = c.app_id"
+            "LEFT JOIN pamp.project_app a ON b.app_id = a.app_id "
+            "LEFT JOIN pamp.cmdb_application c ON b.app_id = c.app_id"
         )
 
         data_result = await db.execute(
@@ -584,8 +584,8 @@ async def bcm_export(
                 f"m.data_version, "
                 f"TO_CHAR(b.create_at, 'YYYY-MM-DD HH24:MI:SS') as created_at, "
                 f"b.create_by as created_by "
-                f"FROM eam.biz_cap_map b "
-                f"LEFT JOIN eam.bcpf_master_data m ON b.data_version = m.data_version AND b.bc_id = m.bc_id "
+                f"FROM pamp.biz_cap_map b "
+                f"LEFT JOIN pamp.bcpf_master_data m ON b.data_version = m.data_version AND b.bc_id = m.bc_id "
                 f"{app_joins} {where_clause} "
                 f"{order_clause}"
             ),
@@ -681,7 +681,7 @@ async def bcm_create(
                 bc_id = body.get("bcId")
             result = await db.execute(
                 text("""
-                    INSERT INTO eam.biz_cap_map (app_id, bcpf_master_id, data_version, bc_id, create_by)
+                    INSERT INTO pamp.biz_cap_map (app_id, bcpf_master_id, data_version, bc_id, create_by)
                     VALUES (:app_id, :biz_capability_master_id, :data_version, :bc_id, :create_by)
                     RETURNING id
                 """),
@@ -734,7 +734,7 @@ async def bcm_update(
     try:
         # Fetch existing record to resolve app ownership
         existing = await db.execute(
-            text("SELECT id, app_id, bcpf_master_id FROM eam.biz_cap_map WHERE id = :id"),
+            text("SELECT id, app_id, bcpf_master_id FROM pamp.biz_cap_map WHERE id = :id"),
             {"id": bcm_id},
         )
         row = existing.mappings().first()
@@ -769,7 +769,7 @@ async def bcm_update(
         set_clause = ", ".join(set_parts)
 
         result = await db.execute(
-            text(f"UPDATE eam.biz_cap_map SET {set_clause} WHERE id = :db_id RETURNING id, app_id, bcpf_master_id"),
+            text(f"UPDATE pamp.biz_cap_map SET {set_clause} WHERE id = :db_id RETURNING id, app_id, bcpf_master_id"),
             params,
         )
         updated = result.mappings().first()
@@ -815,7 +815,7 @@ async def bcm_delete(
 
         # Fetch existing record to resolve app ownership
         existing = await db.execute(
-            text("SELECT id, app_id FROM eam.biz_cap_map WHERE id = :id"),
+            text("SELECT id, app_id FROM pamp.biz_cap_map WHERE id = :id"),
             {"id": bcm_id},
         )
         row = existing.mappings().first()
@@ -826,7 +826,7 @@ async def bcm_delete(
         await check_app_ownership(user, row["app_id"], db)
 
         await db.execute(
-            text("DELETE FROM eam.biz_cap_map WHERE id = :id"),
+            text("DELETE FROM pamp.biz_cap_map WHERE id = :id"),
             {"id": bcm_id},
         )
         await db.commit()

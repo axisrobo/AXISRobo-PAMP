@@ -31,7 +31,7 @@ async def persist_app_content_extract_result(
             await db.execute(
                 text(
                     """
-                    INSERT INTO eam.eam_arch_ai_check_app (
+                    INSERT INTO pamp.pamp_arch_ai_check_app (
                         id, ai_check_id, app_id, id_is_standard, standard_id, app_name,
                         functions, check_app_status, status, create_at, create_by, type
                     ) VALUES (
@@ -61,7 +61,7 @@ async def persist_app_content_extract_result(
             await db.execute(
                 text(
                     """
-                    INSERT INTO eam.eam_arch_ai_check_interaction (
+                    INSERT INTO pamp.pamp_arch_ai_check_interaction (
                         id, ai_check_id, source_app_id, target_app_id, interaction_type,
                         direction, source_function, target_function, interface_status,
                         status,
@@ -97,7 +97,7 @@ async def resolve_app_arch_rule_name(
     attachment_uuid: str,
 ) -> str:
     result = await db.execute(
-        text("SELECT app_arch_type FROM eam.eam_request_attachment WHERE id = :id"),
+        text("SELECT app_arch_type FROM pamp.pamp_request_attachment WHERE id = :id"),
         {"id": attachment_uuid},
     )
     row = result.fetchone()

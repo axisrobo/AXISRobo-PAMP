@@ -32,7 +32,7 @@ pytestmark = [
     pytest.mark.real_db,
     pytest.mark.skipif(
         not REAL_DB_ENABLED,
-        reason="requires RUN_REAL_DB_TESTS=1 and the local eam PostgreSQL database",
+        reason="requires RUN_REAL_DB_TESTS=1 and the local pamp PostgreSQL database",
     ),
 ]
 

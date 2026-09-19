@@ -5,11 +5,11 @@ roles by querying the database.  It is called during the auth middleware
 pipeline *after* Keycloak authentication establishes user identity.
 
 Sources:
-    EA_Admin       ← eam.eam_bigea_team_members  (ea_admin_status = true)
-    EA_Reviewer    ← eam.eam_bigea_team_members  (matched by itcode)
-    App_Owner      ← eam.cmdb_application         (app_dt_owner, app_operation_owner, app_it_owner)
-                   ← eam.application_member        (itcode = email prefix)
-    Project_Owner  ← eam.project                   (pm_itcode, dt_lead_itcode, it_lead_itcode)
+    EA_Admin       ← pamp.pamp_bigea_team_members  (ea_admin_status = true)
+    EA_Reviewer    ← pamp.pamp_bigea_team_members  (matched by itcode)
+    App_Owner      ← pamp.cmdb_application         (app_dt_owner, app_operation_owner, app_it_owner)
+                   ← pamp.application_member        (itcode = email prefix)
+    Project_Owner  ← pamp.project                   (pm_itcode, dt_lead_itcode, it_lead_itcode)
 """
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth.models import AuthUser, Role
 from app.auth.rbac import build_permission_list
 
-logger = logging.getLogger("eam.auth.role_resolver")
+logger = logging.getLogger("pamp.auth.role_resolver")
 
 
 async def resolve_scoped_roles(user: AuthUser, db: AsyncSession) -> AuthUser:
@@ -70,10 +70,10 @@ async def resolve_scoped_roles(user: AuthUser, db: AsyncSession) -> AuthUser:
 
 
 async def _is_ea_admin(itcode: str, db: AsyncSession) -> bool:
-    """Return True if *itcode* has ea_admin_status set to true in eam_bigea_team_members."""
+    """Return True if *itcode* has ea_admin_status set to true in pamp_bigea_team_members."""
     result = await db.execute(
         text(
-            "SELECT 1 FROM eam.eam_bigea_team_members "
+            "SELECT 1 FROM pamp.pamp_bigea_team_members "
             "WHERE itcode = :itcode AND ea_admin_status = true "
             "LIMIT 1"
         ),
@@ -83,9 +83,9 @@ async def _is_ea_admin(itcode: str, db: AsyncSession) -> bool:
 
 
 async def _is_team_member(itcode: str, db: AsyncSession) -> bool:
-    """Return True if *itcode* exists in eam_bigea_team_members."""
+    """Return True if *itcode* exists in pamp_bigea_team_members."""
     result = await db.execute(
-        text("SELECT 1 FROM eam.eam_bigea_team_members WHERE itcode = :itcode LIMIT 1"),
+        text("SELECT 1 FROM pamp.pamp_bigea_team_members WHERE itcode = :itcode LIMIT 1"),
         {"itcode": itcode},
     )
     return result.scalar() is not None
@@ -103,7 +103,7 @@ async def _is_app_owner(user_id: str, email_prefix: str, db: AsyncSession) -> bo
     # Check cmdb_application ownership fields
     result = await db.execute(
         text(
-            "SELECT 1 FROM eam.cmdb_application "
+            "SELECT 1 FROM pamp.cmdb_application "
             "WHERE app_dt_owner = :uid "
             "   OR app_operation_owner = :uid "
             "   OR app_it_owner = :uid "
@@ -118,7 +118,7 @@ async def _is_app_owner(user_id: str, email_prefix: str, db: AsyncSession) -> bo
     if email_prefix:
         result = await db.execute(
             text(
-                "SELECT 1 FROM eam.application_member "
+                "SELECT 1 FROM pamp.application_member "
                 "WHERE LOWER(itcode) = :prefix "
                 "LIMIT 1"
             ),
@@ -140,7 +140,7 @@ async def _is_project_owner(user_id: str, db: AsyncSession) -> bool:
     """
     result = await db.execute(
         text(
-            "SELECT 1 FROM eam.eam_project "
+            "SELECT 1 FROM pamp.pamp_project "
             "WHERE pm_itcode = :uid "
             "   OR dt_lead_itcode = :uid "
             "   OR it_lead_itcode = :uid "

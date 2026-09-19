@@ -25,11 +25,11 @@ Transform the legacy enterprise architecture application into **AxisArch** — a
 |----------|-----|-----|
 | Product | Legacy product name | AxisArch |
 | Module | AVDM | ADD (Architecture Decision & Design) |
-| DB Schema | `eam` | `axisarch` |
-| DB Table prefix | `eam_` | `axisarch_` |
-| Package name (root) | `eam` | `axisarch` |
-| Package name (frontend) | `eam-frontend` | `axisarch-frontend` |
-| Package name (api-tests) | `eam-api-tests` | `axisarch-api-tests` |
+| DB Schema | `pamp` | `axisarch` |
+| DB Table prefix | `pamp_` | `axisarch_` |
+| Package name (root) | `pamp` | `axisarch` |
+| Package name (frontend) | `pamp-frontend` | `axisarch-frontend` |
+| Package name (api-tests) | `pamp-api-tests` | `axisarch-api-tests` |
 | Logo asset | `legacy-brand.png` | `axisarch.png` |
 | Description | Legacy product description | Enterprise Architecture Management Platform |
 
@@ -66,7 +66,7 @@ Transform the legacy enterprise architecture application into **AxisArch** — a
 | `docs/design-En.md` | Same treatment |
 | `docs/authorization.md` | Generic role descriptions |
 | `docs/module-splitting-plan.md` | Replace project name |
-| `docs/schema.prisma` | Schema eam → axisarch |
+| `docs/schema.prisma` | Schema pamp → axisarch |
 | `docs/standards/*` | Keep as-is (coding conventions are generic) |
 | `docs/version-management-strategy.md` | Keep as-is |
 
@@ -136,7 +136,7 @@ Transform the legacy enterprise architecture application into **AxisArch** — a
 1. **Env vars with enterprise defaults**: Remove defaults from `config.py`, use empty strings. Users configure their own values.
 2. **Seed data**: Replace real organization names with generic examples (e.g., "Example Organization A", "Example Organization B").
 3. **Hardcoded references in prompts/SQL**: Replace vendor-specific identity products with "SSO Provider" or "Enterprise IDP".
-4. **Email subjects**: `[EAM]` → `[AxisArch]`.
+4. **Email subjects**: `[PAMP]` → `[AxisArch]`.
 
 ---
 

@@ -508,18 +508,18 @@ class PostgresConcernRepository(ConcernRepository):
 
     async def get_by_id(self, id: str) -> Optional[Concern]:
         result = await self._session.execute(
-            text("SELECT id, code, name, category, description, severity, likelihood, classification FROM eam_concern WHERE id = :id"),
+            text("SELECT id, code, name, category, description, severity, likelihood, classification FROM pamp_concern WHERE id = :id"),
             {"id": id}
         )
         row = result.fetchone()
         return self._to_entity(row) if row else None
 
     async def list(self, page: int = 1, page_size: int = 20) -> tuple[list[Concern], int]:
-        count_result = await self._session.execute(text("SELECT COUNT(*) FROM eam_concern"))
+        count_result = await self._session.execute(text("SELECT COUNT(*) FROM pamp_concern"))
         total = count_result.scalar()
         offset = (page - 1) * page_size
         result = await self._session.execute(
-            text("SELECT id, code, name, category, description, severity, likelihood, classification FROM eam_concern ORDER BY code LIMIT :limit OFFSET :offset"),
+            text("SELECT id, code, name, category, description, severity, likelihood, classification FROM pamp_concern ORDER BY code LIMIT :limit OFFSET :offset"),
             {"limit": page_size, "offset": offset}
         )
         items = [self._to_entity(row) for row in result.fetchall()]
@@ -527,27 +527,27 @@ class PostgresConcernRepository(ConcernRepository):
 
     async def list_by_category(self, category: str) -> list[Concern]:
         result = await self._session.execute(
-            text("SELECT id, code, name, category, description, severity, likelihood, classification FROM eam_concern WHERE category = :category ORDER BY code"),
+            text("SELECT id, code, name, category, description, severity, likelihood, classification FROM pamp_concern WHERE category = :category ORDER BY code"),
             {"category": category}
         )
         return [self._to_entity(row) for row in result.fetchall()]
 
     async def create(self, entity: Concern) -> Concern:
         await self._session.execute(
-            text("INSERT INTO eam_concern (id, code, name, category, description, severity, likelihood, classification) VALUES (:id, :code, :name, :category, :description, :severity, :likelihood, :classification)"),
+            text("INSERT INTO pamp_concern (id, code, name, category, description, severity, likelihood, classification) VALUES (:id, :code, :name, :category, :description, :severity, :likelihood, :classification)"),
             self._to_params(entity)
         )
         return entity
 
     async def update(self, entity: Concern) -> Concern:
         await self._session.execute(
-            text("UPDATE eam_concern SET name=:name, category=:category, description=:description, severity=:severity, likelihood=:likelihood, classification=:classification WHERE id=:id"),
+            text("UPDATE pamp_concern SET name=:name, category=:category, description=:description, severity=:severity, likelihood=:likelihood, classification=:classification WHERE id=:id"),
             self._to_params(entity)
         )
         return entity
 
     async def delete(self, id: str) -> bool:
-        result = await self._session.execute(text("DELETE FROM eam_concern WHERE id = :id"), {"id": id})
+        result = await self._session.execute(text("DELETE FROM pamp_concern WHERE id = :id"), {"id": id})
         return result.rowcount > 0
 
     @staticmethod

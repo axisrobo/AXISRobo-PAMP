@@ -105,7 +105,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="AxisArch API", version="2.0.0", lifespan=lifespan)
 
-logger = logging.getLogger("eam.api")
+logger = logging.getLogger("pamp.api")
 
 # Middleware — order matters: CORS first, then Auth
 app.add_middleware(

@@ -19,7 +19,7 @@ async def get_request_concerns(
     user: AuthUser = Depends(get_current_user),
 ):
     req_result = await db.execute(
-        text("SELECT request_id, project_id FROM eam.eam_request WHERE request_id = :rid OR id::text = :rid LIMIT 1"),
+        text("SELECT request_id, project_id FROM pamp.pamp_request WHERE request_id = :rid OR id::text = :rid LIMIT 1"),
         {"rid": request_id},
     )
     req_row = req_result.mappings().first()
@@ -35,7 +35,7 @@ async def get_request_concerns(
             "SELECT project_id, evaluation, concern_requirement_confirmed_at, "
             "artifact_requirement_confirmed_at, artifact_submitted_at, "
             "questionnaire, risk_items, status "
-            "FROM eam.avdm_project_assessment WHERE project_id = :pid"
+            "FROM pamp.avdm_project_assessment WHERE project_id = :pid"
         ),
         {"pid": project_id},
     )

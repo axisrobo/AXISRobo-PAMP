@@ -201,7 +201,7 @@ async def add_project_application(project_id: str, body: dict, db: AsyncSession 
         app_id = (body.get("appId") or "").strip()
         if not app_id:
             raise HTTPException(status_code=400, detail="appId is required")
-        result = await db.execute(text("INSERT INTO eam.project_app (project_id, app_id, create_by, create_at) VALUES (:pid, :aid, :cb, NOW()) RETURNING *"), {"pid": project_id, "aid": app_id, "cb": user.id})
+        result = await db.execute(text("INSERT INTO pamp.project_app (project_id, app_id, create_by, create_at) VALUES (:pid, :aid, :cb, NOW()) RETURNING *"), {"pid": project_id, "aid": app_id, "cb": user.id})
         await db.commit()
         return {"projectId": project_id, "appId": app_id}
     except Exception as e:
@@ -211,18 +211,18 @@ async def add_project_application(project_id: str, body: dict, db: AsyncSession 
 
 @router.get("/{project_id}/applications", dependencies=[Depends(require_permission("project", "read"))])
 async def list_project_applications(project_id: str, db: AsyncSession = Depends(get_db)):
-    rows = await db.execute(text("SELECT * FROM eam.project_app WHERE project_id = :pid ORDER BY create_at DESC"), {"pid": project_id})
+    rows = await db.execute(text("SELECT * FROM pamp.project_app WHERE project_id = :pid ORDER BY create_at DESC"), {"pid": project_id})
     return [dict(r) for r in rows.mappings().all()]
 
 
 @router.get("/{project_id}/tasks", dependencies=[Depends(require_permission("project", "read"))])
 async def list_project_tasks(project_id: str, db: AsyncSession = Depends(get_db)):
-    rows = await db.execute(text("SELECT * FROM eam.project_task WHERE project_id = :pid ORDER BY create_at DESC"), {"pid": project_id})
+    rows = await db.execute(text("SELECT * FROM pamp.project_task WHERE project_id = :pid ORDER BY create_at DESC"), {"pid": project_id})
     return [dict(r) for r in rows.mappings().all()]
 
 
 @router.delete("/{project_id}/applications/{app_id}", dependencies=[Depends(require_permission("project", "write"))])
 async def delete_project_application(project_id: str, app_id: str, db: AsyncSession = Depends(get_db)):
-    await db.execute(text("DELETE FROM eam.project_app WHERE project_id = :pid AND app_id = :aid"), {"pid": project_id, "aid": app_id})
+    await db.execute(text("DELETE FROM pamp.project_app WHERE project_id = :pid AND app_id = :aid"), {"pid": project_id, "aid": app_id})
     await db.commit()
     return {"message": "deleted"}

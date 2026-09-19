@@ -13,7 +13,7 @@ from app.database import get_db
 from app.auth import require_permission, get_current_user
 from app.auth.models import AuthUser
 
-logger = logging.getLogger("eam.routers.architecture_check_interactions")
+logger = logging.getLogger("pamp.routers.architecture_check_interactions")
 
 router = APIRouter()
 
@@ -57,7 +57,7 @@ async def confirm_arch_check_interactions(
             await db.execute(
                 text(
                     """
-                    UPDATE eam.eam_arch_ai_check_interaction
+                    UPDATE pamp.pamp_arch_ai_check_interaction
                     SET
                         status = 'Confirmed',
                         status_changed_by = :itcode,
@@ -92,7 +92,7 @@ async def add_arch_check_interaction(
         await db.execute(
             text(
                 """
-                INSERT INTO eam.eam_arch_ai_check_interaction (
+                INSERT INTO pamp.pamp_arch_ai_check_interaction (
                     ai_check_id,
                     source_app_id,
                     target_app_id,
@@ -189,7 +189,7 @@ async def update_arch_check_interaction(
         await db.execute(
             text(
                 """
-                UPDATE eam.eam_arch_ai_check_interaction
+                UPDATE pamp.pamp_arch_ai_check_interaction
                 SET
                     source_app_id = :source_app_id,
                     target_app_id = :target_app_id,
@@ -246,7 +246,7 @@ async def delete_arch_check_interaction(
         await db.execute(
             text(
                 """
-                UPDATE eam.eam_arch_ai_check_interaction
+                UPDATE pamp.pamp_arch_ai_check_interaction
                 SET
                     status = 'Deleted',
                     status_changed_by = :itcode,
@@ -279,14 +279,14 @@ async def list_arch_check_interactions(
 ):
     """List all interaction entries for an architecture AI check record.
 
-    aiCheckId is the UUID of eam_arch_ai_check.id. Old records may store the
-    numeric id from eam_arch_ai_check.result->>'id' as ai_check_id, so we
+    aiCheckId is the UUID of pamp_arch_ai_check.id. Old records may store the
+    numeric id from pamp_arch_ai_check.result->>'id' as ai_check_id, so we
     resolve both to cover the full dataset.
     """
     try:
         # Resolve legacy numeric id (same pattern as arch-check-apps)
         numeric_id_row = await db.execute(
-            text("SELECT result->>'id' AS nid FROM eam.eam_arch_ai_check WHERE id = CAST(:uuid AS uuid) LIMIT 1"),
+            text("SELECT result->>'id' AS nid FROM pamp.pamp_arch_ai_check WHERE id = CAST(:uuid AS uuid) LIMIT 1"),
             {"uuid": aiCheckId},
         )
         numeric_id: str | None = None
@@ -321,10 +321,10 @@ async def list_arch_check_interactions(
                 eaaci.status_changed_at AS "statusChangedAt",
                 eaaci.status AS "confirmStatus"
             FROM
-                eam.eam_arch_ai_check_interaction eaaci
+                pamp.pamp_arch_ai_check_interaction eaaci
                 LEFT JOIN stamp.cmdb_application ca_s ON (ca_s.app_id = eaaci.source_app_id OR ca_s.name = eaaci.source_app_id)
                 LEFT JOIN stamp.cmdb_application ca_t ON (ca_t.app_id = eaaci.target_app_id OR ca_t.name = eaaci.target_app_id)
-                LEFT JOIN eam.resource_pool rp_cb ON rp_cb.itcode = eaaci.status_changed_by
+                LEFT JOIN pamp.resource_pool rp_cb ON rp_cb.itcode = eaaci.status_changed_by
             WHERE
                 ({where_clause})
                 AND eaaci.status <> 'Deleted'
