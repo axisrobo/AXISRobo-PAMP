@@ -1442,6 +1442,10 @@ CREATE TABLE IF NOT EXISTS pamp.schema_migrations (
     applied_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Required by run_migrations' ON CONFLICT (filename) upsert.
+CREATE UNIQUE INDEX IF NOT EXISTS schema_migrations_filename_key
+    ON pamp.schema_migrations (filename);
+
 -- Table: pamp.smart_agent
 CREATE TABLE IF NOT EXISTS pamp.smart_agent (
     itcode VARCHAR(255)
