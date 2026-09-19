@@ -549,13 +549,13 @@ export default function CreateRequestPage() {
     return allMatches && anyMatches;
   };
 
-  const clampRiskLevel = (value: number) => Math.min(5, Math.max(1, Math.ceil(value)));
-
   const riskLevelsFromScore = (score: number) => {
+    // Continuous mapping: severity = likelihood = sqrt(min(25, score)) so the
+    // backend itemScore ((s/5)*(l/5)) becomes min(25, score) / 25. This avoids
+    // the coarse nine-value quantisation of the previous ceil(sqrt()) transform.
     const cappedScore = Math.min(25, Math.max(1, score));
-    const severity = clampRiskLevel(Math.sqrt(cappedScore));
-    const likelihood = clampRiskLevel(cappedScore / severity);
-    return { severity, likelihood };
+    const level = Math.min(5, Math.sqrt(cappedScore));
+    return { severity: level, likelihood: level };
   };
 
   const scoreFromRiskLevels = (severity: number, likelihood: number) => severity * likelihood;

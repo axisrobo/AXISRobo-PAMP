@@ -215,7 +215,12 @@ def evaluate_avdm(
             tagged_score = 0.0
 
         risk_score = max(direct_score, tagged_score)
-        score = min(1.0, round(risk_score + complexity_boost, 4))
+        if risk_score <= 0:
+            # Explicit floor: no activation means no score (Optional); the
+            # complexity boost must not manufacture priority for empty inputs.
+            score = 0.0
+        else:
+            score = min(1.0, round(risk_score + complexity_boost, 4))
         scored.append(
             {
                 "concernKey": concern_key,
