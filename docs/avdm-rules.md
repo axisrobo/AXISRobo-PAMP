@@ -58,6 +58,34 @@ mirrors it in `scripts/analysis/run_sensitivity.py`.
    `question.<n>.answer`, `complexitySection.*`, `projectScaleSection.*`,
    `checkpoint1..3.*`, and `architectureTypeSection.*`.
 
+### Question mapping model and UI maintenance
+
+Mappings are stored as one row per `(question, answer, concern)` with a
+`mapping_score` on the 0-5 scale. Every question has a **fixed concern set
+across all of its answers**; an answer only changes the score. The admin editor
+(`/concern-mapping-config` → **Edit Question Mapping**) presents this as a
+**concern × answer matrix**: concerns are the rows, the question's answer
+options are the columns, and each cell holds a score.
+
+Workflow:
+
+1. Pick the question; its answer options become the columns automatically.
+2. Add the concerns this question contributes to. The concern set is defined
+   once and shared by every answer, so adding/removing a concern changes all
+   answers together.
+3. Fill scores per cell. Most questions use one score across a row; per-cell
+   scores are allowed where a concern needs a different weight (for example
+   Q1, Q2, Q11, Q22, Q51, Q63, Q67).
+4. **Save New Version** expands the matrix back into `(question, answer,
+   concern)` rows. The stored representation is unchanged, so the analysis and
+   fixtures are unaffected by the editor.
+
+Scale questions (PS1, PS3, CS2, CS3, TCP1–TCP5) use banded scores: the lowest
+band scores `2` (low) and higher bands score `3` (moderate). A critical single
+signal such as cross-border data (TCP3) scores `5`. Redundant presence
+questions CS1 and PS2 were removed in favour of the corresponding count
+questions.
+
 ### Architecture type rules
 
 The 30 `at-*` rules key on `architectureTypeSection.<...>`. That section is
