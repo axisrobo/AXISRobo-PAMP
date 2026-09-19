@@ -75,7 +75,7 @@ VALUES
     ('OR7', 'Operability Runbook', 'Operations & Reliability', '[]'::jsonb, 'Specify runbooks for incident, release, and rollback.', FALSE, 'medium', 'medium', 'recommended', 'avdm_seed_v2', 'avdm_seed_v2', now(), now()),
     ('SCR1', 'Security Control View', 'Security, Compliance & Risk', '[]'::jsonb, 'Control mechanisms. What controls enforce security policy?', TRUE, 'medium', 'medium', 'recommended', 'avdm_seed_v2', 'avdm_seed_v2', now(), now()),
     ('SCR10', 'Data Protection', 'Security, Compliance & Risk', '[]'::jsonb, 'Describe encryption, tokenization, and sensitive data handling.', FALSE, 'medium', 'medium', 'recommended', 'avdm_seed_v2', 'avdm_seed_v2', now(), now()),
-    ('SCR11', 'Identity and Access Control', 'Security, Compliance & Risk', '[]'::jsonb, 'Map authentication, authorization, and least privilege controls.', TRUE, 'medium', 'medium', 'recommended', 'avdm_seed_v2', 'avdm_seed_v2', now(), now()),
+    ('SCR11', 'Identity and Access Control', 'Security, Compliance & Risk', '[]'::jsonb, 'Access governance. Are least-privilege, access-review, joiner-mover-leaver, and privileged-account controls defined?', TRUE, 'medium', 'medium', 'recommended', 'avdm_seed_v2', 'avdm_seed_v2', now(), now()),
     ('SCR2', 'Threat & Risk Modeling View', 'Security, Compliance & Risk', '[]'::jsonb, 'Threat analysis. What threats and risks exist?', TRUE, 'medium', 'medium', 'recommended', 'avdm_seed_v2', 'avdm_seed_v2', now(), now()),
     ('SCR3', 'Attack Path View', 'Security, Compliance & Risk', '[]'::jsonb, 'Adversarial traversal. How could an attacker move through the system?', TRUE, 'medium', 'medium', 'recommended', 'avdm_seed_v2', 'avdm_seed_v2', now(), now()),
     ('SCR4', 'Service Authentication View', 'Security, Compliance & Risk', '[]'::jsonb, 'Service trust. How do services authenticate each other?', TRUE, 'medium', 'medium', 'recommended', 'avdm_seed_v2', 'avdm_seed_v2', now(), now()),
@@ -97,10 +97,13 @@ ON CONFLICT (concern_key) DO UPDATE SET
     update_at = now(),
     updated_at = now();
 
--- Deactivate legacy alias keys superseded by canonical code keys
+-- Remove superseded DIP7/DIP8 duplicates (renamed to DIN1/DIN2)
+DELETE FROM pamp.avdm_pact_concern WHERE concern_key IN ('DIP7', 'DIP8');
+
+-- Deactivate legacy slug alias keys superseded by canonical code keys
 UPDATE pamp.avdm_pact_concern
    SET is_active = FALSE, update_by = 'avdm_seed_v2', update_at = now(), updated_at = now()
- WHERE concern_key IN ('DIP7', 'DIP8', 'app_domain_boundary', 'app_resilience_pattern', 'governance_control_matrix', 'governance_decision_log', 'data_governance', 'data_lineage', 'infra_recovery', 'infra_scalability', 'integration_contract', 'integration_dependency_map', 'ops_observability', 'ops_operability', 'risk_change_readiness', 'risk_dependency', 'security_data_protection', 'security_identity_access');
+ WHERE concern_key IN ('app_domain_boundary', 'app_resilience_pattern', 'governance_control_matrix', 'governance_decision_log', 'data_governance', 'data_lineage', 'infra_recovery', 'infra_scalability', 'integration_contract', 'integration_dependency_map', 'ops_observability', 'ops_operability', 'risk_change_readiness', 'risk_dependency', 'security_data_protection', 'security_identity_access');
 
 -- 2. Activation rules
 INSERT INTO pamp.avdm_concern_activation_rule
@@ -223,7 +226,6 @@ FROM (VALUES
     ('at-security-data_protection', 'SCR1', 3.0, 10),
     ('at-security-data_protection', 'SCR2', 3.0, 20),
     ('at-security-iam_integration', 'A4', 3.0, 40),
-    ('at-security-iam_integration', 'SCR11', 8.0, 90),
     ('at-security-iam_integration', 'SCR4', 3.0, 10),
     ('at-security-iam_integration', 'SCR5', 3.0, 20),
     ('at-security-iam_integration', 'SCR6', 3.0, 30),
@@ -465,16 +467,8 @@ FROM (VALUES
     (36, 'IP3', 'equals', '3_5', 2.0, 50),
     (36, 'IP3', 'equals', '6_10', 3.0, 50),
     (36, 'IP3', 'equals', 'GT_10', 3.0, 50),
-    (37, 'SCR1', 'equals', 'FCCL', 3.0, 45),
-    (37, 'SCR1', 'equals', 'Kaitian', 3.0, 45),
-    (37, 'SCR1', 'equals', 'NECPC', 3.0, 45),
-    (37, 'SCR1', 'equals', 'Other', 3.0, 45),
-    (37, 'SCR1', 'equals', 'example_corp', 3.0, 45),
-    (37, 'SCR4', 'equals', 'FCCL', 2.0, 45),
-    (37, 'SCR4', 'equals', 'Kaitian', 2.0, 45),
-    (37, 'SCR4', 'equals', 'NECPC', 2.0, 45),
-    (37, 'SCR4', 'equals', 'Other', 2.0, 45),
-    (37, 'SCR4', 'equals', 'example_corp', 2.0, 45),
+    (37, 'SCR1', 'equals', 'Yes', 3.0, 45),
+    (37, 'SCR4', 'equals', 'Yes', 3.0, 45),
     (38, 'D8', 'equals', 'Yes', 3.0, 20),
     (38, 'SCR2', 'equals', 'Yes', 3.0, 10),
     (38, 'SCR4', 'equals', 'Yes', 3.0, 30),
@@ -488,9 +482,9 @@ FROM (VALUES
     (41, 'SCR4', 'equals', 'Yes', 3.0, 20),
     (42, 'SCR2', 'equals', 'General Personal Data', 2.0, 50),
     (42, 'SCR2', 'equals', 'Sensitive Personal Data', 3.0, 50),
-    (43, 'SCR5', 'equals', 'Accounting', 2.0, 45),
-    (43, 'SCR5', 'equals', 'Employee Record', 2.0, 45),
-    (43, 'SCR5', 'equals', 'Tax', 2.0, 45),
+    (43, 'SCR7', 'equals', 'Accounting', 2.0, 45),
+    (43, 'SCR7', 'equals', 'Employee Record', 2.0, 45),
+    (43, 'SCR7', 'equals', 'Tax', 2.0, 45),
     (44, 'SCR4', 'equals', 'Yes', 3.0, 20),
     (44, 'SCR5', 'equals', 'Yes', 3.0, 10),
     (45, 'DIN3', 'equals', 'Yes', 3.0, 20),
@@ -511,18 +505,15 @@ FROM (VALUES
     (5, 'SCR7', 'equals', 'Y', 3.0, 60),
     (50, 'DIN3', 'equals', 'More than 100,000', 3.0, 50),
     (50, 'DIN3', 'equals', 'Less than 100,000', 2.0, 50),
-    (50, 'SCR5', 'equals', 'More than 100,000', 3.0, 50),
-    (50, 'SCR5', 'equals', 'Less than 100,000', 2.0, 50),
+    (50, 'SCR2', 'equals', 'More than 100,000', 3.0, 50),
+    (50, 'SCR2', 'equals', 'Less than 100,000', 2.0, 50),
     (51, 'D5', 'equals', 'Yes', 2.0, 10),
     (51, 'SCR4', 'equals', 'Yes', 3.0, 20),
     (52, 'D8', 'equals', 'Yes', 3.0, 10),
     (52, 'SCR4', 'equals', 'Yes', 3.0, 20),
     (53, 'D7', 'equals', 'Yes', 5.0, 45),
-    (53, 'D7', 'equals', 'Not Sure', 4.0, 45),
     (53, 'D9', 'equals', 'Yes', 5.0, 45),
-    (53, 'D9', 'equals', 'Not Sure', 4.0, 45),
     (53, 'SCR7', 'equals', 'Yes', 5.0, 45),
-    (53, 'SCR7', 'equals', 'Not Sure', 4.0, 45),
     (55, 'B1', 'equals', 'Yes', 2.0, 10),
     (55, 'B2', 'equals', 'Yes', 2.0, 20),
     (56, 'B2', 'equals', 'Yes', 1.0, 10),
@@ -567,6 +558,7 @@ FROM (VALUES
     (8, 'A3', 'equals', 'Y', 3.0, 20),
     (8, 'DIN2', 'equals', 'Y', 3.0, 30),
     (8, 'SCR1', 'equals', 'Y', 3.0, 40),
+    (8, 'SCR11', 'equals', 'Y', 3.0, 45),
     (8, 'SCR2', 'equals', 'Y', 3.0, 50),
     (8, 'SCR3', 'equals', 'Y', 3.0, 60),
     (8, 'SCR7', 'equals', 'Y', 3.0, 70),

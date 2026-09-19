@@ -744,7 +744,7 @@
       "concern_key": "SCR11",
       "concern_name": "Identity and Access Control",
       "layer": "Security, Compliance & Risk",
-      "description": "Map authentication, authorization, and least privilege controls.",
+      "description": "Access governance. Are least-privilege, access-review, joiner-mover-leaver, and privileged-account controls defined?",
       "risk_tags": [],
       "is_active": true,
       "severity": "medium",
@@ -2489,43 +2489,7 @@
       "stable_question_id": "37",
       "concern_key": "SCR1",
       "match_operator": "equals",
-      "answer_value": "FCCL",
-      "mapping_score": 3.0,
-      "sort_order": 45,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "37",
-      "concern_key": "SCR1",
-      "match_operator": "equals",
-      "answer_value": "Kaitian",
-      "mapping_score": 3.0,
-      "sort_order": 45,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "37",
-      "concern_key": "SCR1",
-      "match_operator": "equals",
-      "answer_value": "NECPC",
-      "mapping_score": 3.0,
-      "sort_order": 45,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "37",
-      "concern_key": "SCR1",
-      "match_operator": "equals",
-      "answer_value": "Other",
-      "mapping_score": 3.0,
-      "sort_order": 45,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "37",
-      "concern_key": "SCR1",
-      "match_operator": "equals",
-      "answer_value": "example_corp",
+      "answer_value": "Yes",
       "mapping_score": 3.0,
       "sort_order": 45,
       "is_active": true
@@ -2534,44 +2498,8 @@
       "stable_question_id": "37",
       "concern_key": "SCR4",
       "match_operator": "equals",
-      "answer_value": "FCCL",
-      "mapping_score": 2.0,
-      "sort_order": 45,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "37",
-      "concern_key": "SCR4",
-      "match_operator": "equals",
-      "answer_value": "Kaitian",
-      "mapping_score": 2.0,
-      "sort_order": 45,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "37",
-      "concern_key": "SCR4",
-      "match_operator": "equals",
-      "answer_value": "NECPC",
-      "mapping_score": 2.0,
-      "sort_order": 45,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "37",
-      "concern_key": "SCR4",
-      "match_operator": "equals",
-      "answer_value": "Other",
-      "mapping_score": 2.0,
-      "sort_order": 45,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "37",
-      "concern_key": "SCR4",
-      "match_operator": "equals",
-      "answer_value": "example_corp",
-      "mapping_score": 2.0,
+      "answer_value": "Yes",
+      "mapping_score": 3.0,
       "sort_order": 45,
       "is_active": true
     },
@@ -2694,7 +2622,7 @@
     },
     {
       "stable_question_id": "43",
-      "concern_key": "SCR5",
+      "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Accounting",
       "mapping_score": 2.0,
@@ -2703,7 +2631,7 @@
     },
     {
       "stable_question_id": "43",
-      "concern_key": "SCR5",
+      "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Employee Record",
       "mapping_score": 2.0,
@@ -2712,7 +2640,7 @@
     },
     {
       "stable_question_id": "43",
-      "concern_key": "SCR5",
+      "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Tax",
       "mapping_score": 2.0,
@@ -2901,7 +2829,7 @@
     },
     {
       "stable_question_id": "50",
-      "concern_key": "SCR5",
+      "concern_key": "SCR2",
       "match_operator": "equals",
       "answer_value": "More than 100,000",
       "mapping_score": 3.0,
@@ -2910,7 +2838,7 @@
     },
     {
       "stable_question_id": "50",
-      "concern_key": "SCR5",
+      "concern_key": "SCR2",
       "match_operator": "equals",
       "answer_value": "Less than 100,000",
       "mapping_score": 2.0,
@@ -2964,34 +2892,7 @@
     },
     {
       "stable_question_id": "53",
-      "concern_key": "D7",
-      "match_operator": "equals",
-      "answer_value": "Not Sure",
-      "mapping_score": 4.0,
-      "sort_order": 45,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "53",
       "concern_key": "D9",
-      "match_operator": "equals",
-      "answer_value": "Yes",
-      "mapping_score": 5.0,
-      "sort_order": 45,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "53",
-      "concern_key": "D9",
-      "match_operator": "equals",
-      "answer_value": "Not Sure",
-      "mapping_score": 4.0,
-      "sort_order": 45,
-      "is_active": true
-    },
-    {
-      "stable_question_id": "53",
-      "concern_key": "SCR7",
       "match_operator": "equals",
       "answer_value": "Yes",
       "mapping_score": 5.0,
@@ -3002,8 +2903,8 @@
       "stable_question_id": "53",
       "concern_key": "SCR7",
       "match_operator": "equals",
-      "answer_value": "Not Sure",
-      "mapping_score": 4.0,
+      "answer_value": "Yes",
+      "mapping_score": 5.0,
       "sort_order": 45,
       "is_active": true
     },
@@ -3401,6 +3302,15 @@
       "answer_value": "Y",
       "mapping_score": 3.0,
       "sort_order": 40,
+      "is_active": true
+    },
+    {
+      "stable_question_id": "8",
+      "concern_key": "SCR11",
+      "match_operator": "equals",
+      "answer_value": "Y",
+      "mapping_score": 3.0,
+      "sort_order": 45,
       "is_active": true
     },
     {
@@ -4493,13 +4403,6 @@
     },
     {
       "rule_key": "at-security-iam_integration",
-      "concern_key": "SCR11",
-      "mapping_score": 8.0,
-      "sort_order": 90,
-      "is_active": true
-    },
-    {
-      "rule_key": "at-security-iam_integration",
       "concern_key": "SCR4",
       "mapping_score": 3.0,
       "sort_order": 10,
@@ -4869,8 +4772,7 @@
       "AGD7",
       "DIN5",
       "IP7",
-      "OR5",
-      "SCR11"
+      "OR5"
     ],
     "risk_tags_policy": "risk_tags cleared; activation is driven by question mappings and activation rules only"
   }
