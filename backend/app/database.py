@@ -192,6 +192,18 @@ async def run_migrations() -> None:
         )
         await session.commit()
 
+        # The table may have been created earlier by a schema snapshot without
+        # the UNIQUE(filename) constraint, which makes the ON CONFLICT upsert
+        # below fail. Ensure the index exists regardless of how the table was
+        # created (self-healing for existing installs).
+        await session.execute(
+            text(
+                f'CREATE UNIQUE INDEX IF NOT EXISTS schema_migrations_filename_key '
+                f'ON "{settings.DB_SCHEMA}".schema_migrations (filename)'
+            )
+        )
+        await session.commit()
+
         applied_result = await session.execute(
             text(f'SELECT filename, hash FROM "{settings.DB_SCHEMA}".schema_migrations')
         )
