@@ -1,7 +1,7 @@
 ﻿"""Generate database schema documentation from PostgreSQL information_schema.
 
-Run from the repo root:
-    python scripts/generate_db_schema_doc.py
+Run from anywhere:
+    python scripts/db/generate_db_schema_doc.py
 """
 from __future__ import annotations
 
@@ -14,11 +14,21 @@ from pathlib import Path
 import asyncpg
 
 
+def _repo_root(start: Path) -> Path:
+    for candidate in (start, *start.parents):
+        if (candidate / "backend").is_dir() and (candidate / "docs").is_dir():
+            return candidate
+    raise RuntimeError("repository root not found")
+
+
+REPO_ROOT = _repo_root(Path(__file__).resolve())
+
+
 def get_database_url() -> str:
     url = os.environ.get("DATABASE_URL")
     if url:
         return url
-    env_file = Path(__file__).resolve().parents[1] / "backend" / ".env"
+    env_file = REPO_ROOT / "backend" / ".env"
     if env_file.exists():
         content = env_file.read_text(encoding="utf-8")
         for line in content.splitlines():
@@ -321,7 +331,7 @@ async def main() -> None:
         lines.append("---")
         lines.append("")
 
-    out = Path(__file__).resolve().parents[1] / "docs" / "database-schema.md"
+    out = REPO_ROOT / "docs" / "database-schema.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(lines), encoding="utf-8")
     print(f"\nSchema documentation written to: {out}")

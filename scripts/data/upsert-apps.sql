@@ -1,4 +1,4 @@
-Total unique apps: 43
+-- Total unique apps: 43
 -- First ensure unique constraint on app_id
 CREATE UNIQUE INDEX IF NOT EXISTS idx_project_app_app_id ON pamp.project_app (app_id);
 

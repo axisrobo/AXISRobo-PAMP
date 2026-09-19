@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$SCRIPT_DIR"
+while [[ ! -d "$ROOT_DIR/backend" && "$ROOT_DIR" != "/" ]]; do
+  ROOT_DIR="$(dirname "$ROOT_DIR")"
+done
+if [[ ! -d "$ROOT_DIR/backend" ]]; then
+  echo "Could not locate repository root (no backend/ directory above $SCRIPT_DIR)" >&2
+  exit 1
+fi
 
 BACKEND_CMD=("$ROOT_DIR/backend/venv/bin/python" -m uvicorn app.main:app --reload --host 0.0.0.0 --port 4000 --app-dir "$ROOT_DIR/backend")
 

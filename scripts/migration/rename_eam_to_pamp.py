@@ -23,7 +23,14 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+def _repo_root(start: Path) -> Path:
+    for candidate in (start, *start.parents):
+        if (candidate / "backend").is_dir() and (candidate / "docs").is_dir():
+            return candidate
+    raise RuntimeError("repository root not found")
+
+
+ROOT = _repo_root(Path(__file__).resolve())
 PLACEHOLDER = "\x00TAPKEYCLOAK\x00"
 
 SKIP_SUFFIXES = (

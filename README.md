@@ -60,10 +60,10 @@ The database schema and AVDM seed data are maintained as SQL scripts under [`doc
 # Connection matches the docker container above (db: axisarch)
 export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/axisarch"
 
-scripts/init_db.sh
+scripts/db/init_db.sh
 ```
 
-Under the hood this runs `scripts/init_db.py`, which:
+Under the hood this runs `scripts/db/init_db.py`, which:
 
 1. creates the `pamp` schema if absent;
 2. applies `backend/migrations/*.sql` in filename order (migration `000` moves a legacy `eam` schema to `pamp`);
@@ -211,7 +211,7 @@ Files stored in `pamp.pamp_file_storage` table when S3 is unavailable.
 
 ```bash
 # Generate fresh schema documentation
-cd backend && python ../scripts/generate_db_schema_doc.py
+python scripts/db/generate_db_schema_doc.py
 ```
 
 ## Testing

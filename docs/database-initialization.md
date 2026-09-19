@@ -7,7 +7,7 @@ table, and the configuration documents live in that schema.
 
 ```bash
 export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/pamp"
-scripts/init_db.sh
+scripts/db/init_db.sh
 ```
 
 On Windows:
@@ -19,7 +19,7 @@ $env:DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/pamp"
 
 Connection can also come from `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, and
 `PGDATABASE`. The wrapper selects `backend/venv` automatically and delegates to
-`scripts/init_db.py`.
+`scripts/db/init_db.py`.
 
 ### What it does, in order
 
@@ -33,9 +33,9 @@ Connection can also come from `PGHOST`, `PGPORT`, `PGUSER`, `PGPASSWORD`, and
 Every step is idempotent, so repeated runs are safe. Useful flags:
 
 ```bash
-scripts/init_db.sh --skip-seed          # schema + migrations + DDL only
-scripts/init_db.sh --skip-migrations    # schema + DDL + seed only
-scripts/init_db.sh --ddl docs/SQL/pamp_schema_ddl.sql
+scripts/db/init_db.sh --skip-seed          # schema + migrations + DDL only
+scripts/db/init_db.sh --skip-migrations    # schema + DDL + seed only
+scripts/db/init_db.sh --ddl docs/SQL/pamp_schema_ddl.sql
 ```
 
 ## Manual equivalent
@@ -74,7 +74,7 @@ the `eam_` table prefix change.
 Validate the migration against a throwaway copy of a real database:
 
 ```bash
-python scripts/test_migrate_eam_to_pamp.py
+python scripts/migration/test_migrate_eam_to_pamp.py
 ```
 
 The test copies `eam_local` to a scratch database, applies the migration, checks
@@ -96,7 +96,7 @@ and included in `docs/SQL/pamp_schema_ddl.sql`.
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| `relation "pamp.x" does not exist` | DDL/seed not applied | run `scripts/init_db.sh` |
+| `relation "pamp.x" does not exist` | DDL/seed not applied | run `scripts/db/init_db.sh` |
 | `no unique or exclusion constraint matching the ON CONFLICT` | missing `document_key` unique index | apply migration `004` |
-| Data still under `eam` | migration `000` not applied | start the backend once or run `scripts/init_db.sh` |
+| Data still under `eam` | migration `000` not applied | start the backend once or run `scripts/db/init_db.sh` |
 | `permission denied for schema pamp` | role lacks privileges | grant usage on schema `pamp` to the app role |

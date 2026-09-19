@@ -19,7 +19,14 @@ from pathlib import Path
 
 import asyncpg
 
-ROOT = Path(__file__).resolve().parents[1]
+def _repo_root(start: Path) -> Path:
+    for candidate in (start, *start.parents):
+        if (candidate / "backend").is_dir() and (candidate / "docs").is_dir():
+            return candidate
+    raise RuntimeError("repository root not found")
+
+
+ROOT = _repo_root(Path(__file__).resolve())
 DEFAULT_DDL = ROOT / "docs" / "SQL" / "pamp_schema_ddl.sql"
 DEFAULT_SEED = ROOT / "docs" / "SQL" / "avdm_schema_seed.sql"
 MIGRATIONS_DIR = ROOT / "backend" / "migrations"

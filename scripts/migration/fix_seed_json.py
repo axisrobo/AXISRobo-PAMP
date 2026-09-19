@@ -11,7 +11,14 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-SEED = Path("docs/SQL/avdm_schema_seed.sql")
+def _repo_root(start: Path) -> Path:
+    for candidate in (start, *start.parents):
+        if (candidate / "backend").is_dir() and (candidate / "docs").is_dir():
+            return candidate
+    raise RuntimeError("repository root not found")
+
+
+SEED = _repo_root(Path(__file__).resolve()) / "docs" / "SQL" / "avdm_schema_seed.sql"
 
 
 def convert_literals(text: str) -> tuple[str, int]:

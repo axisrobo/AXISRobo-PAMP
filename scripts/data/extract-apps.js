@@ -1,4 +1,23 @@
-const data = require('/Users/ruodongyang/Workplace/Business-Capability-Application-Mapping/src/data/default-data.json');
+#!/usr/bin/env node
+// Generate idempotent upsert SQL for pamp.project_app from an application
+// mapping JSON export.
+//
+// Usage:
+//   node scripts/data/extract-apps.js <default-data.json> > scripts/data/upsert-apps.sql
+//
+// The input is expected to be an array of rows with fields such as appId,
+// appName, appOwnership, appSolutionOwner, appDtOwner, portfolioMgt,
+// appSolutionType, appClassification, appStatus, and bizFunction.
+
+const fs = require('fs');
+
+const inputPath = process.argv[2];
+if (!inputPath) {
+  console.error('usage: node scripts/data/extract-apps.js <default-data.json>');
+  process.exit(1);
+}
+
+const data = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
 
 const appMap = {};
 for (const row of data) {
@@ -19,35 +38,14 @@ for (const row of data) {
 }
 
 const apps = Object.values(appMap);
-console.log('Total unique apps:', apps.length);
+console.log(`-- Total unique apps: ${apps.length}`);
 
-// Generate SQL: UPSERT (INSERT ... ON CONFLICT UPDATE)
 const esc = (s) => (s || '').replace(/'/g, "''");
 
-const sqls = apps.map(a => {
-  return `INSERT INTO pamp.project_app (id, app_id, app_name, app_it_owner, current_state, business_function, app_ownership, app_solution_owner, portfolio_mgt, app_solution_type, app_classification, create_by, create_at)
-VALUES (gen_random_uuid(), '${esc(a.appId)}', '${esc(a.appName)}', '${esc(a.appDtOwner)}', '${esc(a.appStatus)}', '${esc(a.bizFunction)}', '${esc(a.appOwnership)}', '${esc(a.appSolutionOwner)}', '${esc(a.portfolioMgt)}', '${esc(a.appSolutionType)}', '${esc(a.appClassification)}', 'system', NOW())
-ON CONFLICT (app_id) DO UPDATE SET
-  app_name = EXCLUDED.app_name,
-  app_it_owner = COALESCE(NULLIF(pamp.project_app.app_it_owner, ''), EXCLUDED.app_it_owner),
-  current_state = COALESCE(NULLIF(pamp.project_app.current_state, ''), EXCLUDED.current_state),
-  business_function = EXCLUDED.business_function,
-  app_ownership = EXCLUDED.app_ownership,
-  app_solution_owner = EXCLUDED.app_solution_owner,
-  portfolio_mgt = EXCLUDED.portfolio_mgt,
-  app_solution_type = EXCLUDED.app_solution_type,
-  app_classification = EXCLUDED.app_classification,
-  update_by = 'system',
-  update_at = NOW();`;
-});
-
-// But wait, project_app primary key is 'id' not 'app_id'. Need a unique constraint on app_id first.
-console.log('-- First ensure unique constraint on app_id');
+console.log('-- Ensure a unique constraint on app_id for the upsert.');
 console.log('CREATE UNIQUE INDEX IF NOT EXISTS idx_project_app_app_id ON pamp.project_app (app_id);');
 console.log('');
 
-// Since ON CONFLICT needs a unique constraint, let's check if it exists.
-// Alternative approach: use a CTE with upsert logic
 for (const a of apps) {
   console.log(`INSERT INTO pamp.project_app (id, app_id, app_name, app_it_owner, current_state, business_function, app_ownership, app_solution_owner, portfolio_mgt, app_solution_type, app_classification, create_by, create_at)
 SELECT gen_random_uuid(), '${esc(a.appId)}', '${esc(a.appName)}', '${esc(a.appDtOwner)}', '${esc(a.appStatus)}', '${esc(a.bizFunction)}', '${esc(a.appOwnership)}', '${esc(a.appSolutionOwner)}', '${esc(a.portfolioMgt)}', '${esc(a.appSolutionType)}', '${esc(a.appClassification)}', 'system', NOW()
