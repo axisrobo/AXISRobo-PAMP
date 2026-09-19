@@ -92,19 +92,11 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
                     required=True,
                 ),
                 _section_field(
-                    "hasExternalSystems",
-                    "Does it involve external systems?",
-                    control="radio",
-                    options=_yes_no_options(),
-                    required=True,
-                ),
-                _section_field(
                     "externalSystemsCount",
                     "How many external systems are involved?",
                     control="select",
                     options_source="externalSystemCountRangeOptions",
-                    enabled_when=[_section_condition("hasExternalSystems", equals="Yes")],
-                    required_when=[_section_condition("hasExternalSystems", equals="Yes")],
+                    required=True,
                 ),
             ],
         ),
@@ -114,19 +106,11 @@ DEFAULT_QUESTIONNAIRE_CONFIG: dict = {
             "Project delivery scope across new and modified applications.",
             [
                 _section_field(
-                    "hasNewApplications",
-                    "Will there be new applications?",
-                    control="radio",
-                    options=_yes_no_options(),
-                    required=True,
-                ),
-                _section_field(
                     "newApplicationsCount",
                     "How many new applications?",
                     control="select",
                     options_source="newApplicationCountRangeOptions",
-                    enabled_when=[_section_condition("hasNewApplications", equals="Yes")],
-                    required_when=[_section_condition("hasNewApplications", equals="Yes")],
+                    required=True,
                 ),
                 _section_field(
                     "modifiedApplicationsCount",
