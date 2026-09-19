@@ -1,0 +1,90 @@
+# AVDM Scoring and Rule Configuration
+
+Reference for the AVDM (Architecture Viewpoint Decision Model) concern catalog,
+activation rules, and classification policy. The authoritative data lives in
+`docs/SQL/avdm_config.json` and `docs/SQL/avdm_concerns_rules_seed.sql`, applied
+by `scripts/db/init_db.py` after the base seed.
+
+## Scoring
+
+For each concern, the questionnaire produces an **aggregated mapping score**
+(`raw`), the sum of the mapping scores of every answered question and fired
+activation rule that targets it.
+
+```
+raw = 0 (not activated) : score = 0.0                       -> Optional
+raw > 0                 : base  = min(25, raw) / 25
+                          score = min(1, round(base + complexityCoefficient * complexity, 4))
+```
+
+* `complexityCoefficient` default `0.15`; `complexity` is normalised to `[0,1]`.
+* Classification thresholds: `Mandatory >= 0.66`, `Recommended >= 0.38`,
+  otherwise `Optional`.
+* The mapping is **continuous and floor-zero**: the previous `ceil(sqrt())`
+  risk-level transform produced only nine distinct base values
+  (`0.04 … 1.0`), which quantised classifications into coarse bands. The
+  continuous form removes that artefact.
+* An unactivated concern scores exactly `0.0`; the complexity boost is not
+  applied, so empty inputs cannot manufacture priority.
+
+Frontend and backend both implement this: `riskLevelsFromScore` in
+`frontend/src/app/(architecture_review)/ea-review/(standalone)/request/create/page.tsx`
+emits `severity = likelihood = sqrt(min(25, raw))`, and `evaluate_avdm` in
+`backend/app/add/service.py` applies the floor and boost. The public analysis
+mirrors it in `scripts/analysis/run_sensitivity.py`.
+
+## Activation channels
+
+1. **Question → concern mappings** (`avdm_question_answer_concern_mapping`):
+   `match_operator` / `answer_value` against an answered question.
+2. **Activation rules** (`avdm_concern_activation_rule` + `_score`): an `all`
+   condition list (every condition must match) AND an `any` condition list (at
+   least one must match). Condition sources:
+   `question.<n>.answer`, `complexitySection.*`, `projectScaleSection.*`,
+   `checkpoint1..3.*`, and `architectureTypeSection.*`.
+
+### Architecture type rules
+
+The 30 `at-*` rules key on `architectureTypeSection.<...>`. That section is
+defined in `backend/app/add/questionnaire_config.py` and the frontend
+`questionnaireConfig.ts`, and is a multiselect section. Those rules fire **only
+when the assessment supplies architecture-type selections**; they are not dead,
+but they do not fire for inputs (such as the constructed Case X benchmark) that
+omit the section.
+
+## Concern catalog
+
+* Canonical keys are **code keys** (`A1`, `SCR7`, `DIN1`, …).
+* 68 concerns total: 61 active, 7 inactive (`D12, D13, OR6, OR7, SCR8, SCR9,
+  SCR10`).
+* Legacy identifiers are aliases only: slug ids (`app_domain_boundary`,
+  `security_identity_access`, …) → code keys, and `DIP7`/`DIP8` → `DIN1`/`DIN2`.
+  The alias table is in `avdm_config.json` (`concerns[].aliases`) and documented
+  in the public fixture README.
+* `risk_tags` are intentionally empty: activation is driven by mappings and
+  rules only, so no dilution from non-matching semantic tags.
+
+Runtime uses the database catalog (`list_concerns(..., include_inactive=False)`).
+The static `backend/app/add/catalog.py` is no longer used as an evaluation
+fallback; an empty database catalog returns HTTP 503 so misconfiguration is
+explicit rather than silently scored against a stale in-code catalog.
+
+### Known semantic overlaps (kept for expert-study comparability)
+
+`DIN5`↔`OR2`, `DIN6`↔`DIN4`, `IP7`↔`IP5/IP6`, `IP8`↔`IP2/A3`, `SCR11`↔`SCR6`,
+`AGD1`↔`AGD7`. The expert study is fixed at 61 items, so these are retained
+rather than merged.
+
+## Case X calibration note
+
+The constructed Case X benchmark was produced by an earlier configuration whose
+question→concern associations and mapping scores are not fully present in the
+base seed. To keep the benchmark reproducible, `avdm_config.json` restores:
+
+* 10 associations (activation set): `AGD3, C5, D7, D9, IP1, IP2, OR1, OR4,
+  SCR1, SCR7`;
+* 8 score restorations: `A1, A2, A3, C1, C2, C3, C4` (+8 each) and `AGD2`
+  (+16).
+
+These are benchmark-fitting entries and are listed in
+`avdm_config.json` → `generation_notes`.

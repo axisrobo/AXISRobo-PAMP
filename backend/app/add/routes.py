@@ -537,7 +537,12 @@ def _to_catalog(items: list[dict]) -> list[dict[str, object]]:
 @router.post("/evaluate", response_model=AVDMEvaluateResponse, dependencies=[Depends(require_permission("avdm", "write"))])
 async def evaluate(payload: AVDMEvaluateRequest, db: AsyncSession = Depends(get_db)):
     concerns = await list_concerns(db, include_inactive=False)
-    catalog = _to_catalog(concerns) if concerns else CONCERN_CATALOG
+    catalog = _to_catalog(concerns)
+    if not catalog:
+        raise HTTPException(
+            status_code=503,
+            detail="AVDM concern catalog is empty; run database initialization",
+        )
     policy = await load_classification_policy_config(db)
     return evaluate_avdm(payload, concern_catalog=catalog, policy=policy)
 
@@ -562,7 +567,12 @@ async def upsert_project_questionnaire(
     db: AsyncSession = Depends(get_db),
 ):
     concerns = await list_concerns(db, include_inactive=False)
-    catalog = _to_catalog(concerns) if concerns else CONCERN_CATALOG
+    catalog = _to_catalog(concerns)
+    if not catalog:
+        raise HTTPException(
+            status_code=503,
+            detail="AVDM concern catalog is empty; run database initialization",
+        )
     policy = await load_classification_policy_config(db)
 
     risk_items = [
