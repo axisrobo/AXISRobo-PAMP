@@ -86,6 +86,16 @@ signal such as cross-border data (TCP3) scores `5`. Redundant presence
 questions CS1 and PS2 were removed in favour of the corresponding count
 questions.
 
+### Complexity drivers (RCP / SCP / PRS)
+
+The requirement-, solution-, and resource-complexity matrices (stable ids
+55-69) are **complexity drivers, not concern activations**. They use four
+graded levels `None / Low / Medium / High` mapped to `0 / 2 / 4 / 6`, and their
+selected scores are summed into the **derived project complexity**
+(`requirementComplexitySection`, `solutionComplexitySection`,
+`resourceSizeSection`; frontend `derivedProjectComplexity`). They have **no
+question→concern mappings**.
+
 ### Architecture type rules
 
 The 30 `at-*` rules key on `architectureTypeSection.<...>`. That section is

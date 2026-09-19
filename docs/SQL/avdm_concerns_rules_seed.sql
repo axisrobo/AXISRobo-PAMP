@@ -110,6 +110,20 @@ UPDATE pamp.avdm_question
    SET is_active = FALSE, update_by = 'avdm_seed_v2', update_at = now()
  WHERE stable_question_id IN (27, 29);
 
+-- RCP/SCP/PRS (55-69) are complexity drivers: four graded levels, no Yes/No
+DELETE FROM pamp.avdm_question_option_item
+ WHERE option_set_id IN (SELECT DISTINCT option_set_id FROM pamp.avdm_question
+   WHERE stable_question_id BETWEEN 55 AND 69 AND option_set_id IS NOT NULL);
+INSERT INTO pamp.avdm_question_option_item
+    (option_set_id, option_value, option_label, option_score, sort_order,
+     is_active, create_by, update_by, create_at, update_at)
+SELECT s.option_set_id, v.value, v.label, v.score, v.ord, TRUE,
+       'avdm_seed_v3', 'avdm_seed_v3', now(), now()
+FROM (SELECT DISTINCT option_set_id FROM pamp.avdm_question
+      WHERE stable_question_id BETWEEN 55 AND 69 AND option_set_id IS NOT NULL) s
+CROSS JOIN (VALUES ('None','None',0,10),('Low','Low',2,20),
+                   ('Medium','Medium',4,30),('High','High',6,40)) AS v(value, label, score, ord);
+
 -- 2. Activation rules
 INSERT INTO pamp.avdm_concern_activation_rule
     (rule_key, description, all_conditions, any_conditions, sort_order, is_active,
@@ -516,43 +530,9 @@ FROM (VALUES
     (53, 'D7', 'equals', 'Yes', 5.0, 45),
     (53, 'D9', 'equals', 'Yes', 5.0, 45),
     (53, 'SCR7', 'equals', 'Yes', 5.0, 45),
-    (55, 'B1', 'equals', 'Yes', 2.0, 10),
-    (55, 'B2', 'equals', 'Yes', 2.0, 20),
-    (56, 'B2', 'equals', 'Yes', 1.0, 10),
-    (56, 'D2', 'equals', 'Yes', 1.0, 20),
-    (57, 'AGD2', 'equals', 'Yes', 1.0, 20),
-    (57, 'B3', 'equals', 'Yes', 1.0, 10),
-    (58, 'AGD4', 'equals', 'Yes', 1.0, 20),
-    (58, 'B1', 'equals', 'Yes', 1.0, 10),
-    (59, 'B5', 'equals', 'Yes', 1.0, 10),
-    (59, 'D9', 'equals', 'Yes', 1.0, 20),
     (6, 'AGD4', 'equals', 'Y', 3.0, 30),
     (6, 'DIN4', 'equals', 'Y', 3.0, 10),
     (6, 'OR3', 'equals', 'Y', 3.0, 20),
-    (60, 'A3', 'equals', 'Yes', 2.0, 10),
-    (60, 'C3', 'equals', 'Yes', 2.0, 20),
-    (61, 'C4', 'equals', 'Yes', 1.0, 10),
-    (61, 'OR1', 'equals', 'Yes', 1.0, 20),
-    (62, 'A3', 'equals', 'Yes', 1.0, 20),
-    (62, 'B5', 'equals', 'Yes', 1.0, 10),
-    (63, 'AGD4', 'equals', 'Yes', 2.0, 10),
-    (63, 'OR3', 'equals', 'Yes', 2.0, 20),
-    (63, 'OR5', 'equals', 'Yes', 3.0, 90),
-    (64, 'A3', 'equals', 'Yes', 1.0, 10),
-    (64, 'IP1', 'equals', 'Yes', 1.0, 20),
-    (65, 'DIN4', 'equals', 'Yes', 1.0, 10),
-    (65, 'IP6', 'equals', 'Yes', 1.0, 20),
-    (66, 'A1', 'equals', 'Yes', 4.0, 20),
-    (66, 'AGD1', 'equals', 'Yes', 4.0, 10),
-    (66, 'AGD7', 'equals', 'Yes', 4.0, 90),
-    (66, 'C1', 'equals', 'Yes', 4.0, 30),
-    (67, 'AGD6', 'equals', 'Yes', 4.0, 90),
-    (67, 'SCR1', 'equals', 'Yes', 1.0, 10),
-    (67, 'SCR7', 'equals', 'Yes', 1.0, 20),
-    (68, 'DIN4', 'equals', 'Yes', 2.0, 20),
-    (68, 'OR3', 'equals', 'Yes', 2.0, 10),
-    (69, 'AGD4', 'equals', 'Yes', 2.0, 10),
-    (69, 'OR3', 'equals', 'Yes', 2.0, 20),
     (7, 'A4', 'equals', 'Y', 3.0, 20),
     (7, 'B3', 'equals', 'Y', 3.0, 10),
     (7, 'SCR6', 'equals', 'Y', 3.0, 30),
