@@ -586,22 +586,20 @@ export default function ConcernMappingConfigPage() {
 
           <Typography.Text strong>Concern &times; Answer scores</Typography.Text>
           <div style={{ marginTop: 8, marginBottom: 12 }}>
-            <Space wrap style={{ marginBottom: 8 }}>
+            <Space orientation="vertical" size={8} style={{ width: '100%', marginBottom: 8 }}>
               <Select
-                style={{ width: 320 }}
-                placeholder="Add a concern"
-                value={undefined}
+                mode="multiple"
+                style={{ width: '100%' }}
+                placeholder="Select the concerns this question contributes to"
+                value={matrixConcerns}
                 showSearch
                 optionFilterProp="label"
-                options={concernOptions.filter((option) => !matrixConcerns.includes(String(option.value)))}
-                onChange={(value) => {
-                  const key = String(value);
-                  setMatrixConcerns((previous) => (previous.includes(key) ? previous : [...previous, key]));
-                }}
+                options={concernOptions}
+                onChange={(values) => setMatrixConcerns(values as string[])}
               />
               <Input
-                style={{ width: 240 }}
-                placeholder="Add an answer value (Enter)"
+                style={{ width: 300 }}
+                placeholder="Add a free-text answer value (Enter)"
                 onPressEnter={(event) => {
                   const input = event.target as HTMLInputElement;
                   const value = input.value.trim();
