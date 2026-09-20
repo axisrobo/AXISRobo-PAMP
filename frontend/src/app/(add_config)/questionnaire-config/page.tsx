@@ -19,6 +19,7 @@ import {
   message,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import Link from 'next/link';
 import { Download, Edit3, Plus, RefreshCw, RotateCcw, Save, Trash2 } from 'lucide-react';
 
 import { api } from '@/shared/lib/api';
@@ -28,9 +29,6 @@ import {
   AssessmentMatrixSection,
   CategoryConfig,
   Option,
-  ProjectTypeArtifactStatus,
-  ProjectTypeGuide,
-  ProjectTypeProfile,
   QuestionControl,
   QuestionConfig,
   QuestionnaireCategoryKey,
@@ -67,8 +65,7 @@ type ManagedQuestionRow = {
   control: string;
   optionsSummary: string;
   designIntent?: string;
-  editable: boolean;
-  sourceTab?: string;
+  sourceScope: string;
   questionId?: number;
 };
 
@@ -162,151 +159,6 @@ function downloadJson(filename: string, payload: unknown) {
 
 function nextQuestionId(questions: QuestionConfig[]) {
   return Math.max(0, ...questions.map((item) => Number(item.id) || 0)) + 1;
-}
-
-function projectTypeStatusColor(status: ProjectTypeArtifactStatus) {
-  switch (status) {
-    case 'Mandatory':
-      return 'red';
-    case 'Recommended':
-      return 'blue';
-    case 'Optional':
-      return 'gold';
-    default:
-      return 'default';
-  }
-}
-
-function renderProjectTypeGuide(guide: ProjectTypeGuide, profiles: ProjectTypeProfile[]) {
-  return (
-    <div className="space-y-4">
-      {guide.title && <Typography.Title level={5} style={{ marginBottom: 0 }}>{guide.title}</Typography.Title>}
-      {guide.introduction.map((paragraph) => (
-        <Typography.Paragraph key={paragraph} style={{ marginBottom: 8 }}>{paragraph}</Typography.Paragraph>
-      ))}
-
-      {guide.objectives.length > 0 && (
-        <div>
-          <Typography.Text strong>Objectives</Typography.Text>
-          <div className="mt-2 space-y-2">
-            {guide.objectives.map((item) => (
-              <div key={item.title} className="rounded border border-slate-200 p-3">
-                <Typography.Text strong>{item.title}</Typography.Text>
-                <div className="mt-1 text-sm text-slate-600">{item.description}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {(guide.scopeIntro || guide.scopeProjectTypes.length > 0 || guide.scopeNote) && (
-        <div>
-          <Typography.Text strong>Scope</Typography.Text>
-          {guide.scopeIntro && <div className="mt-2 text-sm text-slate-600">{guide.scopeIntro}</div>}
-          {guide.scopeProjectTypes.length > 0 && (
-            <ul className="mt-2 list-disc pl-5 text-sm text-slate-600">
-              {guide.scopeProjectTypes.map((item) => <li key={item}>{item}</li>)}
-            </ul>
-          )}
-          {guide.scopeNote && <div className="mt-2 text-sm text-slate-600">{guide.scopeNote}</div>}
-        </div>
-      )}
-
-      {guide.corePrinciples.length > 0 && (
-        <div>
-          <Typography.Text strong>Core Principles</Typography.Text>
-          <div className="mt-2 space-y-2">
-            {guide.corePrinciples.map((item) => (
-              <div key={item.title} className="rounded border border-slate-200 p-3">
-                <Typography.Text strong>{item.title}</Typography.Text>
-                <div className="mt-1 text-sm text-slate-600">{item.description}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {guide.governanceBoundary.length > 0 && (
-        <div>
-          <Typography.Text strong>EA Governance Boundary</Typography.Text>
-          <ul className="mt-2 list-disc pl-5 text-sm text-slate-600">
-            {guide.governanceBoundary.map((item) => <li key={item}>{item}</li>)}
-          </ul>
-        </div>
-      )}
-
-      {guide.recommendedUsage.length > 0 && (
-        <div>
-          <Typography.Text strong>Recommended Usage</Typography.Text>
-          <ul className="mt-2 list-disc pl-5 text-sm text-slate-600">
-            {guide.recommendedUsage.map((item) => <li key={item}>{item}</li>)}
-          </ul>
-        </div>
-      )}
-
-      {(guide.artifactSelectionIntro.length > 0 || profiles.length > 0) && (
-        <div>
-          <Typography.Text strong>Architecture Artifact Selection</Typography.Text>
-          {guide.artifactSelectionIntro.map((item) => (
-            <div key={item} className="mt-2 text-sm text-slate-600">{item}</div>
-          ))}
-          {profiles.length > 0 && (
-            <div className="mt-3 overflow-x-auto rounded border border-slate-200">
-              <table className="min-w-full border-collapse text-sm">
-                <thead className="bg-slate-50">
-                  <tr>
-                    <th className="border-b border-slate-200 px-3 py-2 text-left font-semibold">Project Type</th>
-                    <th className="border-b border-slate-200 px-3 py-2 text-left font-semibold">Description</th>
-                    <th className="border-b border-slate-200 px-3 py-2 text-left font-semibold">Artifact Baseline</th>
-                    <th className="border-b border-slate-200 px-3 py-2 text-left font-semibold">Typical Patterns</th>
-                    <th className="border-b border-slate-200 px-3 py-2 text-left font-semibold">Typical Risks</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {profiles.map((profile) => (
-                    <tr key={profile.value}>
-                      <td className="border-b border-slate-100 px-3 py-2 align-top font-medium">{profile.label}</td>
-                      <td className="border-b border-slate-100 px-3 py-2 align-top text-slate-600">{profile.description}</td>
-                      <td className="border-b border-slate-100 px-3 py-2 align-top">
-                        <div className="flex flex-wrap gap-1">
-                          {profile.artifactSelections.map((selection) => (
-                            <Tag key={`${profile.value}-${selection.artifactKey}`} color={projectTypeStatusColor(selection.status)}>
-                              {selection.artifactLabel}: {selection.status}
-                            </Tag>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="border-b border-slate-100 px-3 py-2 align-top text-slate-600">
-                        {profile.typicalPatterns.length > 0 ? profile.typicalPatterns.join(', ') : '-'}
-                      </td>
-                      <td className="border-b border-slate-100 px-3 py-2 align-top text-slate-600">
-                        {profile.typicalRisks.length > 0 ? profile.typicalRisks.join(', ') : '-'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-
-      {guide.legend.length > 0 && (
-        <div>
-          <Typography.Text strong>Legend</Typography.Text>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {guide.legend.map((item) => (
-              <Tag key={item.symbol}>{item.symbol}: {item.meaning}</Tag>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {guide.note && (
-        <Alert type="info" showIcon title={guide.note} />
-      )}
-    </div>
-  );
 }
 
 export default function QuestionnaireConfigPage() {
@@ -412,41 +264,18 @@ export default function QuestionnaireConfigPage() {
         control: item.control,
         optionsSummary: describeQuestionOptions(item.control, item.optionsSource, item.options),
         designIntent: item.designIntent,
-        editable: true,
-        sourceTab: item.sourceScope === 'questionnaire_section'
-          ? 'questionnaire-sections'
-          : item.sourceScope === 'assessment_matrix'
-            ? 'assessment-matrices'
-            : 'question-bank',
+        sourceScope: item.sourceScope || 'question_bank',
         questionId: item.id,
       })),
     ];
 
-    const categoryGroupByKey = new Map(
-      config.questionnaireCategories.map((category) => [category.key, category.group])
-    );
-    const categoryGroupOrderMap = new Map(
-      categoryGroupOptions.map((group, index) => [group.value, index])
-    );
-
+    // Order by the stable numeric question id so the list matches the ID column.
     rows.sort((left, right) => {
-      const leftGroupOrder = categoryGroupOrderMap.get(categoryGroupByKey.get(left.category) || 'change') ?? Number.MAX_SAFE_INTEGER;
-      const rightGroupOrder = categoryGroupOrderMap.get(categoryGroupByKey.get(right.category) || 'change') ?? Number.MAX_SAFE_INTEGER;
-      if (leftGroupOrder !== rightGroupOrder) {
-        return leftGroupOrder - rightGroupOrder;
-      }
-
-      const categoryCompare = left.category.localeCompare(right.category);
-      if (categoryCompare !== 0) {
-        return categoryCompare;
-      }
-
       const leftQuestionId = left.questionId ?? Number.MAX_SAFE_INTEGER;
       const rightQuestionId = right.questionId ?? Number.MAX_SAFE_INTEGER;
       if (leftQuestionId !== rightQuestionId) {
         return leftQuestionId - rightQuestionId;
       }
-
       return left.rowKey.localeCompare(right.rowKey);
     });
 
@@ -652,24 +481,6 @@ export default function QuestionnaireConfigPage() {
     }));
   };
 
-  const updateAssessmentMatricesJson = (value: string) => {
-    setAssessmentMatricesJson(value);
-    try {
-      const parsed = JSON.parse(value);
-      if (!Array.isArray(parsed)) {
-        throw new Error('Assessment matrices JSON must be an array');
-      }
-      const normalized = mergeQuestionnaireConfig({ assessmentMatrices: parsed }).assessmentMatrices;
-      setConfig((previous) => ({
-        ...previous,
-        assessmentMatrices: normalized,
-      }));
-      setAssessmentMatricesError(null);
-    } catch (error) {
-      setAssessmentMatricesError(error instanceof Error ? error.message : 'Invalid JSON');
-    }
-  };
-
   const updateQuestionnaireSectionsJson = (value: string) => {
     setQuestionnaireSectionsJson(value);
     try {
@@ -691,11 +502,20 @@ export default function QuestionnaireConfigPage() {
   const renderQuestionnaireSectionSummary = (sections: QuestionnaireSection[]) => (
     <div className="space-y-3">
       <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
-        Maintain all backend-driven step-two questionnaire sections as JSON, including configurable checkpoint blocks. Changes are saved into the questionnaire config in the database.
+        Backend-driven step-two questionnaire sections, including configurable checkpoint blocks. Edit the JSON below and save; changes are persisted to the questionnaire config in the database.
       </Typography.Paragraph>
+      <Space wrap>
+        <Button
+          icon={<Download className="h-4 w-4" />}
+          onClick={() => downloadJson('avdm-questionnaire-sections.json', sections)}
+        >
+          Download Sections JSON
+        </Button>
+      </Space>
       {questionnaireSectionsError && <Alert type="error" showIcon title={questionnaireSectionsError} />}
       <Input.TextArea
-        rows={24}
+        autoSize={{ minRows: 28, maxRows: 80 }}
+        style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace', fontSize: 12 }}
         value={questionnaireSectionsJson}
         onChange={(event) => updateQuestionnaireSectionsJson(event.target.value)}
         spellCheck={false}
@@ -714,14 +534,26 @@ export default function QuestionnaireConfigPage() {
 
   const renderAssessmentMatrixSummary = (matrices: AssessmentMatrixSection[]) => (
     <div className="space-y-3">
-      <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
-        Maintain the backend-driven questionnaire assessment sections as JSON. Changes are saved into the questionnaire config in the database.
-      </Typography.Paragraph>
+      <Alert
+        type="info"
+        showIcon
+        title="Read-only: assessment matrices are derived from the question bank"
+        description="RCP / SCP / PRS sections are rebuilt from every question whose source scope is 'assessment_matrix' each time the config loads, so edits here are not persisted. Edit those questions and their answer options in the Questions and Option Templates tabs; the 0 / 2 / 4 / 6 complexity levels come from the shared assessment-matrix option sets."
+      />
       {assessmentMatricesError && <Alert type="error" showIcon title={assessmentMatricesError} />}
+      <Space wrap>
+        <Button
+          icon={<Download className="h-4 w-4" />}
+          onClick={() => downloadJson('avdm-assessment-matrices.json', matrices)}
+        >
+          Download Matrices JSON
+        </Button>
+      </Space>
       <Input.TextArea
-        rows={24}
+        readOnly
+        autoSize={{ minRows: 28, maxRows: 80 }}
+        style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace', fontSize: 12 }}
         value={assessmentMatricesJson}
-        onChange={(event) => updateAssessmentMatricesJson(event.target.value)}
         spellCheck={false}
       />
       <div className="space-y-2">
@@ -756,8 +588,30 @@ export default function QuestionnaireConfigPage() {
   ];
 
   const questionColumns: ColumnsType<ManagedQuestionRow> = [
-    { title: 'ID', dataIndex: 'displayId', width: 96 },
+    {
+      title: 'ID',
+      dataIndex: 'questionId',
+      width: 96,
+      defaultSortOrder: 'ascend',
+      sorter: (left, right) => (left.questionId ?? 0) - (right.questionId ?? 0),
+      render: (value, record) => <span title={record.displayId}>#{value}</span>,
+    },
     { title: 'Category', dataIndex: 'category', width: 150, render: (value) => <Tag>{value}</Tag> },
+    {
+      title: 'Source',
+      dataIndex: 'sourceScope',
+      width: 170,
+      filters: [
+        { text: 'Question Bank', value: 'question_bank' },
+        { text: 'Questionnaire Section', value: 'questionnaire_section' },
+        { text: 'Assessment Matrix', value: 'assessment_matrix' },
+      ],
+      onFilter: (value, record) => record.sourceScope === value,
+      render: (value) => {
+        const color = value === 'question_bank' ? 'default' : value === 'questionnaire_section' ? 'purple' : 'cyan';
+        return <Tag color={color}>{value}</Tag>;
+      },
+    },
     { title: 'Answer Type', dataIndex: 'control', width: 120, render: (value) => <Tag color="blue">{value}</Tag> },
     { title: 'Options', dataIndex: 'optionsSummary', width: 220 },
     { title: 'Question', dataIndex: 'text', render: (value) => <Typography.Text>{value}</Typography.Text> },
@@ -765,20 +619,14 @@ export default function QuestionnaireConfigPage() {
     {
       title: 'Action',
       key: 'action',
-      width: 220,
+      width: 140,
       render: (_, record) => (
-        record.editable ? (
-          <Space>
-            <Button icon={<Edit3 className="h-4 w-4" />} onClick={() => openQuestionEditor(config.questionBank.find((item) => item.id === record.questionId))} />
-            <Popconfirm title="Delete question?" onConfirm={() => record.questionId && deleteQuestion(record.questionId)}>
-              <Button danger icon={<Trash2 className="h-4 w-4" />} />
-            </Popconfirm>
-          </Space>
-        ) : (
-          <Typography.Text type="secondary">
-            Edit in {record.sourceTab === 'questionnaire-sections' ? 'Questionnaire Sections' : 'Assessment Matrices'}
-          </Typography.Text>
-        )
+        <Space>
+          <Button icon={<Edit3 className="h-4 w-4" />} onClick={() => openQuestionEditor(config.questionBank.find((item) => item.id === record.questionId))} />
+          <Popconfirm title="Delete question?" onConfirm={() => record.questionId && deleteQuestion(record.questionId)}>
+            <Button danger icon={<Trash2 className="h-4 w-4" />} />
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
@@ -822,6 +670,9 @@ export default function QuestionnaireConfigPage() {
             <Typography.Text type="secondary">Maintain step-two categories, questions, sections, and range options through structured controls.</Typography.Text>
           </div>
           <Space wrap>
+            <Link href="/project-type-guide" target="_blank">
+              <Button>Project Type Guide</Button>
+            </Link>
             <Button icon={<RefreshCw className="h-4 w-4" />} onClick={() => refetch()} loading={isLoading}>Refresh</Button>
             <Button icon={<Download className="h-4 w-4" />} onClick={() => downloadJson(`avdm-questionnaire-config-${new Date().toISOString().slice(0, 10)}.json`, mergeQuestionnaireConfig(config))}>Export JSON</Button>
             <Button icon={<RotateCcw className="h-4 w-4" />} onClick={() => setConfig(serverConfig)}>Reset Server Config</Button>
@@ -894,11 +745,6 @@ export default function QuestionnaireConfigPage() {
                   </div>
                 </Space>
               ),
-            },
-            {
-              key: 'project-type-guide',
-              label: 'Project Type Guide',
-              children: renderProjectTypeGuide(config.projectTypeGuide, config.projectTypeProfiles),
             },
             {
               key: 'questionnaire-sections',
