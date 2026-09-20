@@ -41,8 +41,8 @@ type PolicyResponse = {
 };
 
 const DEFAULTS: ClassificationPolicy = {
-  mandatoryThreshold: 0.66,
-  recommendedThreshold: 0.38,
+  mandatoryThreshold: 0.90,
+  recommendedThreshold: 0.50,
   complexityCoefficient: 0.15,
   maxMandatoryCount: null,
   maxMandatoryRatio: null,

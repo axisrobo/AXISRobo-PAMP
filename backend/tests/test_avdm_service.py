@@ -18,8 +18,8 @@ def test_evaluate_avdm_promotes_high_risk_concerns_to_recommended():
         projectId="P-100",
         projectComplexity=0.9,
         riskItems=[
-            RiskItem(code="compliance", severity=5, likelihood=5),
-            RiskItem(code="privacy", severity=4.5, likelihood=5),
+            RiskItem(code="D7", severity=4, likelihood=3),
+            RiskItem(code="SCR7", severity=4, likelihood=3),
         ],
     )
 
@@ -145,8 +145,8 @@ def test_recommend_artifacts_ignores_optional_and_returns_major_items():
         projectId="P-500",
         projectComplexity=1.0,
         riskItems=[
-            RiskItem(code="security", severity=5, likelihood=5),
-            RiskItem(code="integration", severity=5, likelihood=5),
+            RiskItem(code="SCR4", severity=4, likelihood=3),
+            RiskItem(code="A3", severity=4, likelihood=3),
         ],
     )
 

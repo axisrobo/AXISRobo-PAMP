@@ -145,12 +145,15 @@ async def put_concern_mapping_config(
     db: AsyncSession = Depends(get_db),
 ):
     operator = payload.operator.strip() or "system"
-    result = await save_concern_mapping_config(
-        db,
-        config=payload.config,
-        change_note=payload.changeNote,
-        operator=operator,
-    )
+    try:
+        result = await save_concern_mapping_config(
+            db,
+            config=payload.config,
+            change_note=payload.changeNote,
+            operator=operator,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     return _build_config_response(configKey, result["config"], result)
 
 

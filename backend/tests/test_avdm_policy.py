@@ -29,7 +29,7 @@ def _request():
     )
 
 
-def test_defaults_match_historical_behaviour():
+def test_defaults_match_reference_policy():
     result = evaluate_avdm(_request(), concern_catalog=CATALOG)
     by_key = {decision.concernKey: decision for decision in result.decisions}
     assert by_key["A1"].classification == "Mandatory"
@@ -64,8 +64,15 @@ def test_complexity_coefficient_is_configurable():
 
 def test_thresholds_are_configurable():
     strict = normalize_policy({"mandatoryThreshold": 0.99, "recommendedThreshold": 0.95})
-    assert classify(0.8, DEFAULT_CLASSIFICATION_POLICY) == "Mandatory"
+    assert classify(0.8, DEFAULT_CLASSIFICATION_POLICY) == "Recommended"
     assert classify(0.8, strict) == "Optional"
+
+
+def test_reference_threshold_boundaries():
+    assert classify(0.49, DEFAULT_CLASSIFICATION_POLICY) == "Optional"
+    assert classify(0.50, DEFAULT_CLASSIFICATION_POLICY) == "Recommended"
+    assert classify(0.89, DEFAULT_CLASSIFICATION_POLICY) == "Recommended"
+    assert classify(0.90, DEFAULT_CLASSIFICATION_POLICY) == "Mandatory"
 
 
 def test_max_mandatory_count_downgrades_lowest_scores():

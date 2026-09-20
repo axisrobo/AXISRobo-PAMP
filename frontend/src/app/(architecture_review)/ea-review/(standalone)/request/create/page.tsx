@@ -30,6 +30,7 @@ import {
   type ConcernActivationRule,
   type ConcernScoreMapping,
 } from '@/features/review/stages/preparation';
+import { aggregateConcernScores } from '@/features/review/config/concernScoring';
 
 const { TextArea } = Input;
 
@@ -649,25 +650,21 @@ export default function CreateRequestPage() {
   };
 
   const buildAggregatedConcernActivations = () => {
-    const activationMap = new Map<string, ConcernActivationContribution>();
+    const contributionsByConcern = new Map<string, ConcernActivationContribution[]>();
     buildConcernActivationContributions().forEach((item) => {
-      const existing = activationMap.get(item.concernKey);
-      if (!existing) {
-        activationMap.set(item.concernKey, item);
-        return;
-      }
-      // Aggregate as strongest signal plus a small bonus per extra contributor
-      // (capped at 5) instead of a plain sum, so many weak mappings cannot
-      // accumulate into Mandatory.
-      const aggregated = Math.min(5, Math.max(existing.score, item.score) + 0.25);
-      activationMap.set(item.concernKey, {
-        concernKey: item.concernKey,
+      const contributions = contributionsByConcern.get(item.concernKey) || [];
+      contributions.push(item);
+      contributionsByConcern.set(item.concernKey, contributions);
+    });
+    return Array.from(contributionsByConcern.entries()).map(([concernKey, contributions]) => {
+      const aggregated = aggregateConcernScores(contributions.map((item) => item.score));
+      return {
+        concernKey,
         score: aggregated,
         ...riskLevelsFromScore(aggregated),
-        note: [existing.note, item.note].filter(Boolean).join('; '),
-      });
+        note: contributions.map((item) => item.note).filter(Boolean).join('; '),
+      };
     });
-    return Array.from(activationMap.values());
   };
 
   const buildActivatedConcernKeys = () => buildAggregatedConcernActivations().map((item) => item.concernKey);

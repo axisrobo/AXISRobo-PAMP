@@ -1413,7 +1413,7 @@
       "answer_value": "Y",
       "op": "equals",
       "concern_key": "IP7",
-      "mapping_score": 6.0,
+      "mapping_score": 5.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -1791,7 +1791,7 @@
       "answer_value": "Y",
       "op": "equals",
       "concern_key": "A5",
-      "mapping_score": 8.0,
+      "mapping_score": 5.0,
       "sort_order": 60,
       "is_active": true
     },
@@ -7896,14 +7896,14 @@
     {
       "rule_key": "at-security-compliance_driven",
       "concern_key": "AGD6",
-      "mapping_score": 8.0,
+      "mapping_score": 5.0,
       "sort_order": 40,
       "is_active": true
     },
     {
       "rule_key": "at-security-compliance_driven",
       "concern_key": "AGD7",
-      "mapping_score": 8.0,
+      "mapping_score": 5.0,
       "sort_order": 50,
       "is_active": true
     },
@@ -8092,7 +8092,7 @@
     {
       "rule_key": "at-technical-high_availability",
       "concern_key": "DIN5",
-      "mapping_score": 8.0,
+      "mapping_score": 5.0,
       "sort_order": 40,
       "is_active": true
     },
@@ -8113,7 +8113,7 @@
     {
       "rule_key": "at-technical-high_availability",
       "concern_key": "OR5",
-      "mapping_score": 8.0,
+      "mapping_score": 5.0,
       "sort_order": 50,
       "is_active": true
     },

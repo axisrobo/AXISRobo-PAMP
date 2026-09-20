@@ -446,8 +446,13 @@ function normalizeCategoryKey(raw: unknown): QuestionnaireCategoryKey {
   return QUESTIONNAIRE_CATEGORY_KEY_ALIASES[key] ?? key;
 }
 
-const toConcernScores = (concernKeys: string[], score = 8): ConcernScoreMapping[] =>
-  concernKeys.map((concernKey) => ({ concernKey, score }));
+const normalizeContribution = (raw: unknown, fallback = 5): number => {
+  const value = Number(raw);
+  return Number.isFinite(value) ? Math.min(5, Math.max(0, value)) : fallback;
+};
+
+const toConcernScores = (concernKeys: string[], score = 5): ConcernScoreMapping[] =>
+  concernKeys.map((concernKey) => ({ concernKey, score: normalizeContribution(score) }));
 
 const toStringArray = (raw: any): string[] => (
   Array.isArray(raw) ? raw.filter((item) => typeof item === 'string').map(String) : []
@@ -786,7 +791,7 @@ export function mergeQuestionnaireConfig(raw: any): QuestionnaireConfig {
   };
 }
 
-function normalizeConcernScores(raw: any, fallbackScore = 8): ConcernScoreMapping[] {
+function normalizeConcernScores(raw: any, fallbackScore = 5): ConcernScoreMapping[] {
   if (Array.isArray(raw?.concernScores)) {
     const seen = new Set<string>();
     return raw.concernScores
@@ -800,14 +805,14 @@ function normalizeConcernScores(raw: any, fallbackScore = 8): ConcernScoreMappin
       })
       .map((item: any) => ({
         concernKey: String(item.concernKey),
-        score: Number.isFinite(Number(item.score)) ? Number(item.score) : fallbackScore,
+        score: normalizeContribution(item.score, fallbackScore),
         severity: Number.isFinite(Number(item.severity)) ? Number(item.severity) : undefined,
         likelihood: Number.isFinite(Number(item.likelihood)) ? Number(item.likelihood) : undefined,
         note: item.note ? String(item.note) : undefined,
       }));
   }
   if (Array.isArray(raw?.concernKeys)) {
-    const score = Number.isFinite(Number(raw.score)) ? Number(raw.score) : fallbackScore;
+    const score = normalizeContribution(raw.score, fallbackScore);
     return toConcernScores(raw.concernKeys.map(String), score);
   }
   return [];
@@ -824,7 +829,7 @@ export function mergeConcernMappingConfig(raw: any): ConcernMappingConfig {
       .map((item: any) => ({
         questionId: Number(item.id),
         answer: 'Y',
-        concernScores: toConcernScores(item.mappedConcernKeys.map(String), Number(item.score) || 8),
+        concernScores: toConcernScores(item.mappedConcernKeys.map(String), Number(item.score) || 5),
         hints: Array.isArray(item.mappedConcernHints) ? item.mappedConcernHints.map(String) : undefined,
       }))
     : [];
@@ -843,7 +848,7 @@ export function mergeConcernMappingConfig(raw: any): ConcernMappingConfig {
   const rawRules = Array.isArray(raw.concernActivationRules)
     ? raw.concernActivationRules.map((rule: any) => ({
       ...rule,
-      concernScores: normalizeConcernScores(rule, Number(rule.score) || 8),
+      concernScores: normalizeConcernScores(rule, Number(rule.score) || 5),
     }))
     : [];
 

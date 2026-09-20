@@ -17,8 +17,8 @@ from __future__ import annotations
 from typing import Any, Iterable
 
 DEFAULT_CLASSIFICATION_POLICY: dict[str, Any] = {
-    "mandatoryThreshold": 0.66,
-    "recommendedThreshold": 0.38,
+    "mandatoryThreshold": 0.90,
+    "recommendedThreshold": 0.50,
     "complexityCoefficient": 0.15,
     "maxMandatoryCount": None,
     "maxMandatoryRatio": None,
@@ -65,10 +65,10 @@ def normalize_policy(raw: dict[str, Any] | None) -> dict[str, Any]:
     """Return a validated policy, filling missing values with defaults."""
     source = raw or {}
     mandatory = _as_float(
-        source.get("mandatoryThreshold"), 0.66, minimum=0.0, maximum=1.0
+        source.get("mandatoryThreshold"), 0.90, minimum=0.0, maximum=1.0
     )
     recommended = _as_float(
-        source.get("recommendedThreshold"), 0.38, minimum=0.0, maximum=1.0
+        source.get("recommendedThreshold"), 0.50, minimum=0.0, maximum=1.0
     )
     if recommended > mandatory:
         recommended = mandatory

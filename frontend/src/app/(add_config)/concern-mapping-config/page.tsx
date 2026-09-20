@@ -145,9 +145,21 @@ function cleanConcernScores(items: ConcernScoreMapping[] | undefined): ConcernSc
     })
     .map((item) => ({
       concernKey: item.concernKey.trim(),
-      score: Number(item.score) || 0,
+      score: Number(item.score),
       note: item.note?.trim() || undefined,
     }));
+}
+
+function invalidContribution(config: ConcernMappingConfig): string | null {
+  const groups = [
+    ...config.questionConcernMappings.map((item) => ({ label: `Question ${item.questionId}/${item.answer}`, scores: item.concernScores })),
+    ...config.concernActivationRules.map((item) => ({ label: `Rule ${item.id}`, scores: item.concernScores })),
+  ];
+  for (const group of groups) {
+    const invalid = group.scores.find((item) => !Number.isFinite(item.score) || item.score < 0 || item.score > 5);
+    if (invalid) return `${group.label}, ${invalid.concernKey}: score must be from 0 to 5.`;
+  }
+  return null;
 }
 
 function toRuleFormValues(rule?: ConcernActivationRule): RuleFormValues {
@@ -304,14 +316,18 @@ export default function ConcernMappingConfigPage() {
   }, [concernCatalog?.items, config]);
 
   const saveMutation = useMutation({
-    mutationFn: async () => api.put<ConcernMappingConfigResponse>(
-      '/avdm/concern-mapping-config?configKey=default',
-      {
-        config: mergeConcernMappingConfig(config),
-        changeNote: changeNote || null,
-        operator: user?.id || 'system',
-      }
-    ),
+    mutationFn: async () => {
+      const invalid = invalidContribution(config);
+      if (invalid) throw new Error(invalid);
+      return api.put<ConcernMappingConfigResponse>(
+        '/avdm/concern-mapping-config?configKey=default',
+        {
+          config: mergeConcernMappingConfig(config),
+          changeNote: changeNote || null,
+          operator: user?.id || 'system',
+        }
+      );
+    },
     onSuccess: () => {
       messageApi.success('Concern mapping config saved. New version published.');
       queryClient.invalidateQueries({ queryKey: ['avdmConcernMappingConfig', 'default'] });
@@ -385,6 +401,12 @@ export default function ConcernMappingConfigPage() {
         });
       }
     });
+    const invalid = mappings.flatMap((item) => item.concernScores)
+      .find((item) => !Number.isFinite(item.score) || item.score < 0 || item.score > 5);
+    if (invalid) {
+      messageApi.warning(`Score for ${invalid.concernKey} must be from 0 to 5.`);
+      return;
+    }
     if (mappings.length === 0) {
       messageApi.warning('Set at least one concern score.');
       return;
@@ -410,6 +432,11 @@ export default function ConcernMappingConfigPage() {
       any,
       concernScores: cleanConcernScores(values.concernScores),
     };
+    const invalid = invalidContribution({ questionConcernMappings: [], concernActivationRules: [normalized] });
+    if (invalid) {
+      messageApi.warning(invalid);
+      return;
+    }
     if (!normalized.id || normalized.concernScores.length === 0) {
       messageApi.warning('Rule ID and at least one concern score are required.');
       return;
@@ -636,7 +663,7 @@ export default function ConcernMappingConfigPage() {
                           <td key={answer} style={{ padding: 6 }}>
                             <InputNumber
                               min={0}
-                              max={100}
+                              max={5}
                               style={{ width: 72 }}
                               value={matrixScores[answer]?.[concernKey] ?? null}
                               onChange={(value) => {
@@ -734,13 +761,13 @@ export default function ConcernMappingConfigPage() {
                     <Form.Item {...restField} name={[name, 'concernKey']} rules={[{ required: true }]} style={{ width: 420 }}>
                       <Select options={concernOptions} showSearch optionFilterProp="label" placeholder="Concern" />
                     </Form.Item>
-                    <Form.Item {...restField} name={[name, 'score']} rules={[{ required: true }]} style={{ width: 140 }}>
-                      <InputNumber min={0} max={100} placeholder="Score" style={{ width: '100%' }} />
+                    <Form.Item {...restField} name={[name, 'score']} rules={[{ required: true, type: 'number', min: 0, max: 5 }]} style={{ width: 140 }}>
+                      <InputNumber min={0} max={5} placeholder="Score" style={{ width: '100%' }} />
                     </Form.Item>
                     <Button danger icon={<Trash2 className="h-4 w-4" />} onClick={() => remove(name)} />
                   </Space>
                 ))}
-                <Button icon={<Plus className="h-4 w-4" />} onClick={() => add({ concernKey: undefined, score: 10 })}>Add Concern Score</Button>
+                <Button icon={<Plus className="h-4 w-4" />} onClick={() => add({ concernKey: undefined, score: 5 })}>Add Concern Score</Button>
               </Space>
             )}
           </Form.List>

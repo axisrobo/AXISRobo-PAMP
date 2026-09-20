@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 from copy import deepcopy
 from typing import Any
 
@@ -126,6 +127,28 @@ DEFAULT_ARTIFACT_CATEGORY_BY_KEY = {
 
 def _clone(value: Any) -> Any:
     return deepcopy(value)
+
+
+def validate_concern_mapping_scores(config: dict[str, Any]) -> None:
+    """Reject mapping contributions outside the documented 0-5 contract."""
+    collections = (
+        ("questionConcernMappings", config.get("questionConcernMappings") or []),
+        ("concernActivationRules", config.get("concernActivationRules") or []),
+    )
+    for collection_name, items in collections:
+        for item_index, item in enumerate(items):
+            for score_index, score in enumerate(item.get("concernScores") or []):
+                raw_value = score.get("score")
+                try:
+                    value = float(raw_value)
+                except (TypeError, ValueError) as exc:
+                    raise ValueError(
+                        f"{collection_name}[{item_index}].concernScores[{score_index}].score must be a number from 0 to 5"
+                    ) from exc
+                if not math.isfinite(value) or not 0 <= value <= 5:
+                    raise ValueError(
+                        f"{collection_name}[{item_index}].concernScores[{score_index}].score must be a number from 0 to 5"
+                    )
 
 
 def _default_static_payload(document_key: str) -> Any:
@@ -1040,6 +1063,7 @@ async def save_concern_mapping_config(
     operator: str,
 ) -> dict[str, Any]:
     operator = operator or "system"
+    validate_concern_mapping_scores(config)
     await db.execute(text("DELETE FROM pamp.avdm_question_answer_concern_mapping"))
     await db.execute(text("DELETE FROM pamp.avdm_concern_activation_rule_score"))
     await db.execute(text("DELETE FROM pamp.avdm_concern_activation_rule"))

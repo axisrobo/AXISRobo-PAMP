@@ -42,11 +42,13 @@ aggregated > 0 : score = min(1, round(aggregated / 5 + complexityCoefficient * c
 * An unactivated concern scores exactly `0.0`; the complexity boost is not
   applied, so empty inputs cannot manufacture priority.
 
-Frontend and backend both implement this: `riskLevelsFromScore` in
+The frontend aggregates raw contributions. `riskLevelsFromScore` in
 `frontend/src/app/(architecture_review)/ea-review/(standalone)/request/create/page.tsx`
-emits `severity = likelihood = sqrt(min(25, raw))`, and `evaluate_avdm` in
-`backend/app/add/service.py` applies the floor and boost. The public analysis
-mirrors it in `scripts/analysis/run_sensitivity.py`.
+encodes the resulting 0-5 activation as `severity = likelihood = sqrt(5 *
+aggregated)`. `evaluate_avdm` in `backend/app/add/service.py` then recovers the
+normalised activation, applies the floor and complexity boost, and classifies
+it. The public analysis mirrors the score and classification stages in
+`pamf-papers/scripts/analysis/run_sensitivity.py`.
 
 ## Activation channels
 
@@ -130,14 +132,7 @@ rather than merged.
 
 ## Case X calibration note
 
-The constructed Case X benchmark was produced by an earlier configuration whose
-question→concern associations and mapping scores are not fully present in the
-base seed. To keep the benchmark reproducible, `avdm_config.json` restores:
-
-* 10 associations (activation set): `AGD3, C5, D7, D9, IP1, IP2, OR1, OR4,
-  SCR1, SCR7`;
-* 8 score restorations: `A1, A2, A3, C1, C2, C3, C4` (+8 each) and `AGD2`
-  (+16).
-
-These are benchmark-fitting entries and are listed in
-`avdm_config.json` → `generation_notes`.
+Case X is a constructed benchmark, not an observed project. Its frozen
+per-concern aggregate activations are distributed with the paper validation
+package. The canonical mapping and rule configuration remains independently
+editable and every persisted contribution is constrained to the 0-5 scale.

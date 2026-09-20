@@ -289,8 +289,8 @@ FROM (VALUES
   ('at-data-streaming','IP6',3.0,20,TRUE),
   ('at-data-streaming','OR4',3.0,30,TRUE),
   ('at-security-compliance_driven','AGD1',3.0,30,TRUE),
-  ('at-security-compliance_driven','AGD6',8.0,40,TRUE),
-  ('at-security-compliance_driven','AGD7',8.0,50,TRUE),
+  ('at-security-compliance_driven','AGD6',5.0,40,TRUE),
+  ('at-security-compliance_driven','AGD7',5.0,50,TRUE),
   ('at-security-compliance_driven','D7',3.0,20,TRUE),
   ('at-security-compliance_driven','SCR7',3.0,10,TRUE),
   ('at-security-cross_border','D7',3.0,20,TRUE),
@@ -317,10 +317,10 @@ FROM (VALUES
   ('at-technical-containerized','DIN3',3.0,20,TRUE),
   ('at-technical-containerized','DIN4',3.0,30,TRUE),
   ('at-technical-high_availability','A6',3.0,30,TRUE),
-  ('at-technical-high_availability','DIN5',8.0,40,TRUE),
+  ('at-technical-high_availability','DIN5',5.0,40,TRUE),
   ('at-technical-high_availability','OR2',3.0,10,TRUE),
   ('at-technical-high_availability','OR3',3.0,20,TRUE),
-  ('at-technical-high_availability','OR5',8.0,50,TRUE),
+  ('at-technical-high_availability','OR5',5.0,50,TRUE),
   ('at-technical-hybrid_multicloud','DIN1',3.0,10,TRUE),
   ('at-technical-hybrid_multicloud','DIN2',3.0,20,TRUE),
   ('at-technical-hybrid_multicloud','DIN3',3.0,30,TRUE),
@@ -430,7 +430,7 @@ FROM (VALUES
   (11,'D3','equals','Y',3.0,30,TRUE),
   (11,'D7','equals','Y',3.0,40,TRUE),
   (11,'IP1','equals','Y',3.0,50,TRUE),
-  (11,'IP7','equals','Y',6.0,60,TRUE),
+  (11,'IP7','equals','Y',5.0,60,TRUE),
   (12,'C4','equals','Y',3.0,10,TRUE),
   (12,'AGD3','equals','Y',3.0,20,TRUE),
   (12,'OR1','equals','Y',3.0,30,TRUE),
@@ -472,7 +472,7 @@ FROM (VALUES
   (22,'IP1','equals','Y',3.0,30,TRUE),
   (22,'AGD2','equals','Y',3.0,40,TRUE),
   (22,'AGD5','equals','Y',3.0,50,TRUE),
-  (22,'A5','equals','Y',8.0,60,TRUE),
+  (22,'A5','equals','Y',5.0,60,TRUE),
   (23,'A1','equals','Y',3.0,10,TRUE),
   (23,'A2','equals','Y',3.0,20,TRUE),
   (23,'C1','equals','Y',3.0,30,TRUE),
@@ -1040,5 +1040,27 @@ FROM (VALUES
   (53,'SCR2','equals','Yes',5.0,60,TRUE),
   (53,'SCR1','equals','Yes',5.0,70,TRUE)
 ) AS v(qid, concern_key, op, ans, score, ord, active) JOIN pamp.avdm_question q ON q.stable_question_id=v.qid JOIN pamp.avdm_pact_concern c ON c.concern_key=v.concern_key;
+
+INSERT INTO pamp.avdm_static_document
+    (document_key, document_json, create_by, update_by, create_at, update_at)
+VALUES (
+    'classification_policy',
+    '{"mandatoryThreshold":0.9,"recommendedThreshold":0.5,"complexityCoefficient":0.15,"maxMandatoryCount":null,"maxMandatoryRatio":null,"topNPriorityBudget":null,"tieBreakStrategy":"score_then_key"}'::jsonb,
+    'avdm_seed_v4', 'avdm_seed_v4', now(), now()
+)
+ON CONFLICT (document_key) DO UPDATE
+SET document_json = EXCLUDED.document_json,
+    update_by = EXCLUDED.update_by,
+    update_at = now();
+
+ALTER TABLE pamp.avdm_question_answer_concern_mapping
+    DROP CONSTRAINT IF EXISTS ck_avdm_question_mapping_score_0_5,
+    ADD CONSTRAINT ck_avdm_question_mapping_score_0_5
+    CHECK (mapping_score >= 0 AND mapping_score <= 5);
+
+ALTER TABLE pamp.avdm_concern_activation_rule_score
+    DROP CONSTRAINT IF EXISTS ck_avdm_rule_score_0_5,
+    ADD CONSTRAINT ck_avdm_rule_score_0_5
+    CHECK (mapping_score >= 0 AND mapping_score <= 5);
 
 COMMIT;

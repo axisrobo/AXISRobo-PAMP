@@ -135,9 +135,9 @@ top-N priority budget, and the tie-break strategy.
 
 | Classification | Score Range | Color | Action |
 |---------------|------------|-------|--------|
-| Mandatory | >= 0.66 | Red | Must be addressed in architecture review |
-| Recommended | >= 0.38 | Gold | Should be considered |
-| Optional | < 0.38 | Default | May be skipped |
+| Mandatory | >= 0.90 | Red | Must be addressed in architecture review |
+| Recommended | >= 0.50 | Gold | Should be considered |
+| Optional | < 0.50 | Default | May be skipped |
 
 ### Key Files
 
